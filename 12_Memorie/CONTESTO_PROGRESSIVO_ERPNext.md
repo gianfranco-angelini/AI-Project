@@ -731,6 +731,74 @@ A fine sessione 16 il documento B3 dichiarava 11/12 obiettivi **fattibili**, ma 
 ---
 
 
+## SESSIONE 19 — Standard documentale unico e passaggio a Claude Code locale (26-27/09/2026)
+
+Sessione svolta in Claude Code **cloud** (claude.ai/code, repo GitHub `gianfranco-angelini/AI-Project`),
+senza accesso ai file del PC. Nessun intervento su ERPNext.
+
+### 1. Mail di Romeo del 23/09 ("I: Informazioni mancati ERPNext")
+- Romeo chiede se alla riunione di **martedì 29/09** ha senso far validare a Simone, con il supporto
+  di Sergey, il **ciclo/fase dell'Equipment T09-0100**, per poi implementare la **rendicontazione dei
+  tempi su una parte di processo** come primo riscontro tangibile
+- Risposta di Gian: **sì, se partecipa anche Sergey** (testo preparato, invio a cura di Gian)
+- È un inoltro della mail di Simone del 22/09. Allegati reali: `Anagrafica del personale.xlsx`
+  (già caricata in sess. 18) e **`T09-0100 Ciclo e fasi_26-19008.xlsx`** (1,9 MB, **non ancora
+  analizzato**). Le immagini `image00X.png` sono firme
+- Verificato: **nessuna mail di Romeo con codici articolo SAP**. SAP compare nelle sue mail solo
+  come roadmap ("gestionale in parallelo a SAP fino al 31.12.2026; avvio a regime dal 01.01.2027
+  con ERPNext per i nuovi ordini cliente", presentazione `Progetto_Combustion_EVO_cdg_it`)
+
+### 2. Postazioni — dato da riconciliare
+La mail di Simone del 22/09 riporta: Saldatura 7, **Molatura 6**, Montaggio 5 (4 montaggio + 1
+formatura), **Qualità 2** (VT + PT + dimensionali), **Formatura manuale 1**, **Flussaggio 1**,
+Formatura CNC 1. A sistema è applicato il chiarimento del 25/09 (Molatura 5, Controllo Qualità 3,
+con il flussaggio dentro Qualità). Da confermare con Simone quale dei due vale.
+
+### 3. Standard documentale: decisione di Gian
+- **Standard unico `docx-startit`** per tutti i documenti, Remazel compresi: titoli grigi `757F9B`,
+  logo nell'intestazione, footer su 2 righe, margine superiore 1620, indice `TOC \o "1-4"`, tabella
+  info a 8 campi con **Riferimento** (nessun campo Commessa). Obiettivo: standardizzare il più possibile
+- **`docx-remazel` riscritta come derivata** di `docx-startit`: solo valori variabili, naming, tono,
+  migrazione dei documenti in blu e note d'ambiente. Testo in `12_Memorie/SKILL_docx-remazel.md`,
+  **da salvare nella skill dalla card di revisione** (finché non lo si fa, la skill caricata è
+  quella vecchia in blu: fa fede il file in `12_Memorie`)
+- **Naming**: `{Tipo}_{Oggetto}_Remazel_B{N}.docx`, **senza codice commessa**. I documenti esistenti
+  prendono il nome standard alla versione successiva, con il numero che prosegue
+  (es. `Guida_Concettuale_T080100_v6` → `Guida_Concettuale_Remazel_B7`)
+- I 13 documenti correnti restano validi in blu finché non vengono aggiornati; all'aggiornamento si
+  estrae il contenuto e si **rigenera con `startit_docx.py`**
+- Generatore provato: pacchetto valido (`validate.py` OK), PDF corretto con logo, intestazione,
+  tabella info e footer. Numeri di pagina dell'indice in due passate via `pdftotext` (snippet nella skill)
+
+### 4. Ambiente di lavoro
+- Il connettore Microsoft 365 è **solo lettura** (verificati i permessi: tutti `*.Read*`, nessun
+  `ReadWrite`, nessuna funzione di scrittura). Legge mail, calendario, SharePoint; non scrive file
+  e non restituisce il `.docx` originale (solo il testo)
+- Si lavora quindi con **Claude Code locale** sul PC, lanciato nella cartella OneDrive di progetto.
+  Scorciatoia: funzione **`remazel`** nel profilo PowerShell (`remazel` oppure
+  `remazel remote-control` per comandarla dall'app). Procedura di installazione in
+  `Manuale_Utente_Installazione_ClaudeCode_Remazel_B1.docx`
+- Sistemata la cartella di progetto: `Cloude.md` (nome errato, non caricato) sostituito da
+  **`CLAUDE.md`**; le versioni vecchie della skill (`SKILL_docx-remazel_REVISIONE.md`,
+  `docxremazelSKILLv2.md`) spostate in `12_Memorie/Old`
+- **La copia principale della memoria è ora quella in OneDrive** (`12_Memorie`). La copia nel repo
+  GitHub `AI-Project` non va più aggiornata
+- Nel container cloud mancavano `libreoffice-writer`, `poppler-utils` e `defusedxml` (installati).
+  Sul PC vanno verificati Python 3 e LibreOffice prima di generare documenti
+
+### 5. Elenco documenti da aggiornare (ordine concordato: uno alla volta, struttura prima)
+1. **Materiale per la riunione del 29/09**: agenda e checklist per la validazione del ciclo T09-0100
+   con Simone e Sergey (anomalie note, regola dei codici T08 riusati, 6 date di consegna, proposta
+   di pilota per la rendicontazione dei tempi)
+2. **Guida Produzione → B4** e **Analisi Obiettivi → B4** (stato reale di 1g, 1c, 2b, 2d e obiettivo 3)
+3. **Guida Concettuale → B7**, **Prerequisiti Go-Live → B2**
+4. Nuovi: guida alle nuove funzioni (1c, 2b, 2d), analisi conto lavoro (obiettivo 3), analisi
+   integrazione SAP B1
+5. Correzioni di contenuto aperte dalla sessione 17
+6. `LEGGIMI.md` da aggiornare (punti 5-6 e nota sul footer superati)
+
+---
+
 ## 🖥️ FRONTE ERPNEXT — stato al 27/09/2026
 
 ### Configurazione a regime
@@ -774,7 +842,8 @@ Connected App + App registration Entra ID per `noreply@remazel.com` (dettagli in
 - Import con i componenti identici a T08 referenziati con il **codice T08** (regola di Simone)
 - Project dedicato all'Equipment T09-0100, Sales Order con `po_no = 99-99998`, Work Order propri anche per i componenti condivisi
 - Usare le 6 date di consegna per lo scheduling
-- Preparare la riunione di **martedì 29/09** con Simone e Sergey
+- Preparare la riunione di **martedì 29/09** con Simone e Sergey; analizzare prima `T09-0100 Ciclo e fasi_26-19008.xlsx` (allegato alla mail del 22/09)
+- Riconciliare con Simone le postazioni: mail 22/09 (Molatura 6, Qualità 2 + Flussaggio 1) vs chiarimento 25/09 applicato a sistema
 
 ### Priorità 4 — Correzioni tecniche emerse in sessione 18
 - Server Script `Before Save` su Project per ricalcolare `custom_deadline_interna` quando cambia il buffer
@@ -783,9 +852,11 @@ Connected App + App registration Entra ID per `noreply@remazel.com` (dettagli in
 - Validare con Simone il template "Controllo Saldature per Matricola" e la regola "Quality Inspection per matricola"
 - Comunicare a Simone che anagrafica e postazioni sono a sistema
 
-### Priorità 5 — Documentazione
+### Priorità 5 — Documentazione (ordine e naming definiti in sessione 19, punto 5)
+- **Prima di tutto**: materiale per la riunione del 29/09 (validazione ciclo T09-0100)
+- Tutti i documenti in grafica `docx-startit`, naming `{Tipo}_{Oggetto}_Remazel_B{N}`
 - **Guida Produzione → B4**: rimuovere i riferimenti a Mario Rossi / `HR-EMP-00001` e ai codici C0900/C0901; nuovo flusso operatore con login personale e filtro automatico per reparto; divisione di una fase tra interno ed esterno (più Job Card con quantità parziali); numeri aggiornati (58 WO, 581 Job Card)
-- **Guida Concettuale → v7**: aggiornare la tabella "azioni prima del go-live"; spiegare `production_capacity`, buffer e deadline interna
+- **Guida Concettuale → B7**: aggiornare la tabella "azioni prima del go-live"; spiegare `production_capacity`, buffer e deadline interna
 - Documentare le nuove funzioni: simulazione/applicazione ritardo (1c), documenti tecnici (2b), matricole e controllo saldature (2d)
 - Punti di contenuto ancora aperti dalla sessione 17: titoli di sezione mancanti, voce d'indice spezzata, accenti mancanti, campi persi nelle tabelle info
 - Recuperare e registrare le attività 16-24/09 non documentate (Gantt, Task, precedenze)
@@ -829,5 +900,5 @@ Connected App + App registration Entra ID per `noreply@remazel.com` (dettagli in
 
 ---
 
-*Ultimo aggiornamento: **Sessione 18** — 27 settembre 2026 (anagrafica e accessi operatori, capacità reparti, HTTPS, obiettivi 1g/1c/2b/2d, analisi conto lavoro e SAP B1)*
-*⚠️ A fine ogni sessione: aggiornare questo file nel Project E restituire il blocco all'utente.*
+*Ultimo aggiornamento: **Sessione 19** — 27 settembre 2026 (standard documentale unico docx-startit, docx-remazel derivata, passaggio a Claude Code locale)*
+*⚠️ A fine ogni sessione: aggiornare questo file in `12_Memorie` (copia principale in OneDrive) aggiungendo la sezione della sessione.*
