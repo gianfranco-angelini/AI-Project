@@ -3,15 +3,11 @@
 ## Nota origine
 
 Questo repository (`gianfranco-angelini/AI-Project`) è stato trovato **vuoto** (nessun
-commit) all'avvio di questa sessione. I file `CLAUDE.md` e
-`12_Memorie/CONTESTO_PROGRESSIVO_ERPNext.md` non esistevano. Sono stati ricostruiti a
-partire dal contenuto della skill `anthropic-skills:erpnext-remazel`, che è la fonte
-operativa sincronizzata del progetto ERPNext @ Remazel Engineering.
-
-La fonte di verità del contesto progressivo è normalmente il **Project Cowork**
-(non questo repo git). Se esiste già un `CONTESTO_PROGRESSIVO_ERPNext.md` più
-recente altrove (Project Cowork, altro repo/branch), va preferito a questa
-ricostruzione.
+commit) all'avvio della prima sessione. `12_Memorie/CONTESTO_PROGRESSIVO_ERPNext.md`
+è stato successivamente allineato al file consolidato del Project Cowork "Ciclo
+produzione Remazel Combustion" (versione più recente: Sessione 18, 27/09/2026),
+fornito da Gian. Quel file resta la fonte di verità del contesto progressivo;
+questo repo ne tiene una copia sincronizzata a fine sessione.
 
 ## Progetto
 
