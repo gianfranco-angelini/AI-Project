@@ -63,58 +63,46 @@ File pubblici scaricabili da browser scrivendoli in `frappe.get_site_path("publi
 
 ## 📐 FORMATO DOCUMENTI WORD
 
-⚠️ **Lo standard completo NON sta più in questo file**: vive nella skill `docx-remazel`, che è
-l'unica fonte di verità e va invocata (`/docx-remazel`) ogni volta che si crea o si modifica un
-`.docx` di progetto. Qui restano solo i riferimenti essenziali e le correzioni storiche, perché
-duplicare la specifica in due posti ha già causato disallineamenti.
+⚠️ **Decisione del 27/09/2026 (sessione 19): standard unico `docx-startit`.**
+La grafica di tutti i documenti Remazel è quella dello standard aziendale Start I.T.: titoli
+grigi `757F9B`, logo nell'intestazione, footer su 2 righe, margine superiore 1620, indice
+`TOC \o "1-4"`, tabella info a 8 campi con **Riferimento** (nessun campo Commessa).
+Si carica sempre **prima `docx-startit`**, poi **`docx-remazel`**, che ora è una derivata con le
+sole regole Remazel: valori variabili, naming, tono, migrazione dei vecchi documenti, note
+d'ambiente.
 
-**Revisione dello standard al 15/09/2026**: `12_Memorie/SKILL_docx-remazel_REVISIONE.md` nella
-struttura di progetto. Da salvare nella skill dalla card di revisione — le copie su disco sono
-cache di sola lettura e non persistono.
+**Testo della nuova `docx-remazel`**: `12_Memorie/SKILL_docx-remazel.md`. Va salvato da Gian
+nella skill dalla card di revisione: le copie su disco sono cache di sola lettura.
+La vecchia revisione `SKILL_docx-remazel_REVISIONE.md` del 15/09 è **superata**.
 
-### Regola che vince su tutte
-**Il file fisico caricato batte la specifica scritta.** Se Gian carica un documento e lo indica
-come riferimento, quel file vince su qualunque valore scritto altrove. È nata da un caso reale:
-la skill prescriveva il footer a 3 celle mentre il file di riferimento usava il paragrafo
-singolo. Ha vinto il file.
-
-**Documento di riferimento**: `Analisi_Obiettivi_BU_Combustion_B2.docx` (senza suffisso
-`_Remazel`), nella versione con header 2400/3000/3660, footer a paragrafo singolo, tabella info
-2384/6676, titolo 20pt.
-
-### Valori chiave (dettaglio completo nella skill)
-| Elemento | Valore |
+### Valori variabili Remazel
+| Campo | Valore |
 |---|---|
-| Titolo copertina / sottotitolo | 20pt bold centrato nero / 12pt |
-| Heading 1 / Heading 2 | 14pt / 13pt, colore `2E74B5` |
-| Tabelle a piena larghezza | **9060 DXA**, sempre |
-| Tabella info copertina | **2384 / 6676 DXA**, intestazione `Campo` / `Valore` |
-| Header di pagina | **2400 / 3000 / 3660 DXA** |
-| Footer | **paragrafo singolo** centrato, `pBdr top space=11`, titolo incluso, em-dash |
-| Indice | campo `TOC \o "1-3"`, voci popolate, **su pagina propria** |
-| Stili TOC1 / TOC2 | `after=100` / `after=100` + `ind left=220` |
-| Campo Sistema | **`M.E.S. Remazel`** — mai E.M.S. né M.S.E. |
-| Redatto da / Destinatario | `Start I.T. S.r.l.` / riferimento d'ufficio, mai nomi propri |
-| Pagina | A4 11906×16838, margini 1417/1134, header/footer 720 |
-| Lingua | it-IT su run, `docDefaults`, `themeFontLang`, separatori |
+| Destinatario | `Remazel Engineering S.p.A. — BU Combustion` (colonna 2 header: `Remazel Engineering S.p.A.`) |
+| Sistema | **`M.E.S. Remazel`**, mai E.M.S. né M.S.E. |
+| Riferimento | `ERPNext — combustionerp.remazel.com` o il modulo coinvolto |
+| Redatto da | `Start I.T. S.r.l.` |
 
 ### Naming
-`{Tipo}_{Oggetto}_{Commessa}_{Versione}.docx` — **senza prefisso `ERPNext_`**, **senza suffisso
-`_Remazel`**, commessa **senza trattino** (`T080100`). Il campo `Documento` della tabella info
-deve coincidere col nome file reale.
+`{Tipo}_{Oggetto}_Remazel_B{N}.docx`: **nessun codice commessa/Equipment**, nessun prefisso
+`ERPNext_`. I documenti esistenti prendono il nome standard alla versione successiva, con il
+numero che prosegue (es. `Guida_Concettuale_T080100_v6` → `Guida_Concettuale_Remazel_B7`).
 
-### Flusso di lavoro obbligatorio
-```
-unzip → modifica XML diretta → rezip → validate.py → conversione PDF di verifica
-```
-Mai passare da LibreOffice per aggiornare il TOC: converte i bordi da livello-tabella a
-livello-cella e sporca l'XML. La validazione è obbligatoria, la resa PDF da sola non intercetta
-gli errori di schema.
+### Migrazione
+I 13 documenti correnti sono nella vecchia grafica blu (`2E74B5`). Restano validi finché non
+vengono aggiornati. All'aggiornamento il contenuto si estrae e si **rigenera con
+`startit_docx.py`** nella grafica standard, invece di correggere il vecchio XML.
 
-```bash
-python3 /mnt/skills/public/docx/scripts/office/validate.py file.docx -v
-```
+### Valori superati (storico)
+Blu `2E74B5`, Heading 2 13pt, footer a 3 celle o a paragrafo singolo, tabella info 2500/7000 con
+Commessa, indice `1-2`/`1-3`, margine superiore 1134, naming con `ERPNext_`, commessa e `_v{N}`,
+file di riferimento `Analisi_Obiettivi_BU_Combustion_B2.docx`.
 
+### Flusso
+Struttura proposta e approvata → generazione con `startit_docx.py` (due passate per i numeri di
+pagina dell'indice) → `validate.py` → PDF → controllo visivo di ogni pagina (verifica in 15 punti
+di `docx-startit`). Per il ritocco di un documento già nello standard: unzip → XML → zip →
+`validate.py --original`; mai un giro completo in LibreOffice.
 
 ---
 
@@ -821,7 +809,7 @@ Connected App + App registration Entra ID per `noreply@remazel.com` (dettagli in
 - Ogni variante deve avere l'identificativo di versione nel nome: mai sovrascrivere senza incrementare
 - Il campo `Documento` della tabella info deve coincidere col nome file reale
 - Verificare sempre il **contenuto interno**, non solo il nome file
-- Documenti di progetto per il cliente: skill `docx-remazel`; procedure interne Start I.T.: skill `docx-startit`
+- Tutti i documenti: grafica `docx-startit`; per i documenti Remazel si carica in aggiunta `docx-remazel` (derivata, solo regole Remazel)
 
 **Comunicazione col cliente**
 - Tono soft-ma-fermo; riferimenti d'ufficio, non nomi propri, nei documenti formali
