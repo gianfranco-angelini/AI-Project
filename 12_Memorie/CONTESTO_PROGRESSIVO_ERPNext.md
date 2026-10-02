@@ -1166,6 +1166,20 @@ template su Item T09; domande del 07/09 (RX 10.800 min, P1600 due WO).
 - Conseguenza: fase 1 dell'expediting **senza Purchase Order ERPNext**, tracciamento sulla Job Card;
   il disegno deve permettere di passare in seguito al PO nativo ERPNext → SAP senza rifare i dati
 
+### Expediting fase 1 — passo 1: fornitore strutturato sulle fasi BOM ✅
+- Custom Field **`BOM Operation.custom_fornitore`** (Link Supplier, allow_on_submit, in list view)
+- Compilato da descrizione `(FORNITORE)` su **165/165 fasi esterne** delle 75 BOM default.
+  Correzioni: "A.M.C. CONTROL" → "A.M.C. CONTROL SRL" (BOM-T08-0100-P2301-002); aggiunto
+  A.M.C. CONTROL SRL su T08-0100-P2202-10RX (era senza fornitore, dato dal file Simone)
+- Distribuzione: A.M.C. CONTROL SRL 47, INOXEA 19, SOMECAR 16, BONADEI 16, MAC STAMP 12, SARZI 10,
+  EPIS 10, FLAME SPRAY 7, BODYCOTE 6, H.T.S. 5, A.R.T.I.L. 5, T.A.G. 4, ZARE 2, M.B.L. 2, ATS 2,
+  H.T. SRL 1, GIOTTO 1
+- ⚠️ Da chiedere a Simone (punto 4 della mail): H.T. SRL (solo P6000-10SA) vs H.T.S. SRL — stessa
+  azienda?
+- Prossimo: campi conto lavoro su Job Card (Fornitore, N° ordine SAP, Data uscita, Rientro
+  previsto, Rientro effettivo, Stato) + Server Script che copia il fornitore dalla BOM Operation
+  alla creazione della Job Card; riallineamento delle Job Card T08 esterne
+
 ### Expediting (obiettivo 3)
 Gian prosegue l'expediting (conto lavoro per fase, strada C1) **in un'altra chat**: vedi Priorità 2
 dei task aperti. Chi lavora lì deve registrare l'avanzamento in una sessione propria (23 o successiva).
