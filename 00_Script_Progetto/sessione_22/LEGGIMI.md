@@ -11,7 +11,7 @@ Ordine di esecuzione (tutti in `bench --site site1.local console`, come `frappe-
 | 5 | `campi_consegna_set_jobcard.py` | Campi Consegna set / Production Plan su Job Card + Server Script WorkOrder_Consegna_Set | Eseguito |
 | 6 | `correzione_I000_databook.py` | F000 -> I000 per AISI 304L, Data Book T09 1080 min | Eseguito |
 | 7 | `pp_t09.py` | 6 Production Plan (MFG-PP-2026-00002…00007) | Eseguito |
-| 8 | `jobcard_conto_lavoro.py` | Expediting fase 1: sezione Conto lavoro su Job Card, Server Script JobCard_Fornitore / JobCard_Conto_Lavoro(_Submitted), riallineamento 130 Job Card esterne T08 | In prova |
+| 8 | `jobcard_conto_lavoro.py` | Expediting fase 1: sezione Conto lavoro su Job Card, Server Script JobCard_Fornitore / JobCard_Conto_Lavoro(_Submitted), riallineamento 130 Job Card esterne T08 | Eseguito |
 
 Gli script con `globals().get(...)` vanno lanciati passando le variabili:
 `exec(open(f).read(), {"frappe": frappe, "SCRIVI_PP": True})` — `exec` non vede le variabili della console.

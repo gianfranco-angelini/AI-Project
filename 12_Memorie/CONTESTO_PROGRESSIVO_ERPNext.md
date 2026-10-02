@@ -1180,6 +1180,26 @@ template su Item T09; domande del 07/09 (RX 10.800 min, P1600 due WO).
   previsto, Rientro effettivo, Stato) + Server Script che copia il fornitore dalla BOM Operation
   alla creazione della Job Card; riallineamento delle Job Card T08 esterne
 
+### Expediting fase 1 — passo 2: conto lavoro sulla Job Card ✅
+Script `00_Script_Progetto/sessione_22/jobcard_conto_lavoro.py` (eseguito):
+- Sezione **"Conto lavoro"** su Job Card (visibile solo se workstation/workstation_type =
+  Lavorazione Esterna): `custom_fornitore` (Link Supplier), `custom_ordine_sap` (Data),
+  `custom_stato_cl` (Select Da inviare / Presso fornitore / Rientrato, read only),
+  `custom_data_uscita`, `custom_rientro_previsto` (read only), `custom_rientro_effettivo` — tutti
+  allow_on_submit
+- Server Script **`JobCard_Fornitore`** (Before Insert): fornitore copiato dalla BOM Operation
+  (Job Card → operation_id → Work Order Operation idx → BOM Operation stesso bom_no + idx, stesso
+  percorso di JobCard_Documenti_Tecnici); stato iniziale Da inviare
+- Server Script **`JobCard_Conto_Lavoro`** (Before Save) e **`JobCard_Conto_Lavoro_Submitted`**
+  (Before Save Submitted Document): rientro previsto = data uscita + durata pianificata della Job
+  Card (giorni arrotondati per eccesso), altrimenti fine pianificata; stato automatico
+- Riallineate **130/130 Job Card esterne T08** (controllo codice fase JC = BOM: 0 anomalie):
+  fornitore, stato Da inviare, rientro previsto = fine pianificata
+- Correzione collegata: fornitore compilato anche sulle 3 fasi esterne della BOM non default
+  **BOM-T08-0100-P2301-001** (ancora usata dal WO T08 in corso)
+- Il ritardo ("In ritardo" = rientro previsto < oggi e non rientrato) lo calcolerà il cruscotto
+- Prossimo: cruscotto expediting (report), poi test reale su una Job Card con ordine SAP
+
 ### Expediting (obiettivo 3)
 Gian prosegue l'expediting (conto lavoro per fase, strada C1) **in un'altra chat**: vedi Priorità 2
 dei task aperti. Chi lavora lì deve registrare l'avanzamento in una sessione propria (23 o successiva).
