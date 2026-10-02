@@ -1252,7 +1252,14 @@ l'invio effettivo, quindi una data scritta all'ordine non è affidabile. Decisio
 - Stato: Da inviare → Presso fornitore (Inizia) → Rientrato (Completa/submit)
 - Sezione chiusa con `custom_sb_fine_conto_lavoro`; 898 JC esterne riallineate ("Da inviare");
   ripulita la prova su **PO-JOB05173** (non PO-JOB05464)
-- Da fare: prova reale da browser (Inizia/Completa), poi cruscotto expediting
+- ✅ **Prova reale su PO-JOB05551** (Start Job → Presso fornitore, uscita 02/10, previsto 09/10;
+  data promessa 12/10 → previsto 12/10; Complete qty 10 → Rientrato). Poi Job Card, WO e operazione
+  riportati allo stato iniziale (Open / Not Started / Pending)
+- Valutazione di gestibilità (Gian dubbioso): modello dati corretto, volumi sostenibili (768 fasi
+  esterne T09 ≈ 2-3 eventi/giorno), ma **non usabile senza**: (1) cruscotto/lista expediting (da
+  spedire, presso fornitore, in ritardo, per fornitore); (2) "Invia al fornitore"/"Rientro" su più
+  Job Card insieme (una spedizione = più pezzi); (3) submit automatico al Complete delle esterne;
+  (4) Employee per magazzino/logistica (chi spedisce/riceve) — da chiedere a Simone
 
 ### Risposta di Simone del 02/10 (matricole, calendario, avanzamento)
 - **Matricole: TBD** → decisione di Gian: **matricola solo sul prodotto finito (A0001)**, assegnata
