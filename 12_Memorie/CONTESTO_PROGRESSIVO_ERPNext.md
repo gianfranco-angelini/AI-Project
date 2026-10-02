@@ -1294,7 +1294,7 @@ dei task aperti. Chi lavora lì deve registrare l'avanzamento in una sessione pr
 ### Configurazione a regime (T08-0100)
 - **58 Work Order** "In Process"; Job Card **581** (dato 01/09) vs **557** collegate al progetto
   (verifica 25/09) — ⚠️ discrepanza da verificare. 130 Job Card su Lavorazione Esterna
-- Ciclo **v6** caricato; 613 BOM Operation con descrizione parlante; capacity planning attivo,
+- Ciclo **v5** di Simone (`T080100 Ciclo e fasi 5.xlsx`, 30/08) caricato, poi modificato da noi a sistema (nessun v6); 613 BOM Operation con descrizione parlante; capacity planning attivo,
   backward scheduling dalla scadenza 18/12/2026, deadline interna PROJ-0001 13/12/2026 (buffer 5 gg)
 - **Capacità reparti**: Saldatura 7, Molatura 5, Montaggio 5, Controllo Qualità 3, Lavorazioni
   Meccaniche 1 (chiarimento Simone 25/09)
