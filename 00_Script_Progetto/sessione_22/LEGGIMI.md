@@ -1,0 +1,17 @@
+# Script sessione 22 (02/10/2026) — carico T09-0100
+
+Ordine di esecuzione (tutti in `bench --site site1.local console`, come `frappe-user`):
+
+| # | Script | Cosa fa | Esito |
+|---|---|---|---|
+| 1 | `confronto_t09_t08.py` | Confronta ogni articolo del ciclo T09 del 22/09 con la controparte T08 (fasi, materiale, componenti) | Sola lettura |
+| 2 | `import_t09_prova.py` / `import_t09_scrivi.py` | 14 Item + 14 BOM T09/T08-0200 + BOM-T08-0100-P2301-002 (10VX). Dati in `dati_import_t09.json` | Eseguito |
+| 3 | `project_so_t09.py` | PROJ-0002 + SAL-ORD-2026-00002 (100 liner, 6 set) + po_no T08 | Eseguito |
+| 4 | `fixed_time_lavorazione_esterna.py` | fixed_time su 214 fasi per lotto + capacità Lavorazione Esterna 50 | Eseguito |
+| 5 | `campi_consegna_set_jobcard.py` | Campi Consegna set / Production Plan su Job Card + Server Script WorkOrder_Consegna_Set | Eseguito |
+| 6 | `correzione_I000_databook.py` | F000 -> I000 per AISI 304L, Data Book T09 1080 min | Eseguito |
+| 7 | `pp_t09.py` | 6 Production Plan (MFG-PP-2026-00002…00007) | Eseguito |
+
+Gli script con `globals().get(...)` vanno lanciati passando le variabili:
+`exec(open(f).read(), {"frappe": frappe, "SCRIVI_PP": True})` — `exec` non vede le variabili della console.
+Gli altri hanno `SCRIVI = False` in testa: cambiare a `True` per scrivere.
