@@ -3,7 +3,7 @@
 
 Ciao Simone,
 
-abbiamo allineato a sistema i tempi delle lavorazioni esterne al **TT** del ciclo (tempo per set da 10 liner, comprensivo di spedizione come mi hai indicato). Prima di rilasciare i Work Order della T09 ti chiedo conferma su questi punti:
+ho allineato a sistema i tempi delle lavorazioni esterne al **TT** del ciclo (tempo per set da 10 liner, comprensivo di spedizione come mi hai indicato). Prima di rilasciare i Work Order della T09 ti chiedo conferma su questi punti:
 
 1. **Set da 20 liner (consegne 2-5)** – il ciclo riporta "LT per set di 10 liner". Per un set da 20 il lead time del fornitore resta lo stesso o raddoppia? Se dipende dalla lavorazione (es. trattamento termico in un'unica infornata vs taglio pezzo per pezzo), basta indicarmi le fasi che raddoppiano.
 
@@ -18,7 +18,7 @@ abbiamo allineato a sistema i tempi delle lavorazioni esterne al **TT** del cicl
 
 5. **Radiografie (A.M.C. CONTROL)** – ho allineato tutte le RX a 30 h per set, come da ciclo (prima erano 27 h).
 
-6. **Chiusure dei fornitori** – oggi le lavorazioni esterne contano su giorni di calendario, senza chiusure (es. agosto). Vuoi che ne teniamo conto?
+6. **Chiusure dei fornitori** – oggi le lavorazioni esterne contano su giorni di calendario, senza chiusure (es. agosto). Vuoi che ne tenga conto?
 
 7. **Stato reale set 1 e 2** – per allineare l'avanzamento dopo la creazione dei Work Order mi servirebbe sapere quali fasi/semilavorati sono già stati eseguiti.
 
