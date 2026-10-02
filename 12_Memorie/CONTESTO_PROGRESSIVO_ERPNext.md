@@ -1129,6 +1129,14 @@ template su Item T09; domande del 07/09 (RX 10.800 min, P1600 due WO).
   Certificato `*.remazel.com` valido fino al **15/02/2027**: aggiornare
   `Procedura_Rinnovo_Certificato_SSL_Remazel_B2` (intermedio corretto + verifica con
   `openssl s_client … | grep "Verify return code"`) → B3
+- **Taratura ERPNext sulle nuove risorse**:
+  - MariaDB `innodb_buffer_pool_size` 128 MB → **2 GB** (file `/etc/mysql/mariadb.conf.d/99-erpnext-remazel.cnf`)
+  - `gunicorn_workers` 5 → **9**, `background_workers` 1 → **2** (short e long), via
+    `bench set-config -g -p …` + `bench setup supervisor --yes` + `supervisorctl reread/update`.
+    Backup `config/supervisor.conf.bak-20261002`. Tutti RUNNING, ping 200
+  - ⚠️ Trappola: `bench set-config` senza `-p` salva i numeri come stringa → `bench setup
+    supervisor` va in TypeError
+  - Bench CLI 5.29.1 (disponibile 5.31.0): aggiornamento rimandato con ERPNext
 
 ### Expediting (obiettivo 3)
 Gian prosegue l'expediting (conto lavoro per fase, strada C1) **in un'altra chat**: vedi Priorità 2
