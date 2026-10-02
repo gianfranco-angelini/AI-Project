@@ -1235,6 +1235,27 @@ l'invio effettivo, quindi una data scritta all'ordine non è affidabile. Decisio
   Lavorazione Esterna senza calendario (24h). La vecchia "Festivi Italia 2026-2027" resta (rollback).
   Vale per le pianificazioni future (WO T09); Job Card T08 già pianificate invariate
 
+### Permessi e profilo "Responsabile Processo MES" (02/10/2026)
+- **Problema**: Simone non vedeva più le Job Card. Causa: su Job Card esistevano solo 2 Custom
+  DocPerm (Operatore di Reparto, Sola Lettura MES) → in Frappe i Custom DocPerm **sostituiscono**
+  quelli standard, quindi System Manager / Manufacturing Manager / Manufacturing User erano senza
+  accesso. **Corretto**: ricopiati in Custom DocPerm i permessi standard della Job Card (ora 5 ruoli)
+- Verifica su tutti i doctype con Custom DocPerm: solo Job Card aveva ruoli standard persi
+  rilevanti (scarti minori non toccati: Desk User su Currency/Role, Report Manager su Email Account,
+  Accounts Manager su Terms and Conditions)
+- ⚠️ Ruolo **"Sola Lettura MES"** presente su molti doctype ma non documentato in queste sessioni
+  (probabilmente periodo 16-24/09): non toccato
+- ⚠️ Trappola: aggiungere un Custom DocPerm a un doctype senza ricopiare gli standard toglie
+  l'accesso a tutti gli altri ruoli
+- **Role Profile "Responsabile Processo MES"** (decisione di Gian: chi governa il processo, non
+  super amministratori): Manufacturing Manager/User, Projects Manager/User, Item Manager, Quality
+  Manager, Stock User, Purchase User, Prepared Report User
+- Assegnato a **Simone Sacchi** (da 49 ruoli con System Manager a 9), **Sergey Mylnikov** e **Omar
+  Ferrari** (dal profilo "Manufacturing" a 3 ruoli, nessun ruolo perso). Tutti leggono/scrivono Job
+  Card. Amministrazione di sistema (script, permessi, utenti, aggiornamenti) solo a Gian
+- Da verificare con Simone: selezione del Dipendente nei time log Job Card senza ruoli HR (se serve,
+  sola lettura Employee)
+
 ### Expediting (obiettivo 3)
 Gian prosegue l'expediting (conto lavoro per fase, strada C1) **in un'altra chat**: vedi Priorità 2
 dei task aperti. Chi lavora lì deve registrare l'avanzamento in una sessione propria (23 o successiva).
