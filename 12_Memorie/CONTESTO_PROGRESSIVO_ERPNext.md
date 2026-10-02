@@ -644,7 +644,7 @@ A fine sessione 16 il documento B3 dichiarava 11/12 obiettivi **fattibili**, ma 
 - Custom Field su Project: `custom_fine_produzione_stimata` (Date, sola lettura), `custom_buffer_giorni` (Int, modificabile, default **5**), `custom_deadline_interna` (Date, sola lettura)
 - PROJ-0001: buffer 5 gg, deadline interna **13/12/2026** (reale 18/12/2026)
 - Lezione: con lo scheduling backward la fine produzione coincide sempre con la deadline, quindi il buffer è un **parametro di input**, non un valore calcolato
-- ⚠️ `custom_deadline_interna` è stata calcolata da script: **non si ricalcola da sola** se si modifica il buffer. Serve un Server Script `Before Save` su Project
+- ✅ (sessione 22) `custom_deadline_interna` si ricalcola a ogni salvataggio: Server Script `Project_Deadline_Interna` (Before Save su Project)
 
 **1c — Riprogrammazione agile ✅ (livello 1)**
 - Server Script API `Simula_Ritardo_JobCard` (`/api/method/simula_ritardo_jobcard`, nessuna scrittura) e `Applica_Ritardo_JobCard` (`/api/method/applica_ritardo_jobcard`, scrive le date). Parametri: `job_card_name`, `nuova_data_fine`
@@ -1256,6 +1256,26 @@ l'invio effettivo, quindi una data scritta all'ordine non è affidabile. Decisio
 - Da verificare con Simone: selezione del Dipendente nei time log Job Card senza ruoli HR (se serve,
   sola lettura Employee)
 
+### Tempi fasi esterne e buffer (02/10/2026)
+- Nel ciclo di Simone: **Attività/set** = pezzi per un set da 10 liner, **C/T** = ore per pezzo,
+  **TT [H]** = Attività/set × C/T = tempo del lotto. Le note delle esterne dicono "LT per set di 10 liner"
+- ⚠️ A sistema le fasi esterne hanno C/T invece di TT → durate ~10x troppo corte. Proposta (in attesa
+  di conferma di Gian): durata esterne = **TT** in ore di calendario (`fixed_time`) su T08 e T09;
+  buffer trasporto **0** di default (Simone: il TT comprende già la spedizione)
+- Da chiedere a Simone: il TT comprende spedizione andata/ritorno? Per i set T09 da **20 liner**
+  (consegne 2-5) il lead time resta uguale o raddoppia (anche fase per fase)? Provvisorio: TT invariato
+- **Terminologia**: non usare "commessa" (progetto "Da Commessa a Prodotto"); il documento è il
+  **Project** (PROJ-0001 = T08-0100, PROJ-0002 = T09-0100), la commessa è il Job
+- **Buffer Project**: resta **sul singolo Project** (scelta di Gian, per avere buffer diversi per
+  ordine), NON nella pagina impostazioni. Dove: Project → Details → sezione **Timeline** (chiusa) →
+  "Buffer Project (giorni)", default 5; accanto "Deadline Interna (con buffer)" e "Fine Produzione Stimata"
+- ✅ Server Script **`Project_Deadline_Interna`** (Before Save su Project): deadline interna =
+  Expected End Date − buffer. Etichetta rinominata da "Buffer Commessa" a "Buffer Project". Verifica:
+  PROJ-0001 13/12/2026, PROJ-0002 25/11/2027 (invariati). Script: `sessione_22/project_buffer_ricalcolo.py`
+- **Pagina unica "Impostazioni MES Remazel"** (da fare, va documentata nel manuale docx): buffer
+  trasporto (default 0), buffer trasporto per fornitore (opzionale), regola 2A, calendario chiusure,
+  capacità reparti
+
 ### Expediting (obiettivo 3)
 Gian prosegue l'expediting (conto lavoro per fase, strada C1) **in un'altra chat**: vedi Priorità 2
 dei task aperti. Chi lavora lì deve registrare l'avanzamento in una sessione propria (23 o successiva).
@@ -1314,7 +1334,6 @@ eventuale correzione → conferma.
 
 **Non bloccanti (si parte senza, restano aperti)**
 - SMTP Microsoft 365 (Connected App su Entra ID per `noreply@remazel.com`)
-- Server Script `Before Save` su Project per ricalcolare `custom_deadline_interna`
 - Matricole reali, Job reali, documenti tecnici (disegni, WPS, criteri di controllo)
 - Policy Quality Inspection oltre la matricola; validazione del template saldature con Simone
 - Riconciliazione postazioni con Simone (mail 22/09: Molatura 6, Qualità 2 + Flussaggio 1)
