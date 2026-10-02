@@ -13,7 +13,7 @@ cosa si è capito prima di agire. Non ripetere passi già confermati come esegui
   Indicare sempre **dove** va eseguito il codice: bash come `frappe-user`, oppure
   `bench --site site1.local console`
 - Equipment: T08-0100 (Job 24-19006, pilota a regime) · T09-0100 (Job 26-19008, in importazione)
-- Go-live target: 30/09/2026
+- Go-live target: ~~30/09/2026~~ slittato → ripianificato per il 02/10/2026
 
 ## Regole operative (sempre valide)
 - Italiano, diretto e conciso, senza preamboli

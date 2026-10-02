@@ -4,10 +4,11 @@
 
 Questo repository (`gianfranco-angelini/AI-Project`) è stato trovato **vuoto** (nessun
 commit) all'avvio della prima sessione. `12_Memorie/CONTESTO_PROGRESSIVO_ERPNext.md`
-è stato successivamente allineato al file consolidato del Project Cowork "Ciclo
-produzione Remazel Combustion" (versione più recente: Sessione 18, 27/09/2026),
-fornito da Gian. Quel file resta la fonte di verità del contesto progressivo;
-questo repo ne tiene una copia sincronizzata a fine sessione.
+è la copia nel repo della memoria di progetto. In sessione 22 (02/10/2026) sono state
+riconciliate la versione del Project Cowork "Ciclo produzione Remazel Combustion" e quella
+aggiornata da Claude Code, con numerazione unica e cronologica delle sessioni.
+Copia principale: `12_Memorie` in OneDrive, allineata al Project Cowork; questo repo ne
+tiene una copia sincronizzata a fine sessione.
 
 ## Progetto
 
