@@ -1244,6 +1244,16 @@ l'invio effettivo, quindi una data scritta all'ordine non è affidabile. Decisio
   fornitore finale (= una fase) o due ordini (= due fasi consecutive, il Completa della prima avvia
   la seconda, QC spostato dopo)
 
+### Expediting a eventi — implementato ✅ (02/10/2026, `sessione_22/expediting_eventi.py`)
+- Nuovo `custom_data_promessa` ("Data promessa fornitore", facoltativa, allow_on_submit)
+- `custom_data_uscita` → "Uscita (da Inizia)" e `custom_rientro_effettivo` → "Rientro (da Completa)",
+  **sola lettura**, calcolati dai Time Log (primo from_time / ultimo to_time a quantità completata o submit)
+- Rientro previsto = data promessa → uscita + durata pianificata → fine pianificata
+- Stato: Da inviare → Presso fornitore (Inizia) → Rientrato (Completa/submit)
+- Sezione chiusa con `custom_sb_fine_conto_lavoro`; 898 JC esterne riallineate ("Da inviare");
+  ripulita la prova su **PO-JOB05173** (non PO-JOB05464)
+- Da fare: prova reale da browser (Inizia/Completa), poi cruscotto expediting
+
 ### Risposta di Simone del 02/10 (matricole, calendario, avanzamento)
 - **Matricole: TBD** → decisione di Gian: **matricola solo sul prodotto finito (A0001)**, assegnata
   **solo alla chiusura del WO del liner**, numerazione **provvisoria** dalla serie
