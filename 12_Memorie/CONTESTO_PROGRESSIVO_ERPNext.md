@@ -1136,7 +1136,21 @@ template su Item T09; domande del 07/09 (RX 10.800 min, P1600 due WO).
     Backup `config/supervisor.conf.bak-20261002`. Tutti RUNNING, ping 200
   - ⚠️ Trappola: `bench set-config` senza `-p` salva i numeri come stringa → `bench setup
     supervisor` va in TypeError
-  - Bench CLI 5.29.1 (disponibile 5.31.0): aggiornamento rimandato con ERPNext
+  - Bench CLI 5.29.1 (disponibile 5.31.0): non aggiornato
+- **Aggiornamento ERPNext eseguito** (stesso giorno, con snapshot VMware `pre-update-erpnext-02102026`
+  + backup): **ERPNext 16.21.1 → 16.37.0, Frappe 16.18.3 → 16.36.1, HRMS 16.7.1 → 16.20.1**.
+  `bench update` in tmux, log `/home/frappe-user/script_progetto/bench_update_20261002.log`.
+  Migrate e build completati (assets 02/10 13:37); il riavvio finale di bench è fallito perché
+  `sudo supervisorctl` chiede la password → riavvio a mano `sudo supervisorctl restart all`, 9/9
+  RUNNING, ping 200. Verifica post: 10 Server Script attivi, 4 Client Script abilitati, 4 Custom
+  Field Job Card presenti; 1 Error Log alle 13:36 (`FORMULA_TRIGGER_CHARS`, codice misto durante
+  l'update), import OK dopo il riavvio, 0 errori dopo le 13:38
+  - ⚠️ Trappola: `bench update` termina con `CalledProcessError: sudo supervisorctl status` se sudo
+    richiede password — non è un fallimento dell'update, basta riavviare a mano
+  - Pulizia: `apps/frappe/completa_wo.py` (script di TEST di luglio che chiude tutti i WO T08 con
+    time log fittizi di HR-EMP-00001 — **NON rilanciare**) spostato in `/home/frappe-user/script_progetto/`
+  - Da fare: test funzionali nel browser (colonna Consegna set, Simula Ritardo, Gantt WO, Workspace,
+    report Carico Reparti); eliminare lo snapshot VMware dopo qualche giorno
 
 ### Expediting (obiettivo 3)
 Gian prosegue l'expediting (conto lavoro per fase, strada C1) **in un'altra chat**: vedi Priorità 2
