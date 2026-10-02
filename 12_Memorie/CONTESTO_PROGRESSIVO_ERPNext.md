@@ -1273,6 +1273,9 @@ l'invio effettivo, quindi una data scritta all'ordine non è affidabile. Decisio
 - ⚠️ I 58 WO T08 e le 130 Job Card esterne esistenti **mantengono i tempi vecchi**: riallineamento da
   decidere (ripianifica la T08 in corso). I WO T09 (da creare) prendono già i nuovi tempi
 - Buffer trasporto **0** di default (Simone: il TT comprende già la spedizione)
+- 🅿️ **Decisione di Gian (02/10)**: la **T08 è parcheggiata** (WO e Job Card esistenti non si
+  riallineano per ora); ci si concentra sulla **T09**. La **base resta la T08**: codici, BOM e fasi
+  T08 condivisi (aggiornati con il TT) sono la base dati comune
 - Da chiedere a Simone: il TT comprende spedizione andata/ritorno? Per i set T09 da **20 liner**
   (consegne 2-5) il lead time resta uguale o raddoppia (anche fase per fase)? Provvisorio: TT invariato
 - **Terminologia**: non usare "commessa" (progetto "Da Commessa a Prodotto"); il documento è il
