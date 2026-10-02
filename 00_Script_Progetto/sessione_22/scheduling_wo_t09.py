@@ -72,7 +72,7 @@ def indietro(fine, minuti, info):
         return fine - datetime.timedelta(minutes=minuti)
     giorni = int(math.ceil(minuti / info["minuti"]))
     d = fine.date()
-    if fine.time() < info["ora_inizio"]:
+    if fine.time() <= info["ora_inizio"]:
         d = d - datetime.timedelta(days=1)
     contati = 0
     while True:
