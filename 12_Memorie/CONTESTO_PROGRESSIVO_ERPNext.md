@@ -1149,8 +1149,9 @@ template su Item T09; domande del 07/09 (RX 10.800 min, P1600 due WO).
     richiede password — non è un fallimento dell'update, basta riavviare a mano
   - Pulizia: `apps/frappe/completa_wo.py` (script di TEST di luglio che chiude tutti i WO T08 con
     time log fittizi di HR-EMP-00001 — **NON rilanciare**) spostato in `/home/frappe-user/script_progetto/`
-  - Da fare: test funzionali nel browser (colonna Consegna set, Simula Ritardo, Gantt WO, Workspace,
-    report Carico Reparti); eliminare lo snapshot VMware dopo qualche giorno
+  - ✅ Test funzionali nel browser confermati da Gian (scrivania, colonna Consegna set, Simula
+    Ritardo, Gantt WO, Workspace + report Carico Reparti). Da fare: eliminare lo snapshot VMware
+    dopo qualche giorno
 
 ### Expediting (obiettivo 3)
 Gian prosegue l'expediting (conto lavoro per fase, strada C1) **in un'altra chat**: vedi Priorità 2
