@@ -1101,9 +1101,14 @@ Script `/home/frappe-user/pp_t09.py` (impostazioni copiate da MFG-PP-2026-00001)
 **Work Order NON ancora creati.** Prima di crearli, decisioni aperte:
 1. Conto lavoro C1 (chat expediting): modifica le BOM Operation (`is_subcontracted`)? Va fatto prima
    dei WO, che copiano le fasi alla creazione — domanda girata all'altra chat
-2. Set con inizio a ritroso già nel passato (commessa in produzione da maggio): proposta partire da
-   oggi, segnalare il ritardo, poi allineare l'avanzamento reale
-3. Fine produzione per set: alla consegna esatta (come T08) o consegna − 5 gg di buffer
+2. ✅ **Deciso (2A)**: se l'inizio calcolato a ritroso cade nel passato, il WO parte dal primo giorno
+   utile e viene segnalato in ritardo rispetto alla consegna del set
+3. ✅ **Deciso (3B)**: fine produzione di ogni set = **consegna − buffer 5 gg** (deadline interna
+   per set), non la consegna esatta come T08
+   + collegato: chiedere a Simone lo stato reale dei set 1-2 (fasi/semilavorati già fatti) per
+   l'allineamento dell'avanzamento dopo la creazione dei WO
+   + nuovo prerequisito (expediting fase 1): **fornitore strutturato sulle BOM Operation** prima del
+   submit dei WO T09, copiato sulla Job Card alla creazione
 4. Matricole liner (A0001/A1000/A2000/A3000 a seriale): mail a Simone preparata (matricole reali o
    serie provvisoria `T09-0100-A0001-.####`) + calendario chiusure aziendali 2026-2027
 Sequenza poi: WO in bozza → scheduling all'indietro sui WO in bozza (script da riscrivere) → submit
