@@ -18,3 +18,4 @@ Gli script con `globals().get(...)` vanno lanciati passando le variabili:
 Gli altri hanno `SCRIVI = False` in testa: cambiare a `True` per scrivere.
 | 9 | `project_buffer_ricalcolo.py` | Server Script Project_Deadline_Interna (Before Save) + etichetta "Buffer Project" | Eseguito |
 | 10 | `verifica_tempi_esterne.py` + `dati_tt_esterne_t09.json` | Sola lettura: fasi esterne a sistema vs TT del ciclo T09 (129 fasi) | Da eseguire |
+| 11 | `tempi_esterne_tt.py` + `dati_tt_minuti_finale.json` | Durata fasi esterne = TT (T09 22/09 prevale, poi T08 v5), esclusi P4000/P5000. Backup valori in `backup_sessione22/` | Da eseguire |
