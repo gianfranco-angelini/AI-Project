@@ -1217,7 +1217,14 @@ l'invio effettivo, quindi una data scritta all'ordine non è affidabile. Decisio
   la seconda, QC spostato dopo)
 
 ### Risposta di Simone del 02/10 (matricole, calendario, avanzamento)
-- **Matricole: TBD** → si procede con la serie provvisoria `T09-0100-<articolo>-.####`
+- **Matricole: TBD** → decisione di Gian: **matricola solo sul prodotto finito (A0001)**, assegnata
+  **solo alla chiusura del WO del liner**, numerazione **provvisoria** dalla serie
+  (`T08-0100-A0001-.####`, `T09-0100-A0001-.####`). Eseguito: **A1000/A2000/A3000 di T08 e T09
+  senza matricola** (nessun movimento di magazzino, modifica consentita); Custom Field
+  **`Serial No.custom_matricola_reale`** ("Matricola reale", in list view, filtro, indicizzato) per
+  la matricola definitiva senza rinominare il documento. Restano le 58 matricole segnaposto T08-A0001.
+  Nota: nessun Item ha `quality_inspection_template` collegato (template saldature per matricola
+  esistente ma non agganciato ad A0001 — da fare quando validato con Simone)
 - **Chiusure aziendali** (date approssimative): 24/12/2026–07/01/2027 · 09/08/2027–20/08/2027 ·
   24/12/2027–07/01/2028 · 07/08/2028–18/08/2028 · 25/12/2028–07/01/2029 (nella mail scritto
   "07/101/2029", refuso)
