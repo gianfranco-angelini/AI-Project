@@ -1105,8 +1105,7 @@ Script `/home/frappe-user/pp_t09.py` (impostazioni copiate da MFG-PP-2026-00001)
    utile e viene segnalato in ritardo rispetto alla consegna del set
 3. ✅ **Deciso (3B)**: fine produzione di ogni set = **consegna − buffer 5 gg** (deadline interna
    per set), non la consegna esatta come T08
-   + collegato: chiedere a Simone lo stato reale dei set 1-2 (fasi/semilavorati già fatti) per
-   l'allineamento dell'avanzamento dopo la creazione dei WO
+   + ✅ stato reale dei set 1-2: **lo smarca Simone** stesso quando tutto sarà operativo (risposta 02/10)
    + nuovo prerequisito (expediting fase 1): **fornitore strutturato sulle BOM Operation** prima del
    submit dei WO T09, copiato sulla Job Card alla creazione
 4. ✅ Matricole: TBD da Simone → serie provvisoria; chiusure aziendali ricevute (da caricare nella

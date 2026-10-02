@@ -20,9 +20,7 @@ ho allineato a sistema i tempi delle lavorazioni esterne al **TT** del ciclo (te
 
 6. **Chiusure dei fornitori** – oggi le lavorazioni esterne contano su giorni di calendario, senza chiusure (es. agosto). Vuoi che ne tenga conto?
 
-7. **Stato reale set 1 e 2** – per allineare l'avanzamento dopo la creazione dei Work Order mi servirebbe sapere quali fasi/semilavorati sono già stati eseguiti.
-
-8. **Microfuso** – resto in attesa del tuo riscontro: un ordine unico (fuso + lavorazione) o due ordini distinti?
+7. **Microfuso** – resto in attesa del tuo riscontro: un ordine unico (fuso + lavorazione) o due ordini distinti?
 
 Grazie,
 Gianfranco
