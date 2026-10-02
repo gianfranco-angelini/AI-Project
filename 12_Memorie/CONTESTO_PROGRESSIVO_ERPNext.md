@@ -1229,6 +1229,11 @@ l'invio effettivo, quindi una data scritta all'ordine non è affidabile. Decisio
   24/12/2027–07/01/2028 · 07/08/2028–18/08/2028 · 25/12/2028–07/01/2029 (nella mail scritto
   "07/101/2029", refuso)
 - **Stato avanzamento set: lo smarcherà Simone** stesso quando tutto sarà operativo
+- ✅ **Holiday List "Calendario Remazel 2026-2029"** creata (01/01/2026–31/12/2029, 493 giorni):
+  405 sabati/domeniche, 44 festività nazionali (11/anno incl. Pasquetta e 15/8 = patrono Chiuduno),
+  44 giorni feriali di chiusura aziendale. Assegnata ai 5 reparti interni e come default azienda;
+  Lavorazione Esterna senza calendario (24h). La vecchia "Festivi Italia 2026-2027" resta (rollback).
+  Vale per le pianificazioni future (WO T09); Job Card T08 già pianificate invariate
 
 ### Expediting (obiettivo 3)
 Gian prosegue l'expediting (conto lavoro per fase, strada C1) **in un'altra chat**: vedi Priorità 2
