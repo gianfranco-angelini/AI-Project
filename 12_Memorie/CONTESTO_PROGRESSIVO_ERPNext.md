@@ -1107,7 +1107,13 @@ avviati prima di oggi, inizio necessario 25/08/2026), **set 2 +41 gg** (10 WO), 
 Ritardo set 1-2 solo indicativo: sono in produzione da maggio, Simone smarcherà l'avanzamento → poi
 rilanciare lo scheduling. Residuo 1-4 gg da arrotondamenti (fasi 24h vs giornata), entro il buffer.
 Calendari: interni 540 min/g 07-17 con Calendario Remazel; Lavorazione Esterna 24h.
-Prossimo: submit set per set (prima un WO di prova), esclusi P4000/P5000.
+✅ **Set 1 sottomesso** (56 WO, P4000/P5000 in bozza): liner MFG-WO-2026-01210 pianificato da ERPNext
+10/03 → **26/03/2027** (+28 gg sulla consegna 26/02). Job Card esterne con fornitore e stato "Da inviare".
+- ⚠️ Fix: `custom_stato_cl` (Select) aveva "Da inviare" come prima opzione → ERPNext lo usava come default
+  anche sulle Job Card interne. Opzioni ora `\nDa inviare\nPresso fornitore\nRientrato`, interne ripulite.
+  **Lezione**: `frappe.new_doc` tiene in memoria il modello del documento nuovo **nel processo**; dopo aver
+  cambiato un campo, `clear_cache` non basta in console → **chiudere e riaprire la console**
+Prossimo: submit set 2-6.
 
 Decisioni prese prima della creazione:
 1. Conto lavoro C1 (chat expediting): modifica le BOM Operation (`is_subcontracted`)? Va fatto prima
