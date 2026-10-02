@@ -1098,7 +1098,12 @@ Script `/home/frappe-user/pp_t09.py` (impostazioni copiate da MFG-PP-2026-00001)
 | 5 | 29/10/2027 | 20 | MFG-PP-2026-00006 |
 | 6 | 30/11/2027 | 10 | MFG-PP-2026-00007 |
 
-**Work Order NON ancora creati.** Prima di crearli, decisioni aperte:
+✅ **348 Work Order T09 creati in bozza** (02/10, `make_work_order()` dai 6 PP, 58 per set): tutti su
+PROJ-0002, data consegna del set compilata anche sui sub-assembly (Server Script WorkOrder_Consegna_Set).
+WO P4000/P5000 (a scorta) creati ma da non sottomettere finché Simone non risponde. Prossimo: scheduling
+`sessione_22/scheduling_wo_t09.py` → submit set per set.
+
+Decisioni prese prima della creazione:
 1. Conto lavoro C1 (chat expediting): modifica le BOM Operation (`is_subcontracted`)? Va fatto prima
    dei WO, che copiano le fasi alla creazione — domanda girata all'altra chat
 2. ✅ **Deciso (2A)**: se l'inizio calcolato a ritroso cade nel passato, il WO parte dal primo giorno
