@@ -1060,6 +1060,21 @@ sul Purchase Order di conto lavoro). Eseguito:
   T09-A0001-20QC 1560 min = 26 h dal file). I WO T08 esistenti non cambiano (copia propria)
 - **Workstation "Lavorazione Esterna": `production_capacity` 1 → 50** (fornitori in parallelo)
 
+### Identificazione Job Card per set di consegna (opzione B: tutti e 6 i set)
+Decisione di Gian: pianificare **tutti e 6 i set** T09, **un Production Plan per set**
+(`combine_sub_items = 0` come T08). Per distinguere Job Card identiche di set diversi:
+- Server Script **`WorkOrder_Consegna_Set`** (DocType Event, Work Order, Before Insert): se manca,
+  `expected_delivery_date` = `delivery_date` della riga Sales Order del WO
+- Custom Field su Job Card: **`custom_consegna_set`** (Date, "Consegna set", fetch
+  `work_order.expected_delivery_date`, in list view + filtro) e **`custom_production_plan`** (Link,
+  fetch `work_order.production_plan`, filtro)
+- Riallineati T08: 57 WO semilavorati con consegna 18/12/2026; 557 Job Card con i due campi
+- ✅ **Discrepanza Job Card chiusa: a sistema sono 557** (581 era il conteggio del 01/09)
+- Impostazioni PP T08 da replicare (MFG-PP-2026-00001): get_items_from Sales Order, for_warehouse e
+  sub_assembly_warehouse `Sub-Assembly & Parts WH - Rema`, include_subcontracted_items 1,
+  include_non_stock_items 1, skip_available_sub_assembly_item 1, combine_items 0,
+  combine_sub_items 0, ignore_existing_ordered_qty 1, include_safety_stock 0
+
 ### Expediting (obiettivo 3)
 Gian prosegue l'expediting (conto lavoro per fase, strada C1) **in un'altra chat**: vedi Priorità 2
 dei task aperti. Chi lavora lì deve registrare l'avanzamento in una sessione propria (23 o successiva).
