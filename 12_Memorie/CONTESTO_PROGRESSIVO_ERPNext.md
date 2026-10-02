@@ -954,6 +954,61 @@ Esistevano due versioni divergenti di questo file: quella del Project Cowork (fi
   dedicata interamente a questo
 - Perimetro (proposta, da confermare): **T08-0100** come primo Equipment in esercizio. T09-0100
   resta in importazione e non blocca la partenza
+- **Decisione di Gian in sessione**: prima del go-live si procede con il **carico di T09-0100**
+
+### T09-0100 — verifica del file del 22/09 e codifica definitiva T08/T09
+File: `T09-0100 Ciclo e fasi_26-19008.xlsx` (2.013.881 byte, MD5 `2cc058e6589cf20beb2c6dfd72630b36`),
+fogli "Ciclo e fasi" (58 righe articolo, 556 operazioni, 35 righe materiale) e "Tabelle". **Non era
+presente in OneDrive**: da salvare a cura di Gian in `01_Documentazione/Dati/`. I fogli "Fasi
+critiche"/"Matricole" non esistono più → punto chiuso.
+
+Verifiche a sistema (console, sola lettura):
+- T09 a sistema: nessun Item, BOM o Project. T08: 61 Item, 61 BOM submitted/attive/default, 571 BOM
+  Operation sulle BOM default (non 613 come riportato in passato)
+- ⚠️ `SAL-ORD-2026-00001.po_no` è **vuoto**: il segnaposto `99-99999` non è mai stato scritto
+- Schema BOM Operation T08: `operation` = nome reparto (6 Operation in tutto, una per Workstation
+  Type); il codice fase sta in testa alla `description` (`T08-0100-P6000-10LT — Taglio + Calandratura
+  (SOMECAR SRL)`); fasi esterne su Workstation "Lavorazione Esterna"; `time_in_mins` = C/T × 60
+- Materiali del file: tutti i 14 codici `001-00xx-Cxxxx` esistono. Fornitori: tutti esistono tranne
+  `ARTIL` (= `A.R.T.I.L. SNC`)
+- Script di confronto `/home/frappe-user/confronto_t09_t08.py`: ogni articolo del file confrontato con
+  la controparte T08 su sequenza codici fase, materiale, componenti per unità (non confronta tempi,
+  descrizioni, fornitori)
+
+**Regola di codifica definitiva** (applicata dal basso verso l'alto):
+1. Articolo T09 fisicamente identico a un T08 (stesse fasi, stesso materiale, stessi componenti) →
+   **codice T08** e BOM T08 esistente, nessun import
+2. Diverso anche in un solo punto → `T09-0100-xxx`, con **tutte** le fasi a prefisso T09
+3. Un assieme con anche un solo componente T09 diventa T09
+4. Le differenze di sola numerazione dei codici fase (QC fuori sequenza o duplicati) non contano: in
+   ERPNext la numerazione è in sequenza dalla sessione 15
+
+**Esito**:
+| | Articoli | In ERPNext |
+|---|---|---|
+| **Nuovi `T09-0100-`** (10) | P2114 (nuovo), P3101, P3103, P3104 (materiale AISI 304L invece di Hastelloy-X), P2100 (contiene P2114 ×6), P3100 (contiene P3101/3103/3104), A1000 (ciclo diverso, senza P7000 ×3), A2000, A3000, A0001 (per cascata) | Item + BOM da creare |
+| **T09 nel file ma identici a T08** (11) | P1100, P1103, P1110, P1120, P1800, P2105, P2106, P2300, P2302, P3200, P6000 | codice `T08-0100-` |
+| **`T08-0200` nel file** (4) | P3300, P3203, P3301, P3302 — identici a `T08-0100-`: **refuso** | codice `T08-0100-` |
+| **Già T08 nel file** (32) | il resto | BOM T08 esistenti |
+
+Correzioni al file di Simone da applicare nelle BOM nuove: P2114 fase `T08-…-10LA` → `T09-0100-P2114-10LA`;
+P3101 fasi a prefisso T09; P3100 seconda `10ML` → `20ML`; A2000 seconda `20VT` → `30VT`.
+La conclusione della sessione 21 su P6000 (articolo T08 riusato) è **confermata**.
+
+**Buco nella BOM T08 trovato**: `T08-0100-P2301` non ha la fase **10VX** (Valutazione RX W30) dopo
+`10RX`; il gemello P2307 ce l'ha e il file di Simone la riporta. Correzione proposta: nuova
+`BOM-T08-0100-P2301-002` con 10VX (Controllo Qualità, 1 min), submit e default. I WO T08 già In Process
+restano sulla -001.
+
+**Mail a Simone preparata** (invio a cura di Gian) con 5 punti da confermare: codice e quantità del
+materiale AISI 304L (P3101/P3103 sp. 1,6 — P3104 sp. 3,18), quantità del materiale di P2114, aggiunta
+10VX su P2301, A1000 senza P7000, reparto per le 3 marcature `*CONFERMARE GRUPPO*` (stesso reparto
+di T08). Proposta di partire con codici provvisori (`PLACEHOLDER-304L-1.6`, `PLACEHOLDER-304L-3.18`)
+se i dati non arrivano. ⚠️ Nella bozza, al punto 3, "gemello P2301" va corretto in **P2307**.
+
+### Expediting (obiettivo 3)
+Gian prosegue l'expediting (conto lavoro per fase, strada C1) **in un'altra chat**: vedi Priorità 2
+dei task aperti. Chi lavora lì deve registrare l'avanzamento in una sessione propria (23 o successiva).
 
 ---
 
@@ -1015,14 +1070,14 @@ eventuale correzione → conferma.
 - Riconciliazione postazioni con Simone (mail 22/09: Molatura 6, Qualità 2 + Flussaggio 1)
 
 ### Priorità 1 — T09-0100: chiudere l'import
-1. Script di verifica P3101/P2114 contro `tabItem` (sessione 21)
-2. `*CONFERMARE GRUPPO*` (A0001-40MT, A1000-10LA, A1000-10MT) da far dichiarare definitive a Simone
-3. Duplicazioni ereditate da T08 (A2000-20VT, P2201-10RX) e proprie di T09 (P1100-10QC, P3100-10ML)
-4. Fogli "Fasi critiche"/"Matricole" da riverificare sul file del 22/09
-5. Import: Item + BOM + BOM Operation, Project dedicato, Sales Order `po_no = 99-99998`, Work Order
-   propri anche per i componenti condivisi, 6 date di consegna per lo scheduling
+1. Inviare la mail a Simone (sessione 22) e raccoglierne le risposte
+2. Decisioni di Gian: BOM -002 di T08-0100-P2301 con 10VX; codici provvisori per AISI 304L
+3. Script di import in **modalità prova** (stampa senza scrivere), poi in scrittura: 10 Item
+   T09-0100 (+ eventuali materiali provvisori), 10 BOM dal basso verso l'alto con submit, Project
+   T09-0100, Sales Order con `po_no = 99-99998`, Production Plan → Work Order, 6 date di consegna
+4. Scrivere `po_no = 99-99999` su `SAL-ORD-2026-00001` (oggi vuoto)
 
-### Priorità 2 — Obiettivo 3: pilota conto lavoro (C1)
+### Priorità 2 — Obiettivo 3: pilota conto lavoro (C1) — in corso in un'altra chat
 - Eseguire `pilota_1_lettura.py` (output mai ricevuto)
 - Prerequisiti: magazzino presso fornitore; normalizzare "A.M.C. CONTROL" → "A.M.C. CONTROL SRL";
   verificare "H.T. SRL" vs "H.T.S. SRL"; fornitore sulla fase che ne è priva
@@ -1086,5 +1141,5 @@ eventuale correzione → conferma.
 
 ---
 
-*Ultimo aggiornamento: **Sessione 22** — 2 ottobre 2026 (riconciliazione delle versioni Cowork e Claude Code, rinumerazione cronologica, go-live slittato e ripianificato per il 02/10)*
+*Ultimo aggiornamento: **Sessione 22** — 2 ottobre 2026 (riconciliazione delle versioni Cowork e Claude Code, rinumerazione cronologica, go-live slittato; verifica file T09 del 22/09, codifica definitiva T08/T09, buco 10VX su T08-0100-P2301, mail a Simone)*
 *⚠️ A fine ogni sessione: aggiornare questo file in `12_Memorie` e nel Project Cowork, aggiungendo la sezione della sessione.*
