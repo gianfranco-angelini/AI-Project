@@ -1259,9 +1259,20 @@ l'invio effettivo, quindi una data scritta all'ordine non è affidabile. Decisio
 ### Tempi fasi esterne e buffer (02/10/2026)
 - Nel ciclo di Simone: **Attività/set** = pezzi per un set da 10 liner, **C/T** = ore per pezzo,
   **TT [H]** = Attività/set × C/T = tempo del lotto. Le note delle esterne dicono "LT per set di 10 liner"
-- ⚠️ A sistema le fasi esterne hanno C/T invece di TT → durate ~10x troppo corte. Proposta (in attesa
-  di conferma di Gian): durata esterne = **TT** in ore di calendario (`fixed_time`) su T08 e T09;
-  buffer trasporto **0** di default (Simone: il TT comprende già la spedizione)
+- ✅ **Durata fasi esterne = TT** (eseguito 02/10): 152 BOM Operation aggiornate su 75 BOM default
+  (11 già corrette, 165 fasi esterne totali). Ore esterne totali 2.759 h → **21.380 h**. Fonti: ciclo T09
+  del 22/09 (prevale) + ciclo T08 **v5** = allegato "T08-0100 Ciclo e fasi (5).xlsx" della mail di Simone
+  del 28/08 ("R: componenti con serial number disabilitato"), colonna "Tempo/set". RX 27 → 30 h;
+  `P1102-10TT` 100 h (T09) invece di 120 (v5); anomalie del file tenute come scritte (A1000-10LA 100 h,
+  P3200-10LA 250 h). **Esclusi** `P4000-10LA` e `P5000-10LA` (articoli a scorta, ordini 1000-1500 pz).
+  Backup valori: `/home/frappe-user/backup_sessione22/bom_operation_esterne_prima_tt.json`.
+  Script `sessione_22/tempi_esterne_tt.py`
+- Postazione Lavorazione Esterna: 24 h, capacità 50, **nessuna Holiday List** → ERPNext non applica
+  festività (workstation.py: controllo solo se la postazione ha una Holiday List propria) → il TT conta in
+  giorni di calendario 7/7. Non considera chiusure fornitori (agosto): eventuale "Calendario Fornitori" dopo
+- ⚠️ I 58 WO T08 e le 130 Job Card esterne esistenti **mantengono i tempi vecchi**: riallineamento da
+  decidere (ripianifica la T08 in corso). I WO T09 (da creare) prendono già i nuovi tempi
+- Buffer trasporto **0** di default (Simone: il TT comprende già la spedizione)
 - Da chiedere a Simone: il TT comprende spedizione andata/ritorno? Per i set T09 da **20 liner**
   (consegne 2-5) il lead time resta uguale o raddoppia (anche fase per fase)? Provvisorio: TT invariato
 - **Terminologia**: non usare "commessa" (progetto "Da Commessa a Prodotto"); il documento è il
