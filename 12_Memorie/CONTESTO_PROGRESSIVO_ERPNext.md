@@ -1006,6 +1006,31 @@ materiale AISI 304L (P3101/P3103 sp. 1,6 — P3104 sp. 3,18), quantità del mate
 di T08). Proposta di partire con codici provvisori (`PLACEHOLDER-304L-1.6`, `PLACEHOLDER-304L-3.18`)
 se i dati non arrivano. ⚠️ Nella bozza, al punto 3, "gemello P2301" va corretto in **P2307**.
 
+### Risposta di Simone (02/10, Cc Picco, Scaglia, Brunasso, Verzeroli, Lasorella) e import eseguito
+Risposte: **T08-0200 sono codici corretti**, non refusi (nel file hanno documentazione qualità
+propria `CQ-T08-0200-xxx`) → creati come Item propri; rinumerazione fasi ok; materiali senza codice
+= materiale del fornitore → codice fittizio come le fusioni (**F000** "Grezzo di fusione"); qty
+materiali sempre 1; **P2301 10VX va inserita** (nel suo Excel T08 c'è: persa nel nostro caricamento);
+**P7000 non esiste in T09**; marcature `*CONFERMARE GRUPPO*` nello stesso reparto di T08. Non ha
+commentato gli 11 articoli passati a codice T08 → accettati.
+
+**Import eseguito** (script `/home/frappe-user/import_t09_scrivi.py`, prova `import_t09.py`, backup
+prima della scrittura), 0 errori:
+- 14 Item + 14 BOM submitted/default: T09-0100-P2114, -P3101, -P3103, -P3104, T08-0200-P3203,
+  -P3301, -P3302, -P3300, T09-0100-P2100, -P3100, -A1000, -A2000, -A3000, -A0001
+- Item copiati dalla controparte T08 (P2114 da P2113), senza barcode; seriale attivo su A0001,
+  A1000, A2000, A3000 con serie `T09-0100-xxxx-.####`
+- BOM copiate dalla controparte T08 (qty BOM 1), componenti con codici finali, materiali qty 1,
+  fasi dal file del 22/09 (codice ricostruito sul codice articolo finale), reparto copiato dalla
+  fase T08 con lo stesso codice (3 fasi per regola), tempo = C/T × 60 (min 1)
+- `BOM-T08-0100-P2301-002` con 10VX in posizione 6 (Controllo Qualità, 1 min), default. I WO T08 in
+  corso restano sulla -001
+- Note: A0001-20QC "Data Book" 1560 min/pezzo e RX 1800 min/pezzo sono attività per lotto modellate
+  per pezzo, come già in T08 (RX 1620): da rivedere in blocco su T08+T09 se il carico CQ risulta
+  falsato. T08-0200-P3300-30SA "W??": numero saldatura mancante già nel file di Simone
+- Verifica fasi perse nel caricamento T08: coperti 49 articoli T08 su 61 (unica mancanza P2301);
+  i 12 articoli T08 non usati da T09 non sono stati verificati contro l'Excel T08 di Simone
+
 ### Expediting (obiettivo 3)
 Gian prosegue l'expediting (conto lavoro per fase, strada C1) **in un'altra chat**: vedi Priorità 2
 dei task aperti. Chi lavora lì deve registrare l'avanzamento in una sessione propria (23 o successiva).
@@ -1070,11 +1095,10 @@ eventuale correzione → conferma.
 - Riconciliazione postazioni con Simone (mail 22/09: Molatura 6, Qualità 2 + Flussaggio 1)
 
 ### Priorità 1 — T09-0100: chiudere l'import
-1. Inviare la mail a Simone (sessione 22) e raccoglierne le risposte
-2. Decisioni di Gian: BOM -002 di T08-0100-P2301 con 10VX; codici provvisori per AISI 304L
-3. Script di import in **modalità prova** (stampa senza scrivere), poi in scrittura: 10 Item
-   T09-0100 (+ eventuali materiali provvisori), 10 BOM dal basso verso l'alto con submit, Project
-   T09-0100, Sales Order con `po_no = 99-99998`, Production Plan → Work Order, 6 date di consegna
+1. ✅ Mail a Simone, risposte ricevute; ✅ Item + BOM T09 caricati; ✅ BOM -002 P2301
+2. Project T09-0100, Sales Order con `po_no = 99-99998` e 6 date di consegna (26/02, 30/04,
+   30/06, 31/08, 29/10, 30/11/2027), Production Plan → Work Order
+3. Verificare i 12 articoli T08 non usati da T09 contro l'Excel T08 di Simone
 4. Scrivere `po_no = 99-99999` su `SAL-ORD-2026-00001` (oggi vuoto)
 
 ### Priorità 2 — Obiettivo 3: pilota conto lavoro (C1) — in corso in un'altra chat
