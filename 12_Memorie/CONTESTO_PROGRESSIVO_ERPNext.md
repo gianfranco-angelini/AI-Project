@@ -1031,6 +1031,22 @@ prima della scrittura), 0 errori:
 - Verifica fasi perse nel caricamento T08: coperti 49 articoli T08 su 61 (unica mancanza P2301);
   i 12 articoli T08 non usati da T09 non sono stati verificati contro l'Excel T08 di Simone
 
+### Project e Sales Order T09-0100 creati
+Commessa **26-19008 = 100 liner**, ordine dell'**11/05/2026** (produzione già in corso: si subentra in
+corsa e si allinea l'avanzamento dopo). Consegne dalla mail di Simone del 22/09 "Informazioni
+mancati ERPNext": 10 liner 26/02/2027 · 20 30/04 · 20 30/06 · 20 31/08 · 20 29/10 · 10 30/11/2027.
+- **PROJ-0002** "T09-0100 ASSY LINER COMPLETE": 11/05/2026 → 30/11/2027, buffer 5, deadline interna
+  25/11/2027, cliente REMAZEL, External
+- **SAL-ORD-2026-00002**: 6 righe `T09-0100-A0001` (BOM-T09-0100-A0001-001), `po_no = 99-99998`,
+  prezzo segnaposto 100 come T08, submitted (To Deliver and Bill), collegato a PROJ-0002
+- `SAL-ORD-2026-00001.po_no = 99-99999` scritto
+- Script `/home/frappe-user/project_so_t09.py`
+- ⚠️ T08 è modellato su **1 pezzo** (SO qty 1, WO top qty 1, 58 WO): ogni riga SO genera un albero di
+  ~57 WO / ~550 Job Card indipendentemente dalla quantità
+- ⚠️ Trappola: `exec(open(...).read())` **non vede le variabili** impostate in console prima
+  (`globals().get(...)` restituisce il default). Passarle esplicitamente:
+  `exec(open(f).read(), {"frappe": frappe, "VAR": valore})`
+
 ### Expediting (obiettivo 3)
 Gian prosegue l'expediting (conto lavoro per fase, strada C1) **in un'altra chat**: vedi Priorità 2
 dei task aperti. Chi lavora lì deve registrare l'avanzamento in una sessione propria (23 o successiva).
@@ -1096,10 +1112,10 @@ eventuale correzione → conferma.
 
 ### Priorità 1 — T09-0100: chiudere l'import
 1. ✅ Mail a Simone, risposte ricevute; ✅ Item + BOM T09 caricati; ✅ BOM -002 P2301
-2. Project T09-0100, Sales Order con `po_no = 99-99998` e 6 date di consegna (26/02, 30/04,
-   30/06, 31/08, 29/10, 30/11/2027), Production Plan → Work Order
+2. ✅ PROJ-0002 + SAL-ORD-2026-00002 (100 liner, 6 consegne); ✅ `po_no` T08. Da fare: Production
+   Plan → Work Order (proposta: un PP per set, ora solo il 1°), poi allineare l'avanzamento reale
 3. Verificare i 12 articoli T08 non usati da T09 contro l'Excel T08 di Simone
-4. Scrivere `po_no = 99-99999` su `SAL-ORD-2026-00001` (oggi vuoto)
+4. ✅ `po_no = 99-99999` su `SAL-ORD-2026-00001`
 
 ### Priorità 2 — Obiettivo 3: pilota conto lavoro (C1) — in corso in un'altra chat
 - Eseguire `pilota_1_lettura.py` (output mai ricevuto)
