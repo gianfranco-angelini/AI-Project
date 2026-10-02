@@ -1075,6 +1075,17 @@ Decisione di Gian: pianificare **tutti e 6 i set** T09, **un Production Plan per
   include_non_stock_items 1, skip_available_sub_assembly_item 1, combine_items 0,
   combine_sub_items 0, ignore_existing_ordered_qty 1, include_safety_stock 0
 
+### Correzioni da mail di Simone del 04/09 (non applicate all'import, recuperate)
+- Materia prima **AISI 304L → codice fittizio `I000`** (non F000): creato Item I000 "Grezzo INOX
+  AISI 304L (fittizio)" (copia di F000); sostituito in BOM-T09-0100-P3101/-P3103/-P3104-001;
+  esplosi ricalcolati a cascata (`update_exploded_items`) su P3100, A3000, A0001 → A0001: F000 9 +
+  I000 3
+- **Data Book T09 = stessi tempi di T08**: T09-0100-A0001-20QC 1560 → **1080 min**
+- Nella stessa mail Simone suggeriva di testare un **SO con più righe a date diverse** (fatto:
+  SAL-ORD-2026-00002)
+- **Scheduling all'indietro di T08**: fatto **una tantum da console il 06/09** (WO creati 01/09,
+  modificati in blocco 06/09 16:48), script non salvato. Va riscritto per T09
+
 ### Expediting (obiettivo 3)
 Gian prosegue l'expediting (conto lavoro per fase, strada C1) **in un'altra chat**: vedi Priorità 2
 dei task aperti. Chi lavora lì deve registrare l'avanzamento in una sessione propria (23 o successiva).
