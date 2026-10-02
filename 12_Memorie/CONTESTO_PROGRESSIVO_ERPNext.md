@@ -1109,8 +1109,8 @@ Script `/home/frappe-user/pp_t09.py` (impostazioni copiate da MFG-PP-2026-00001)
    l'allineamento dell'avanzamento dopo la creazione dei WO
    + nuovo prerequisito (expediting fase 1): **fornitore strutturato sulle BOM Operation** prima del
    submit dei WO T09, copiato sulla Job Card alla creazione
-4. Matricole liner (A0001/A1000/A2000/A3000 a seriale): mail a Simone preparata (matricole reali o
-   serie provvisoria `T09-0100-A0001-.####`) + calendario chiusure aziendali 2026-2027
+4. ✅ Matricole: TBD da Simone → serie provvisoria; chiusure aziendali ricevute (da caricare nella
+   Holiday List); avanzamento set lo smarca Simone
 Sequenza poi: WO in bozza → scheduling all'indietro sui WO in bozza (script da riscrivere) → submit
 (Job Card pianificate con capacity planning) → Start All.
 Da fare dopo: Simula/Applica ritardo devono confrontare con la consegna del set
@@ -1199,6 +1199,29 @@ Script `00_Script_Progetto/sessione_22/jobcard_conto_lavoro.py` (eseguito):
   **BOM-T08-0100-P2301-001** (ancora usata dal WO T08 in corso)
 - Il ritardo ("In ritardo" = rientro previsto < oggi e non rientrato) lo calcolerà il cruscotto
 - Prossimo: cruscotto expediting (report), poi test reale su una Job Card con ordine SAP
+
+### Expediting — modello a EVENTI, non a date (decisione di Gian, 02/10/2026)
+Problema reale: oggi l'expediting è su Excel e non funziona; l'ordine SAP può precedere di **mesi**
+l'invio effettivo, quindi una data scritta all'ordine non è affidabile. Decisione:
+- **Inizia** sulla Job Card esterna = materiale partito verso il fornitore (chi spedisce, data
+  automatica); **Completa** = materiale rientrato (chi riceve, data automatica). Stessi pulsanti
+  nativi usati per le fasi interne
+- A mano solo, facoltativi: **N° ordine SAP** e **data promessa dal fornitore**
+- Calcolati: fornitore (BOM), data necessaria (piano), dove si trova il materiale, giorni fuori,
+  ritardo (oggi > promessa o > necessaria)
+- Da rimuovere/sostituire dalla sezione Conto lavoro: Data uscita e Rientro effettivo (→ eventi
+  Inizia/Completa); scartati: data richiesta, note sollecito, tabella lead time
+- Passaggio diretto fornitore→fornitore: nei cicli **non esistono due fasi esterne consecutive**
+  (verificato: 132 fasi esterne isolate, 0 catene). Caso microfuso da chiarire: ordine unico al
+  fornitore finale (= una fase) o due ordini (= due fasi consecutive, il Completa della prima avvia
+  la seconda, QC spostato dopo)
+
+### Risposta di Simone del 02/10 (matricole, calendario, avanzamento)
+- **Matricole: TBD** → si procede con la serie provvisoria `T09-0100-<articolo>-.####`
+- **Chiusure aziendali** (date approssimative): 24/12/2026–07/01/2027 · 09/08/2027–20/08/2027 ·
+  24/12/2027–07/01/2028 · 07/08/2028–18/08/2028 · 25/12/2028–07/01/2029 (nella mail scritto
+  "07/101/2029", refuso)
+- **Stato avanzamento set: lo smarcherà Simone** stesso quando tutto sarà operativo
 
 ### Expediting (obiettivo 3)
 Gian prosegue l'expediting (conto lavoro per fase, strada C1) **in un'altra chat**: vedi Priorità 2
