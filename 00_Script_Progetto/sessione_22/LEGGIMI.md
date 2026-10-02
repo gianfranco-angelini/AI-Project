@@ -16,3 +16,5 @@ Ordine di esecuzione (tutti in `bench --site site1.local console`, come `frappe-
 Gli script con `globals().get(...)` vanno lanciati passando le variabili:
 `exec(open(f).read(), {"frappe": frappe, "SCRIVI_PP": True})` — `exec` non vede le variabili della console.
 Gli altri hanno `SCRIVI = False` in testa: cambiare a `True` per scrivere.
+| 9 | `project_buffer_ricalcolo.py` | Server Script Project_Deadline_Interna (Before Save) + etichetta "Buffer Project" | Eseguito |
+| 10 | `verifica_tempi_esterne.py` + `dati_tt_esterne_t09.json` | Sola lettura: fasi esterne a sistema vs TT del ciclo T09 (129 fasi) | Da eseguire |

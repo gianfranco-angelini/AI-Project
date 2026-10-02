@@ -1272,6 +1272,10 @@ l'invio effettivo, quindi una data scritta all'ordine non è affidabile. Decisio
 - ✅ Server Script **`Project_Deadline_Interna`** (Before Save su Project): deadline interna =
   Expected End Date − buffer. Etichetta rinominata da "Buffer Commessa" a "Buffer Project". Verifica:
   PROJ-0001 13/12/2026, PROJ-0002 25/11/2027 (invariati). Script: `sessione_22/project_buffer_ricalcolo.py`
+- 🌐 **Lingua (decisione di Gian, 02/10)**: tutto è stato creato in italiano (etichette Custom Field,
+  Server/Client Script, Workspace, report, stati), ma la lingua finale del sistema è l'**inglese**.
+  Traduzione delle etichette italiano → inglese **solo alla fine**, in un unico passaggio; nel frattempo
+  si continua in italiano. Tenere traccia degli oggetti con etichette italiane da convertire
 - **Pagina unica "Impostazioni MES Remazel"** (da fare, va documentata nel manuale docx): buffer
   trasporto (default 0), buffer trasporto per fornitore (opzionale), regola 2A, calendario chiusure,
   capacità reparti
@@ -1367,6 +1371,7 @@ eventuale correzione → conferma.
 - Fase 2: Service Layer (credenziali e utente tecnico da ottenere)
 
 ### Priorità 5 — Dopo il go-live
+- **Traduzione finale in inglese** di tutte le etichette create in italiano (vedi sessione 22)
 - Motore APS di terze parti (obiettivo 1e); cascata ritardi tra WO padre/figlio; vista "coda per postazione"
 - Codifica articoli neutra per le commesse future (T10, T11...), da concordare con Simone
 - Layout 22 postazioni (TO-BE del 9/09)
