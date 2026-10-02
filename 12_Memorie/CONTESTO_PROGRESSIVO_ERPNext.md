@@ -1112,6 +1112,24 @@ Da fare dopo: Simula/Applica ritardo devono confrontare con la consegna del set
 (`custom_consegna_set`) e non con la deadline del Project; Gantt/Workspace per PROJ-0002; QI
 template su Item T09; domande del 07/09 (RX 10.800 min, P1600 due WO).
 
+### Manutenzione server cs-erp01 (02/10/2026, nessun utente collegato)
+- Verifica risorse prima: 2 vCPU, 3,8 GB RAM (1,9 disponibili), disco 27 GB al 53%, DB MariaDB
+  410 MB, 7 processi supervisor RUNNING. Uptime 118 giorni su kernel 6.8.0-124 (riavvio arretrato)
+- Backup prima dell'intervento: `/home/frappe-user/backup_sessione22/` (12:11 e 12:22, 3,3 MB cad.)
+- `apt upgrade`: 54 aggiornati + 26 nuovi, nessun pacchetto ERPNext (MariaDB/nginx/redis/python3
+  invariati); hypervisor **VMware** (open-vm-tools)
+- VM portata a **4 vCPU / 8 GB RAM**; riavvio → kernel **6.8.0-146**, servizi tutti RUNNING
+- Versioni: ERPNext 16.21.1, Frappe 16.18.3, HRMS 16.7.1. Aggiornamento ERPNext **rimandato** a
+  finestra dedicata (controllo "commit indietro" non affidabile: clone shallow, remoto `upstream`)
+- ⚠️ **Certificato HTTPS senza intermedio** (dalla sessione 18): il fullchain conteneva la root
+  DigiCert Global Root G2 al posto dell'intermedio **RapidSSL TLS RSA CA G1** → `curl` falliva
+  (verify 21); i browser lo mascheravano. Corretto: intermedio scaricato da
+  `https://cacerts.digicert.com/RapidSSLTLSRSACAG1.crt.pem`, fullchain = certificato + intermedio,
+  backup `combustionerp.remazel.com.crt.bak-20261002`, nginx ricaricato → **Verify return code 0**.
+  Certificato `*.remazel.com` valido fino al **15/02/2027**: aggiornare
+  `Procedura_Rinnovo_Certificato_SSL_Remazel_B2` (intermedio corretto + verifica con
+  `openssl s_client … | grep "Verify return code"`) → B3
+
 ### Expediting (obiettivo 3)
 Gian prosegue l'expediting (conto lavoro per fase, strada C1) **in un'altra chat**: vedi Priorità 2
 dei task aperti. Chi lavora lì deve registrare l'avanzamento in una sessione propria (23 o successiva).
