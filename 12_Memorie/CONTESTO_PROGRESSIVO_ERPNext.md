@@ -1113,7 +1113,19 @@ Calendari: interni 540 min/g 07-17 con Calendario Remazel; Lavorazione Esterna 2
   anche sulle Job Card interne. Opzioni ora `\nDa inviare\nPresso fornitore\nRientrato`, interne ripulite.
   **Lezione**: `frappe.new_doc` tiene in memoria il modello del documento nuovo **nel processo**; dopo aver
   cambiato un campo, `clear_cache` non basta in console → **chiudere e riaprire la console**
-Prossimo: submit set 2-6.
+✅ **Tutti i 6 set T09 sottomessi** (02/10): **336 WO** submitted, 12 in bozza (P4000/P5000 × 6, a scorta),
+**3.306 Job Card** (768 esterne), 0 errori. Pianificazione ERPNext (capacity planning) dei liner:
+| Set | Liner | Consegna | Fine liner | Scarto |
+|---|---|---|---|---|
+| 1 | MFG-WO-2026-01210 | 26/02/2027 | 26/03/2027 | **+28 gg** |
+| 2 | MFG-WO-2026-01268 | 30/04/2027 | 08/06/2027 | **+39 gg** |
+| 3 | MFG-WO-2026-01326 | 30/06/2027 | 23/06/2027 | −7 gg |
+| 4 | MFG-WO-2026-01384 | 31/08/2027 | 24/08/2027 | −7 gg |
+| 5 | MFG-WO-2026-01442 | 29/10/2027 | 19/10/2027 | −10 gg |
+| 6 | MFG-WO-2026-01500 | 30/11/2027 | 19/11/2027 | −11 gg |
+Ritardo set 1-2 indicativo (in produzione da maggio, avanzamento da smarcare a cura di Simone).
+Nota: `custom_stato_cl` vuoto sulle interne vale `''` (non NULL): nei controlli usare `IFNULL(campo,'') <> ''`.
+Set 2-5 da 20 liner: lead time esterno ancora da confermare (mail a Simone, punto 1).
 
 Decisioni prese prima della creazione:
 1. Conto lavoro C1 (chat expediting): modifica le BOM Operation (`is_subcontracted`)? Va fatto prima
