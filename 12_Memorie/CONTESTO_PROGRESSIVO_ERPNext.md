@@ -1153,6 +1153,14 @@ template su Item T09; domande del 07/09 (RX 10.800 min, P1600 due WO).
     Ritardo, Gantt WO, Workspace + report Carico Reparti). Da fare: eliminare lo snapshot VMware
     dopo qualche giorno
 
+### Expediting — decisione di Gian sull'ordine al fornitore (02/10/2026)
+- **Oggi l'ordine al fornitore lo emette SAP B1.** ERPNext **traccia** uscita/rientro della fase
+  esterna e registra il riferimento all'ordine SAP
+- **In futuro**, quando il sistema sarà affidabile: ordine generato da ERPNext e inviato a SAP B1
+  tramite connettore (Service Layer, porta 50000)
+- Conseguenza: fase 1 dell'expediting **senza Purchase Order ERPNext**, tracciamento sulla Job Card;
+  il disegno deve permettere di passare in seguito al PO nativo ERPNext → SAP senza rifare i dati
+
 ### Expediting (obiettivo 3)
 Gian prosegue l'expediting (conto lavoro per fase, strada C1) **in un'altra chat**: vedi Priorità 2
 dei task aperti. Chi lavora lì deve registrare l'avanzamento in una sessione propria (23 o successiva).
