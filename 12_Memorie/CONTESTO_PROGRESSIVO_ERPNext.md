@@ -1100,8 +1100,14 @@ Script `/home/frappe-user/pp_t09.py` (impostazioni copiate da MFG-PP-2026-00001)
 
 ✅ **348 Work Order T09 creati in bozza** (02/10, `make_work_order()` dai 6 PP, 58 per set): tutti su
 PROJ-0002, data consegna del set compilata anche sui sub-assembly (Server Script WorkOrder_Consegna_Set).
-WO P4000/P5000 (a scorta) creati ma da non sottomettere finché Simone non risponde. Prossimo: scheduling
-`sessione_22/scheduling_wo_t09.py` → submit set per set.
+WO P4000/P5000 (a scorta) creati ma da non sottomettere finché Simone non risponde.
+✅ **Scheduling eseguito** (`sessione_22/scheduling_wo_t09.py`, 348 planned_start_date scritte): indietro
+da consegna − buffer 5, poi avanti con regola 2A. Esito: **set 1 +35 gg** sulla consegna (17 WO andavano
+avviati prima di oggi, inizio necessario 25/08/2026), **set 2 +41 gg** (10 WO), set 3-6 in tempo.
+Ritardo set 1-2 solo indicativo: sono in produzione da maggio, Simone smarcherà l'avanzamento → poi
+rilanciare lo scheduling. Residuo 1-4 gg da arrotondamenti (fasi 24h vs giornata), entro il buffer.
+Calendari: interni 540 min/g 07-17 con Calendario Remazel; Lavorazione Esterna 24h.
+Prossimo: submit set per set (prima un WO di prova), esclusi P4000/P5000.
 
 Decisioni prese prima della creazione:
 1. Conto lavoro C1 (chat expediting): modifica le BOM Operation (`is_subcontracted`)? Va fatto prima
