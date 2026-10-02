@@ -1047,6 +1047,19 @@ mancati ERPNext": 10 liner 26/02/2027 · 20 30/04 · 20 30/06 · 20 31/08 · 20 
   (`globals().get(...)` restituisce il default). Passarle esplicitamente:
   `exec(open(f).read(), {"frappe": frappe, "VAR": valore})`
 
+### Correzione modello tempi per lotto (prerequisito al Production Plan T09)
+Diagnosi: in BOM il tempo fase è **per pezzo** e il WO lo moltiplica per la qty. T08 (qty 1) non lo
+mostrava; con T09 (10-20 liner per set) le fasi esterne (tempi del file = **per lotto**, "LT per set
+di 10 liner") su Workstation "Lavorazione Esterna" a **capacità 1** davano ~210.000 min/pezzo in coda
+→ CapacityError certo già col 1° set. Manufacturing Settings: capacity planning attivo,
+`capacity_planning_for_days = 365`, no overtime, no festivi.
+Decisione: **nessuna Workstation per fornitore** (il fornitore sta in descrizione fase e, con C1,
+sul Purchase Order di conto lavoro). Eseguito:
+- **`fixed_time = 1`** su 214 BOM Operation delle 75 BOM default attive (T08+T09+T08-0200): 165
+  Lavorazione Esterna, 47 MX, 2 Data Book (T08-A0001-20QC 1080 min = 18 h come da Simone 01/09;
+  T09-A0001-20QC 1560 min = 26 h dal file). I WO T08 esistenti non cambiano (copia propria)
+- **Workstation "Lavorazione Esterna": `production_capacity` 1 → 50** (fornitori in parallelo)
+
 ### Expediting (obiettivo 3)
 Gian prosegue l'expediting (conto lavoro per fase, strada C1) **in un'altra chat**: vedi Priorità 2
 dei task aperti. Chi lavora lì deve registrare l'avanzamento in una sessione propria (23 o successiva).
