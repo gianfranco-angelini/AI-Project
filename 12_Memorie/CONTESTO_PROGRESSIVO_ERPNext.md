@@ -1086,6 +1086,32 @@ Decisione di Gian: pianificare **tutti e 6 i set** T09, **un Production Plan per
 - **Scheduling all'indietro di T08**: fatto **una tantum da console il 06/09** (WO creati 01/09,
   modificati in blocco 06/09 16:48), script non salvato. Va riscritto per T09
 
+### Production Plan T09 creati (uno per set)
+Script `/home/frappe-user/pp_t09.py` (impostazioni copiate da MFG-PP-2026-00001), tutti Submitted,
+57 sub-assembly ciascuno (livelli 0:5, 1:8, 2:24, 3:14, 4:4, 5:2):
+| Set | Consegna | Liner | PP |
+|---|---|---|---|
+| 1 | 26/02/2027 | 10 | MFG-PP-2026-00002 |
+| 2 | 30/04/2027 | 20 | MFG-PP-2026-00003 |
+| 3 | 30/06/2027 | 20 | MFG-PP-2026-00004 |
+| 4 | 31/08/2027 | 20 | MFG-PP-2026-00005 |
+| 5 | 29/10/2027 | 20 | MFG-PP-2026-00006 |
+| 6 | 30/11/2027 | 10 | MFG-PP-2026-00007 |
+
+**Work Order NON ancora creati.** Prima di crearli, decisioni aperte:
+1. Conto lavoro C1 (chat expediting): modifica le BOM Operation (`is_subcontracted`)? Va fatto prima
+   dei WO, che copiano le fasi alla creazione — domanda girata all'altra chat
+2. Set con inizio a ritroso già nel passato (commessa in produzione da maggio): proposta partire da
+   oggi, segnalare il ritardo, poi allineare l'avanzamento reale
+3. Fine produzione per set: alla consegna esatta (come T08) o consegna − 5 gg di buffer
+4. Matricole liner (A0001/A1000/A2000/A3000 a seriale): mail a Simone preparata (matricole reali o
+   serie provvisoria `T09-0100-A0001-.####`) + calendario chiusure aziendali 2026-2027
+Sequenza poi: WO in bozza → scheduling all'indietro sui WO in bozza (script da riscrivere) → submit
+(Job Card pianificate con capacity planning) → Start All.
+Da fare dopo: Simula/Applica ritardo devono confrontare con la consegna del set
+(`custom_consegna_set`) e non con la deadline del Project; Gantt/Workspace per PROJ-0002; QI
+template su Item T09; domande del 07/09 (RX 10.800 min, P1600 due WO).
+
 ### Expediting (obiettivo 3)
 Gian prosegue l'expediting (conto lavoro per fase, strada C1) **in un'altra chat**: vedi Priorità 2
 dei task aperti. Chi lavora lì deve registrare l'avanzamento in una sessione propria (23 o successiva).
