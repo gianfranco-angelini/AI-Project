@@ -1261,6 +1261,20 @@ l'invio effettivo, quindi una data scritta all'ordine non è affidabile. Decisio
   Job Card insieme (una spedizione = più pezzi); (3) submit automatico al Complete delle esterne;
   (4) Employee per magazzino/logistica (chi spedisce/riceve) — da chiedere a Simone
 
+### Expediting — integrazione SAP (decisione 03/10/2026)
+- **Scelta B**: il magazzino resta su SAP (in SAP esistono già i magazzini dei fornitori). ERPNext non
+  fa movimenti di stock per il conto lavoro: traccia con un **Ordine conto lavoro** (raggruppa le Job
+  Card esterne; n° ordine SAP, fornitore, data promessa, magazzino SAP fornitore; pulsanti
+  Spedito/Rientrato senza operatore; al Rientrato JC completate e sottomesse in automatico)
+- Start/Complete sulla singola Job Card **scartato** (Gian: per le esterne non c'è operatore)
+- Connettore: **lettura SAP → ERPNext** (trasferimenti verso/da magazzini fornitore = eventi
+  Spedito/Rientrato; giacenze presso fornitore) — una direzione, ripetibile, fallback manuale;
+  **scrittura** solo per gli ordini (futuro) via **Service Layer**, mai SQL diretto
+- Rete: cs-erp01 raggiunge **cs-sql03.remazel.local:1433 (10.101.1.100)** ✅ (03/10)
+- Da fare: utente SQL **sola lettura** sul DB della società SAP; ambiente Python separato `~/sap_conn`
+  (pymssql); credenziali in `~/.sap_ro.json` chmod 600; script `sessione_22/sap_lettura.py`
+  (magazzini per fornitore da OWTR/WTR1, codici articolo movimentati, UDF su OCRD, elenco OWHS)
+
 ### Risposta di Simone del 02/10 (matricole, calendario, avanzamento)
 - **Matricole: TBD** → decisione di Gian: **matricola solo sul prodotto finito (A0001)**, assegnata
   **solo alla chiusura del WO del liner**, numerazione **provvisoria** dalla serie
