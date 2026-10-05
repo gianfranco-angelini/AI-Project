@@ -1391,6 +1391,11 @@ l'invio effettivo, quindi una data scritta all'ordine non è affidabile. Decisio
 
 ### Azioni
 - Fronte ERPNext, Decisioni chiuse e Task aperti **riscritti da zero** al 05/10
+- Recuperati in **Appendice tecnica** i dettagli ancora validi di `Cowork_Progetto_T080100.md` e
+  `MEMORIA_SESSIONE_T08-0100.md` (25/08), da spostare in `12_Memorie/Old`
+- Verifica OneDrive: memoria principale aggiornata ✅; da eliminare `Old/CONTESTO_PROGRESSIVO_ERPNext125.md`
+  (copia della nuova) e i duplicati `Transfer/CONTESTO_PROGRESSIVO_ERPNext (1).md` e `(2).md`
+- ⚠️ Repo GitHub `AI-Project` risulta **pubblico**: contiene dati interni → da rendere privato (Gian)
 - File finale da copiare a cura di Gian in OneDrive `12_Memorie` (sostituisce quello del 01/10) e nel
   Project Cowork (il connettore Microsoft 365 è in sola lettura); `Old` e `Transfer` da archiviare
 
@@ -1500,6 +1505,74 @@ l'invio effettivo, quindi una data scritta all'ordine non è affidabile. Decisio
 - Traduzione finale in inglese delle etichette; connettore SAP in scrittura (ordini)
 - Motore APS; cascata ritardi tra WO padre/figlio; vista "coda per postazione"
 - Codifica articoli neutra per le commesse future; layout 22 postazioni (TO-BE del 9/09)
+
+---
+
+## 🔧 APPENDICE TECNICA — dettagli del 25/08/2026 ancora validi
+Recuperati in sessione 23 da `Cowork_Progetto_T080100.md` e `MEMORIA_SESSIONE_T08-0100.md` (OneDrive
+`12_Memorie`, poi spostati in `Old`). Il resto di quei file è superato (postazioni a capacità 1, BOM
+Operation vuote, 57 WO, modulo Subcontracting).
+
+### Correzione BOM T08 (25/08/2026)
+- In `BOM-T08-0100-P2105-001` (P2106, P2107) e `BOM-T08-0100-P2109-001` (P2110, P2111) le quantità
+  erano 6 anziché 1 → corrette a **qty = 1** via SQL su `tabBOM Item` (qty e stock_qty)
+- WO ricreati con la quantità corretta (36 → 6): `MFG-WO-2026-00492-1` (P2106), `00491-1` (P2107),
+  `00488-1` (P2110), `00489-1` (P2111)
+
+### Script sui Work Order
+- Server Script **`WO Default WIP Warehouse`** (DocType Event, Before Submit, Work Order) — imposta il WIP
+  anche sui WO T09:
+```python
+if not doc.wip_warehouse:
+    doc.wip_warehouse = "Goods In Transit - Rema"
+```
+- Server Script API **`submit_all_draft_wo`** + Client Script **"WO List Submit All Draft"** (lista Work Order,
+  pulsante "Submit All Draft" con conferma). ⚠️ Sottomette **tutti** i WO in bozza: oggi includerebbe i 12 WO
+  P4000/P5000 T09 tenuti in bozza apposta → non usarlo finché Simone non risponde
+```python
+wos = frappe.get_all("Work Order", filters={"status": "Draft"}, fields=["name"])
+count = 0
+errors = []
+for wo in wos:
+    try:
+        doc = frappe.get_doc("Work Order", wo.name)
+        doc.submit()
+        frappe.db.commit()
+        count += 1
+    except Exception as e:
+        errors.append({"wo": wo.name, "error": str(e)})
+frappe.response["message"] = {"submitted": count, "errors": errors}
+```
+- Abilitazione Server Script: `bench set-config -g server_script_enabled true && bench restart`
+
+### Magazzini ERPNext
+| Magazzino | Uso |
+|---|---|
+| Raw Materials WH - Rema | materie prime |
+| Sub-Assembly & Parts WH - Rema | sotto-assiemi (anche `sub_assembly_warehouse` dei Production Plan) |
+| Finished Products WH - Rema | prodotti finiti |
+| Goods In Transit - Rema | WIP dei Work Order |
+
+### Query SQL di servizio (MariaDB)
+```sql
+-- bom_no vuoti su componenti non materia prima
+SELECT bi.name, bi.item_code, bi.bom_no, bi.parent
+FROM `tabBOM Item` bi JOIN `tabBOM` b ON b.name = bi.parent
+WHERE b.is_active = 1 AND bi.item_code NOT LIKE '001-%%' AND (bi.bom_no IS NULL OR bi.bom_no = '');
+
+-- correzione bom_no (dopo un reimport)
+UPDATE `tabBOM Item` bi
+JOIN `tabBOM` b ON b.name = bi.parent
+JOIN `tabBOM` bsub ON bsub.item = bi.item_code AND bsub.is_active = 1 AND bsub.is_default = 1
+SET bi.bom_no = bsub.name
+WHERE b.is_active = 1 AND bi.item_code NOT LIKE '001-%%' AND (bi.bom_no IS NULL OR bi.bom_no = '');
+```
+(in `frappe.db.sql` il `%` va raddoppiato come sopra; in un client SQL usare `'001-%'`)
+
+### Production Plan in v16
+"Include Exploded Items" non esiste più. Procedura da interfaccia: Production Plan dalla Sales Order →
+tab **Sub Assembly Items** → **Get Sub Assembly Items** → **Make Work Orders**. Da script (usato per la T09):
+`pp.get_sub_assembly_items()` prima del submit, poi `pp.make_work_order()` (crea WO in bozza).
 
 ---
 
