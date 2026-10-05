@@ -1402,6 +1402,16 @@ La mail del 02/10 **era stata inviata** (02/10 17:10). Risposte:
 - **Microfusioni**: **ordine unico** fusione + lavorazione, in casa solo il **QC finale** → verificare che le fasi FE
   siano una sola fase esterna seguita solo dal QC
 
+### Risposte di Simone applicate ✅ (`sessione_23/risposte_simone_0510.py`)
+- **"Calendario Fornitori 2026-2029"**: 75 giorni (festività + chiusure aziendali feriali, senza weekend),
+  assegnato alla postazione **Lavorazione Esterna** (vale per le pianificazioni future)
+- 51 Job Card esterne T09 già pianificate attraversano chiusure (128 giorni; caso peggiore ZARE PO-JOB06414,
+  12 gg a Natale 2026): **non modificate**, da evidenziare nel cruscotto expediting
+- P4000-10LA / P5000-10LA a **TT 150 h**; **12 WO T09 sottomessi** → **348/348 WO T09 submitted**.
+  ⚠️ Con la capacità reale finiscono 1-13 gg **dopo** l'inizio del liner del set (es. set 2: P4000 17/05 vs
+  liner 04/05/2027): da tenere d'occhio (servono al montaggio A0001-10MT)
+- Microfusioni (P2112, P2302, P2305, P2404): già **una sola fase FE + QC finale** ✅
+
 ### Azioni
 - Fronte ERPNext, Decisioni chiuse e Task aperti **riscritti da zero** al 05/10
 - Recuperati in **Appendice tecnica** i dettagli ancora validi di `Cowork_Progetto_T080100.md` e
@@ -1424,7 +1434,7 @@ La mail del 02/10 **era stata inviata** (02/10 17:10). Risposte:
 
 ### T09-0100 — in esercizio (PROJ-0002)
 - SAL-ORD-2026-00002, 100 liner in 6 set; Production Plan MFG-PP-2026-00002…00007 (uno per set)
-- **348 WO**: 336 submitted, **12 in bozza** (P4000/P5000 × 6, articoli a scorta in attesa di Simone);
+- **348 WO tutti submitted** (gli ultimi 12, P4000/P5000, il 05/10);
   **3.306 Job Card**, di cui 768 esterne con fornitore e stato "Da inviare"
 - Fine liner pianificata da ERPNext: set 1 26/03/2027 (**+28 gg**), set 2 08/06/2027 (**+39 gg**),
   set 3-6 in anticipo di 7-11 gg sulla consegna (tabella in sessione 22)
@@ -1485,8 +1495,7 @@ La mail del 02/10 **era stata inviata** (02/10 17:10). Risposte:
    pezzo a metà ciclo; codici dei magazzini fornitore; accesso al Service Layer
 
 ### Priorità 2 — Risposte di Simone
-- ✅ Risposte del 05/10 ricevute (vedi sessione 23). Da applicare: P4000/P5000 a TT 150 h + submit dei 12 WO
-  in bozza; calendario chiusure per la Lavorazione Esterna; verifica fasi FE (ordine unico + QC finale)
+- ✅ Risposte del 05/10 ricevute e applicate (vedi sessione 23)
 - H.T. SRL vs H.T.S. SRL; selezione Dipendente nei time log senza ruoli HR
 - Avanzamento reale set 1-2 (lo smarca Simone) → poi ripianificare (i WO sono submitted: si usano gli
   strumenti di ritardo, non `scheduling_wo_t09.py` che lavora sui WO in bozza)
