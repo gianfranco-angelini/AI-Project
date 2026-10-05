@@ -1389,6 +1389,19 @@ l'invio effettivo, quindi una data scritta all'ordine non è affidabile. Decisio
 - **Numerazione**: sessione 22 = 02-03/10 (stessa chat), sessione 23 = 05/10 (decisione di Gian)
 - Skill `erpnext-remazel`: la lista "Fix aperti pre go-live" è superata (da aggiornare, vedi task)
 
+### Risposta di Simone del 05/10 (mail "tempi lavorazioni esterne", Cc Lasorella, Picco, Scaglia, Brunasso, Mylnikov, Verzeroli)
+La mail del 02/10 **era stata inviata** (02/10 17:10). Risposte:
+- **Set da 20 liner**: stesso LT del set da 10; si monitorano le variazioni durante la commessa → nessuna modifica
+- **P4000/P5000**: **da pianificare** comunque (eventuali pezzi in eccesso a magazzino) → TT 150 h sulle due fasi
+  10LA e submit dei 12 WO in bozza (da fare)
+- **A1000-10LA**: vale il **TT 100 h** (C/T corretto a 10 h/pz) → già così a sistema
+- **P3200-10LA**: refuso nel file, C/T 25 h/pz, **TT 250 h** (~25 gg) → già così a sistema
+- **P1102-10TT**: 100 h → già così; **RX**: tutte a 30 h → già così
+- **Chiusure fornitori = stessi periodi di Remazel** → calendario per la Lavorazione Esterna con le sole
+  chiusure (non i weekend), da fare
+- **Microfusioni**: **ordine unico** fusione + lavorazione, in casa solo il **QC finale** → verificare che le fasi FE
+  siano una sola fase esterna seguita solo dal QC
+
 ### Azioni
 - Fronte ERPNext, Decisioni chiuse e Task aperti **riscritti da zero** al 05/10
 - Recuperati in **Appendice tecnica** i dettagli ancora validi di `Cowork_Progetto_T080100.md` e
@@ -1472,9 +1485,8 @@ l'invio effettivo, quindi una data scritta all'ordine non è affidabile. Decisio
    pezzo a metà ciclo; codici dei magazzini fornitore; accesso al Service Layer
 
 ### Priorità 2 — Risposte di Simone
-- **Verificare se la mail sui tempi esterni è stata inviata** (`sessione_22/Mail_Simone_Tempi_Esterni.md`):
-  set da 20 liner (lead time uguale o doppio — può spostare i set 2-5), P4000/P5000 a scorta (12 WO in
-  bozza), TT di A1000-10LA e P3200-10LA, P1102-10TT, chiusure fornitori, microfuso (uno o due ordini)
+- ✅ Risposte del 05/10 ricevute (vedi sessione 23). Da applicare: P4000/P5000 a TT 150 h + submit dei 12 WO
+  in bozza; calendario chiusure per la Lavorazione Esterna; verifica fasi FE (ordine unico + QC finale)
 - H.T. SRL vs H.T.S. SRL; selezione Dipendente nei time log senza ruoli HR
 - Avanzamento reale set 1-2 (lo smarca Simone) → poi ripianificare (i WO sono submitted: si usano gli
   strumenti di ritardo, non `scheduling_wo_t09.py` che lavora sui WO in bozza)
