@@ -1,5 +1,9 @@
 # MEMORIA_SESSIONE — Sessione 19 — 26-29 settembre 2026
 
+> ⚠️ **Nota del 05/10/2026 (sessione 23)**: la regola "il repo GitHub non va più aggiornato" è **superata**.
+> A fine sessione la memoria va allineata in OneDrive, Project Cowork e repo. Vedi `CONTESTO_PROGRESSIVO_ERPNext.md`, Regole operative → Memoria.
+
+
 Sessione in **Claude Code cloud** (claude.ai/code), repo GitHub `gianfranco-angelini/AI-Project`,
 branch `claude/cool-curie-q5r93n`. Nessun intervento su ERPNext. Tema: memoria di progetto,
 standard documentale, passaggio a Claude Code sul PC.

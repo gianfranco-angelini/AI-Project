@@ -15,13 +15,13 @@ Chi riceve questo contesto deve, **a fine sessione**, aggiornarlo con i progress
 - Cliente: **Remazel Engineering S.p.A.**, divisione **BU Combustion**
 - Fornitore/implementatore: **Start I.T. S.r.l.** — Gian è il lead implementor
 - Progetto: **M.E.S. Remazel** (Manufacturing Execution System) su ERPNext v16
-- Go-live target: ~~30 settembre 2026~~ → **slittato, ripianificato per il 2 ottobre 2026** (sessione 22)
+- Go-live target: ~~30 settembre 2026~~ → slittato; dal **02/10/2026** in esercizio la **T09-0100** (pianificata, 336 WO), T08-0100 parcheggiata (sessione 22)
 - Contatto cliente primario: **Simone** (Responsabile Produzione)
 - Altri utenti ERPNext: Fabio Picco, Omar Ferrari, Sergey Mylnikov
 - Marco Lasorella: in copia email, nessun account ERPNext
 - Commesse centrali:
-  - **T08-0100** (Job 24-19006, ASSY LINER COMPLETE) — pilota, già a regime
-  - **T09-0100** (Job 26-19008, Liner FR7EA DLN 24k) — struttura identica a T08
+  - **T08-0100** (Job 24-19006, ASSY LINER COMPLETE) — pilota, **parcheggiata dal 02/10/2026**; resta la base dati (codici, BOM, fasi)
+  - **T09-0100** (Job 26-19008, Liner FR7EA DLN 24k) — **focus attuale**, 100 liner in 6 set, WO pianificati il 02/10/2026
 
 ⚠️ **CORREZIONE IMPORTANTE**: il nome prodotto corretto è **"M.E.S. Remazel"**. Le varianti "E.M.S. Remazel" e "M.S.E." sono **errori confermati** — non usarle più in nessun documento, anche se compaiono nelle sessioni storiche sotto riportate.
 
@@ -700,7 +700,7 @@ A fine sessione 16 il documento B3 dichiarava 11/12 obiettivi **fattibili**, ma 
 - Fase 1: dato un fabbisogno (es. "100 × T08-0100") il Production Plan esplode la BOM e calcola materiali e acquisti (con lead time e fornitore); il risultato si esporta in un **file** per SAP B1
 - Fase 2: se la fase 1 regge, interconnessione automatica via Service Layer
 
-**Decisione sulla strada:** **C1 — conto lavoro per fase nativo v16**. Prima un **pilota su una sola Job Card esterna** in mezzo al ciclo con fornitore A.M.C. CONTROL SRL, poi estensione alle 134 fasi via script. Script di lettura preparato: `pilota_1_lettura.py` (Job Card candidate, codice v16 delle funzioni di conto lavoro, pulsanti JS, campi Job Card) — **output in attesa**.
+**Decisione sulla strada:** **C1 — conto lavoro per fase nativo v16**. Prima un **pilota su una sola Job Card esterna** in mezzo al ciclo con fornitore A.M.C. CONTROL SRL, poi estensione alle 134 fasi via script. Script di lettura preparato: `pilota_1_lettura.py` (Job Card candidate, codice v16 delle funzioni di conto lavoro, pulsanti JS, campi Job Card) — **output in attesa**. ⚠️ *Superato in sessione 22: scelta B (Ordine conto lavoro + SAP), niente conto lavoro nativo.*
 
 ### 10. Documentazione e archivio
 - La struttura di progetto vive su SharePoint: sito StartIT → `Documenti condivisi/Clienti/Remazel/Progetti/Remazel-Combustion`. Verificata la presenza dei 13 documenti correnti e delle sottocartelle `Dati` ed `Email_Simone`: la copia locale originale può essere eliminata
@@ -932,7 +932,7 @@ BOM Operation per T09-0100).
 
 ---
 
-## SESSIONE 22 — Riconciliazione memoria e ripartenza go-live (02/10/2026)
+## SESSIONE 22 — Riconciliazione memoria, carico e pianificazione T09, expediting (02-03/10/2026)
 
 ### Riconciliazione delle due versioni della memoria
 Esistevano due versioni divergenti di questo file: quella del Project Cowork (fino alla sessione
@@ -952,9 +952,9 @@ Esistevano due versioni divergenti di questo file: quella del Project Cowork (fi
 ### Go-live
 - Il go-live del **30/09/2026 è slittato**. Obiettivo: **partire oggi, 02/10/2026** — sessione
   dedicata interamente a questo
-- Perimetro (proposta, da confermare): **T08-0100** come primo Equipment in esercizio. T09-0100
-  resta in importazione e non blocca la partenza
-- **Decisione di Gian in sessione**: prima del go-live si procede con il **carico di T09-0100**
+- ~~Perimetro: T08-0100 come primo Equipment in esercizio, T09-0100 non blocca~~ → **superato**
+- **Decisione di Gian in sessione**: prima del go-live si procede con il **carico di T09-0100**; poi
+  (02/10) **T08 parcheggiata** e focus sulla T09 (vedi "Tempi fasi esterne e buffer")
 
 ### T09-0100 — verifica del file del 22/09 e codifica definitiva T08/T09
 File: `T09-0100 Ciclo e fasi_26-19008.xlsx` (2.013.881 byte, MD5 `2cc058e6589cf20beb2c6dfd72630b36`),
@@ -1129,7 +1129,8 @@ Set 2-5 da 20 liner: lead time esterno ancora da confermare (mail a Simone, punt
 
 Decisioni prese prima della creazione:
 1. Conto lavoro C1 (chat expediting): modifica le BOM Operation (`is_subcontracted`)? Va fatto prima
-   dei WO, che copiano le fasi alla creazione — domanda girata all'altra chat
+   dei WO, che copiano le fasi alla creazione — ✅ chiuso: nessuna modifica (scelta B, tracciamento
+   senza conto lavoro nativo)
 2. ✅ **Deciso (2A)**: se l'inizio calcolato a ritroso cade nel passato, il WO parte dal primo giorno
    utile e viene segnalato in ritardo rispetto alla consegna del set
 3. ✅ **Deciso (3B)**: fine produzione di ogni set = **consegna − buffer 5 gg** (deadline interna
@@ -1353,101 +1354,152 @@ l'invio effettivo, quindi una data scritta all'ordine non è affidabile. Decisio
   trasporto (default 0), buffer trasporto per fornitore (opzionale), regola 2A, calendario chiusure,
   capacità reparti
 
-### Expediting (obiettivo 3)
-Gian prosegue l'expediting (conto lavoro per fase, strada C1) **in un'altra chat**: vedi Priorità 2
-dei task aperti. Chi lavora lì deve registrare l'avanzamento in una sessione propria (23 o successiva).
+### Riepilogo sessione 22 (02-03/10/2026)
+- Memoria riconciliata (Cowork + Claude Code), numerazione cronologica unica
+- T09-0100 caricata: 14 Item/BOM, PROJ-0002, SAL-ORD-2026-00002, 6 Production Plan, **348 WO (336
+  submitted, 12 bozza P4000/P5000), 3.306 Job Card**; scheduling 3B/2A; set 3-6 in tempo, set 1-2 in
+  ritardo indicativo (+28 / +39 gg)
+- Tempi fasi esterne = **TT** del ciclo (152 BOM Operation); Buffer Project con ricalcolo automatico
+- Server cs-erp01 aggiornato (4 vCPU/8 GB, Ubuntu + ERPNext 16.37), backup 02/10 18:35
+- Permessi "Responsabile Processo MES", calendario Remazel 2026-2029, matricole solo A0001 provvisorie
+- Expediting: fornitore da BOM, sezione Conto lavoro su Job Card; modello a eventi provato con
+  Start/Complete e poi **scartato** per le esterne (nessun operatore) → **scelta B**: Ordine conto
+  lavoro + magazzino su SAP + connettore in lettura (03/10)
+- Decisioni: T08 parcheggiata (base dati resta T08), niente "commessa" (Project), lingua finale
+  inglese alla fine, buffer sul singolo Project
+- Mail a Simone sui tempi esterni preparata (`sessione_22/Mail_Simone_Tempi_Esterni.md`): **invio non
+  confermato** in memoria
+- Expediting seguito **in questa stessa chat** (non in un'altra, come ipotizzato all'inizio)
 
 ---
 
-## 🖥️ FRONTE ERPNEXT — stato al 02/10/2026
+## SESSIONE 23 — Riallineamento della memoria (05/10/2026)
 
-⚠️ Stato ricostruito dalle memorie, non da un controllo diretto sul server: i punti marcati
-"da verificare" vanno confermati in console prima di partire.
+### Incongruenze rilevate e corrette
+- **Copie della memoria divergenti**: repo GitHub aggiornato al 03/10 (sessione 22 completa);
+  OneDrive `12_Memorie` fermo al **01/10** e Project Cowork fermo alla versione "_5" (entrambi senza
+  la sessione 22); copie vecchie in OneDrive `12_Memorie/Old` (`_01`, `_02`) e `Transfer` (`(1)`, `(2)`)
+- **Regola sulle copie contraddittoria**: `MEMORIA_SESSIONE_19.md` diceva "il repo non va più
+  aggiornato"; `CLAUDE.md` e la pratica dicono il contrario → regola unificata (vedi Regole operative,
+  Memoria) e nota di superamento in `MEMORIA_SESSIONE_19.md`
+- **Parti superate dentro questo file**, riscritte o barrate: go-live del 02/10 con la T08; expediting
+  "in un'altra chat"; conto lavoro "nativo v16 (strada C1)"; Fronte ERPNext limitato alla T08; task
+  "GO-LIVE OGGI", "Production Plan → WO da fare", "pilota_1_lettura.py", SAP via file DTW; riga
+  "Ultimo aggiornamento"
+- **Numerazione**: sessione 22 = 02-03/10 (stessa chat), sessione 23 = 05/10 (decisione di Gian)
+- Skill `erpnext-remazel`: la lista "Fix aperti pre go-live" è superata (da aggiornare, vedi task)
 
-### Configurazione a regime (T08-0100)
-- **58 Work Order** "In Process"; Job Card **581** (dato 01/09) vs **557** collegate al progetto
-  (verifica 25/09) — ⚠️ discrepanza da verificare. 130 Job Card su Lavorazione Esterna
-- Ciclo **v5** di Simone (`T080100 Ciclo e fasi 5.xlsx`, 30/08) caricato, poi modificato da noi a sistema (nessun v6); 613 BOM Operation con descrizione parlante; capacity planning attivo,
-  backward scheduling dalla scadenza 18/12/2026, deadline interna PROJ-0001 13/12/2026 (buffer 5 gg)
-- **Capacità reparti**: Saldatura 7, Molatura 5, Montaggio 5, Controllo Qualità 3, Lavorazioni
-  Meccaniche 1 (chiarimento Simone 25/09)
-- **21 Employee + 21 User** con ruolo `Operatore di Reparto` e 24 User Permission per reparto
-- **HTTPS** attivo (wildcard `*.remazel.com`)
-- `allow_negative_stock = 1` per scelta, nessun carico fittizio
-- Ritardo a cascata: Server Script `Simula_Ritardo_JobCard` / `Applica_Ritardo_JobCard` + Client
-  Script `Job Card-Ritardo` (menu "Pianificazione"); cascata solo dentro lo stesso Work Order
-- Documenti tecnici su Job Card (2b) e 58 matricole segnaposto + template saldature (2d): infrastruttura pronta
-- Workspace "Produzione Remazel" con dashboard, report "Carico Reparti Settimanale" e 3 viste Gantt
+### Azioni
+- Fronte ERPNext, Decisioni chiuse e Task aperti **riscritti da zero** al 05/10
+- File finale da copiare a cura di Gian in OneDrive `12_Memorie` (sostituisce quello del 01/10) e nel
+  Project Cowork (il connettore Microsoft 365 è in sola lettura); `Old` e `Transfer` da archiviare
 
-### Decisioni chiuse (non più bloccanti)
-| Punto | Stato |
+---
+
+## 🖥️ FRONTE ERPNEXT — stato al 05/10/2026
+
+### Ambiente
+- **cs-erp01** (VMware, Ubuntu 24.04, 4 vCPU / 8 GB), ERPNext **16.37.0** / Frappe 16.36.1 / HRMS 16.20.1,
+  MariaDB buffer pool 2 GB, HTTPS con catena completa (wildcard `*.remazel.com` + RapidSSL)
+- Ultimo backup: **02/10/2026 18:35** (`site1.local`). Snapshot VMware del 02/10 da eliminare
+- Rete verso SAP: cs-erp01 → **cs-sql03.remazel.local:1433** (10.101.1.100) raggiungibile
+
+### T09-0100 — in esercizio (PROJ-0002)
+- SAL-ORD-2026-00002, 100 liner in 6 set; Production Plan MFG-PP-2026-00002…00007 (uno per set)
+- **348 WO**: 336 submitted, **12 in bozza** (P4000/P5000 × 6, articoli a scorta in attesa di Simone);
+  **3.306 Job Card**, di cui 768 esterne con fornitore e stato "Da inviare"
+- Fine liner pianificata da ERPNext: set 1 26/03/2027 (**+28 gg**), set 2 08/06/2027 (**+39 gg**),
+  set 3-6 in anticipo di 7-11 gg sulla consegna (tabella in sessione 22)
+- Fasi esterne = **TT** del ciclo (lotto da 10 liner), Lavorazione Esterna 24h senza calendario;
+  reparti interni 07-17 (540 min/g) con "Calendario Remazel 2026-2029"
+- Capacità reparti: Saldatura 7, Molatura 5, Montaggio 5, Controllo Qualità 3, Lavorazioni Meccaniche 1;
+  Lavorazione Esterna 50
+
+### T08-0100 — parcheggiata (PROJ-0001)
+- 58 WO "In Process" e Job Card con i **tempi esterni vecchi** (riallineamento al TT rinviato);
+  130 Job Card esterne con fornitore. Discrepanza 581 vs 557 Job Card mai verificata (non urgente)
+- Le BOM T08 sono aggiornate al TT e restano la base dati comune
+
+### Funzioni disponibili
+- Utenti: 21 Employee/User "Operatore di Reparto" con filtro per reparto; profilo **"Responsabile
+  Processo MES"** per Simone, Sergey, Omar (non System Manager)
+- **Buffer Project** sul singolo Project + Server Script `Project_Deadline_Interna`
+- Ritardo a cascata (`Simula/Applica_Ritardo_JobCard`, menu "Pianificazione"), solo dentro lo stesso WO;
+  confronta ancora con la deadline del Project (da portare sulla consegna del set)
+- Job Card: "Consegna set" e "Production Plan"; sezione **Conto lavoro** (fornitore da BOM, n° ordine
+  SAP, data promessa, uscita/rientro in sola lettura, rientro previsto, stato)
+- Matricole solo su A0001, assegnate a fine produzione, provvisorie; `Serial No.custom_matricola_reale`
+- Documenti tecnici su Job Card (2b), template saldature (2d, non agganciato), Workspace "Produzione
+  Remazel" con 3 viste Gantt (T08), report "Carico Reparti Settimanale"
+- `allow_negative_stock = 1`, **nessuna giacenza in ERPNext**: il magazzino è su SAP
+
+### Decisioni chiuse
+| Punto | Decisione |
 |---|---|
-| Codici e prezzi microfusi | ✅ restano `F000` e €1.000 provvisori |
-| `allow_negative_stock` | ✅ resta a 1 |
-| Tracciabilità per matricola | ✅ Quality Inspection per Serial No |
-| Conto lavoro (obiettivo 3) | ✅ strada C1, conto lavoro per fase nativo v16 (pilota da fare) |
-| Codifica articoli T08/T09 | ✅ T09 usa il codice T08 se identico; niente alias |
-| Anagrafica e postazioni | ✅ caricate |
-| Standard documentale | ✅ `docx-startit` unico |
+| Perimetro | **T09 in esercizio**, T08 parcheggiata; la base dati resta la T08 |
+| Codifica T08/T09 | identico → codice T08; diverso → T09 con tutte le fasi T09; niente alias |
+| Tempi fasi esterne | **TT** del ciclo (lotto da 10 liner), ore di calendario; buffer trasporto 0 |
+| Scheduling | 3B: fine set = consegna − Buffer Project; 2A: inizio non prima di oggi |
+| Buffer | sul **singolo Project** (default 5), non nella pagina impostazioni |
+| Conto lavoro / expediting | **scelta B**: Ordine conto lavoro in ERPNext, magazzino e magazzini fornitore su **SAP**, connettore SAP → ERPNext in lettura; scrittura ordini (futuro) via Service Layer. **Niente** conto lavoro nativo v16, **niente** Start/Complete sulle Job Card esterne |
+| Ordini al fornitore | oggi li emette **SAP**; in futuro generati da ERPNext e inviati a SAP |
+| Matricole | solo prodotto finito A0001, a fine produzione, provvisorie |
+| Microfusi | codici `F000` e €1.000 provvisori |
+| `allow_negative_stock` | resta a 1 |
+| Terminologia | niente "commessa": **Project** (la commessa è il Job) |
+| Lingua | lavori in italiano, traduzione etichette in **inglese solo alla fine** |
+| Standard documentale | `docx-startit` (+ `docx-remazel`) |
 
 ---
 
-## 🎯 TASK APERTI / PROSSIMA SESSIONE (aggiornato al 02/10/2026)
+## 🎯 TASK APERTI (aggiornato al 05/10/2026)
 
-### Priorità 0 — GO-LIVE OGGI (02/10/2026)
-Checklist proposta, **da validare con Gian** prima di eseguire. Ogni punto: verifica in console →
-eventuale correzione → conferma.
+### Priorità 1 — Expediting (in corso)
+1. **Ordine conto lavoro**: DocType con n° ordine SAP, fornitore, data promessa, magazzino SAP
+   fornitore, righe = Job Card esterne; pulsanti **Spedito / Rientrato** (anche parziale); al rientro
+   Job Card completate e sottomesse in automatico. Prima: verificare se ERPNext completa una Job Card
+   senza dipendente (altrimenti dipendente tecnico "Conto lavoro")
+2. **Cruscotto expediting**: da ordinare/spedire, presso fornitore, in ritardo, per fornitore
+3. **Lettura SAP**: login SQL **sola lettura** + nome DB della società (da chiedere all'amministratore
+   SAP); su cs-erp01 ambiente `~/sap_conn` (pymssql) e credenziali `~/.sap_ro.json` (chmod 600);
+   script `sessione_22/sap_lettura.py`. In alternativa, query dal client SAP (Gestione interrogazioni)
+4. Da chiarire con Remazel: documenti SAP usati per il conto lavoro; codici articolo con cui viaggia il
+   pezzo a metà ciclo; codici dei magazzini fornitore; accesso al Service Layer
 
-**Bloccanti**
-1. **Strategia ambiente** (mai decisa): partire sul sito attuale ripulendo i dati di test, oppure
-   tenerli come dati validi. Senza questa decisione non si parte
-2. **Stato reale a sistema**: conteggio Work Order / Job Card per progetto (581 vs 557), Job Card
-   con time log di test da azzerare, `po_no` su `SAL-ORD-2026-00001` (atteso `99-99999`)
-3. **Accessi operatori**: login di prova con almeno un utente per reparto, verifica che veda solo
-   le Job Card del proprio reparto; credenziali consegnate (`Credenziali_Operatori_Reparto_T080100.xlsx`)
-4. **Backup** completo prima della partenza (`bench --site site1.local backup --with-files`)
-5. **Comunicazione a Simone**: anagrafica, postazioni e credenziali a sistema; istruzioni minime
-   per gli operatori (login, avvio/stop Job Card)
+### Priorità 2 — Risposte di Simone
+- **Verificare se la mail sui tempi esterni è stata inviata** (`sessione_22/Mail_Simone_Tempi_Esterni.md`):
+  set da 20 liner (lead time uguale o doppio — può spostare i set 2-5), P4000/P5000 a scorta (12 WO in
+  bozza), TT di A1000-10LA e P3200-10LA, P1102-10TT, chiusure fornitori, microfuso (uno o due ordini)
+- H.T. SRL vs H.T.S. SRL; selezione Dipendente nei time log senza ruoli HR
+- Avanzamento reale set 1-2 (lo smarca Simone) → poi ripianificare (i WO sono submitted: si usano gli
+  strumenti di ritardo, non `scheduling_wo_t09.py` che lavora sui WO in bozza)
 
-**Non bloccanti (si parte senza, restano aperti)**
-- SMTP Microsoft 365 (Connected App su Entra ID per `noreply@remazel.com`)
-- Matricole reali, Job reali, documenti tecnici (disegni, WPS, criteri di controllo)
-- Policy Quality Inspection oltre la matricola; validazione del template saldature con Simone
-- Riconciliazione postazioni con Simone (mail 22/09: Molatura 6, Qualità 2 + Flussaggio 1)
+### Priorità 3 — Pianificazione
+- Strumenti di ritardo: confronto con la **consegna del set** (`custom_consegna_set`), non con il Project
+- Pagina **"Impostazioni MES Remazel"** (buffer trasporto, buffer per fornitore, regola 2A, calendari,
+  capacità reparti) e sua documentazione nel manuale
+- Gantt / Workspace per PROJ-0002; eventuale "Calendario Fornitori" (chiusure di agosto)
 
-### Priorità 1 — T09-0100: chiudere l'import
-1. ✅ Mail a Simone, risposte ricevute; ✅ Item + BOM T09 caricati; ✅ BOM -002 P2301
-2. ✅ PROJ-0002 + SAL-ORD-2026-00002 (100 liner, 6 consegne); ✅ `po_no` T08. Da fare: Production
-   Plan → Work Order (proposta: un PP per set, ora solo il 1°), poi allineare l'avanzamento reale
-3. Verificare i 12 articoli T08 non usati da T09 contro l'Excel T08 di Simone
-4. ✅ `po_no = 99-99999` su `SAL-ORD-2026-00001`
-
-### Priorità 2 — Obiettivo 3: pilota conto lavoro (C1) — in corso in un'altra chat
-- Eseguire `pilota_1_lettura.py` (output mai ricevuto)
-- Prerequisiti: magazzino presso fornitore; normalizzare "A.M.C. CONTROL" → "A.M.C. CONTROL SRL";
-  verificare "H.T. SRL" vs "H.T.S. SRL"; fornitore sulla fase che ne è priva
-- Pilota su una Job Card esterna (A.M.C. CONTROL SRL), poi estensione alle 134 fasi
-
-### Priorità 3 — Documentazione (grafica `docx-startit`, naming `{Tipo}_{Oggetto}_Remazel_B{N}`)
-- **Guida Produzione → B4**: via Mario Rossi e C0900/C0901, login operatore e filtro per reparto,
-  fase divisa interno/esterno, numeri aggiornati, nota CapacityError
-- **Guida Concettuale → B7**, **Analisi Obiettivi → B4** (stato reale), **Prerequisiti Go-Live → B2**
-- Guida alle nuove funzioni (1c con pulsanti "Pianificazione", 2b, 2d)
-- I documenti del 29/09 (`Analisi_Implicazioni_Integrazione_SAP_BU_Combustion_B2`,
-  `Stato_Avanzamento_Lavori_BU_Combustion_B3`, `Guida_Riunione_Allineamento_ERPNext_B2`) non
-  seguono il naming standard: lo prendono alla versione successiva
-- Punti di contenuto aperti dalla sessione 17; `LEGGIMI.md` (punti 5-6 e nota footer superati)
+### Priorità 4 — Documentazione (grafica `docx-startit`, naming `{Tipo}_{Oggetto}_Remazel_B{N}`)
+- **Manuale**: pagina impostazioni, expediting (Ordine conto lavoro), uso operativo T09
+- **Guida Produzione → B4**, **Guida Concettuale → B7**, **Analisi Obiettivi → B4**, **Prerequisiti
+  Go-Live → B2**; guida alle funzioni 1c/2b/2d
+- I documenti del 29/09 prendono il naming standard alla versione successiva
 - Salvare `12_Memorie/SKILL_docx-remazel.md` nella skill `docx-remazel`
 
-### Priorità 4 — Integrazione SAP Business One
-- Fase 1: Production Plan di prova (es. 100 × T08-0100) e formato file per SAP B1 (template DTW già preparato)
-- Fase 2: Service Layer (credenziali e utente tecnico da ottenere)
+### Priorità 5 — Manutenzione e memoria
+- **Copiare questa memoria** in OneDrive `12_Memorie` e nel Project Cowork; archiviare `Old` e `Transfer`
+- Aggiornare la skill `erpnext-remazel` (lista "Fix aperti pre go-live" superata)
+- Eliminare lo snapshot VMware del 02/10
+- QI template su A0001 quando validato; SMTP Microsoft 365; matricole e Job reali
 
-### Priorità 5 — Dopo il go-live
-- **Traduzione finale in inglese** di tutte le etichette create in italiano (vedi sessione 22)
-- Motore APS di terze parti (obiettivo 1e); cascata ritardi tra WO padre/figlio; vista "coda per postazione"
-- Codifica articoli neutra per le commesse future (T10, T11...), da concordare con Simone
-- Layout 22 postazioni (TO-BE del 9/09)
+### Priorità 6 — T08 (parcheggiata, alla ripresa)
+- Riallineare WO e Job Card T08 ai tempi TT (ripianifica la T08); verificare 581 vs 557 Job Card
+
+### Dopo
+- Traduzione finale in inglese delle etichette; connettore SAP in scrittura (ordini)
+- Motore APS; cascata ritardi tra WO padre/figlio; vista "coda per postazione"
+- Codifica articoli neutra per le commesse future; layout 22 postazioni (TO-BE del 9/09)
 
 ---
 
@@ -1480,12 +1532,15 @@ eventuale correzione → conferma.
 - `allow_negative_stock` resta a 1: non riportarlo a 0 senza conferma esplicita di Gian
 
 **Memoria**
-- Copia principale: `12_Memorie/CONTESTO_PROGRESSIVO_ERPNext.md` in OneDrive, da tenere allineata
-  al Project Cowork. Il repo GitHub `AI-Project` ne tiene una copia
+- Copia principale: `12_Memorie/CONTESTO_PROGRESSIVO_ERPNext.md` in **OneDrive**. A fine sessione la
+  stessa versione va in **tutte e tre** le posizioni: OneDrive, Project Cowork e repo GitHub `AI-Project`
+  (il repo si aggiorna anche durante la sessione). Prima di iniziare, verificare quale copia è la più
+  recente (data e dimensione) e partire da quella
+- Le versioni superate vanno in `12_Memorie/Old`, non in altre cartelle
 - Una sola sequenza di sessioni, in ordine cronologico, qualunque sia lo strumento (Cowork, Claude
   Code locale o cloud): prima di aggiungere una sessione, verificare l'ultimo numero usato
 
 ---
 
-*Ultimo aggiornamento: **Sessione 22** — 2 ottobre 2026 (riconciliazione delle versioni Cowork e Claude Code, rinumerazione cronologica, go-live slittato; verifica file T09 del 22/09, codifica definitiva T08/T09, buco 10VX su T08-0100-P2301, mail a Simone)*
-*⚠️ A fine ogni sessione: aggiornare questo file in `12_Memorie` e nel Project Cowork, aggiungendo la sezione della sessione.*
+*Ultimo aggiornamento: **Sessione 23** — 5 ottobre 2026 (riallineamento della memoria: copie divergenti, parti superate rimosse, Fronte ERPNext / Decisioni / Task riscritti. Sessione 22 del 02-03/10: carico e pianificazione T09, tempi esterni TT, expediting e scelta B con SAP)*
+*⚠️ A fine ogni sessione: aggiornare questo file in OneDrive `12_Memorie`, nel Project Cowork e nel repo, aggiungendo la sezione della sessione.*
