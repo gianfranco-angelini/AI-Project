@@ -1458,6 +1458,11 @@ La mail del 02/10 **era stata inviata** (02/10 17:10). Risposte:
 - Altri documenti 06/10: `Guida_Personalizzazioni_MES_Remazel_B2` (senza cap. Principi), `Manuale_Utente_Remazel_B3`
   (sostituisce Manuale_Utente B2 + Manuale_Operativo_T080100_v2; passi di avvio fatti dall'utente da interfaccia,
   nessun contatto), `Guida_Concettuale_Remazel_B7` (T09, magazzino SAP). Superati → `01_Documentazione/Old` (fatto da Gian)
+- `Analisi_Prerequisiti_GoLive_BU_Combustion_B2` (go-live = uso in reparto + conto lavoro; prerequisiti B1 decaduti/chiusi)
+  e `Guida_Concettuale_Remazel_B8` (B7 + regole valide del Piano Operativo: R1, R3, R6, R7, R8 colata, R10; superate
+  R2, R4, R5, R9). Da spostare in Old (Gian): Piano_Operativo, Guida_Produzione, Guida_Test_Pianificazione, Audit,
+  Ciclo_Produttivo, Relazione_Lavorazioni_Esterne, Scenari_Conto_Lavoro, Agenda_Validazione B2, Prerequisiti B1,
+  Guida_Concettuale v6. Restano correnti 7 documenti + Controlli_e_Sigle v3. Da scrivere: analisi Ordine conto lavoro
 - ✅ **Decisione chiusura WO (06/10)**: opzione (a) — scarico di produzione (Stock Entry Manufacture) con giacenze
   negative ammesse; valore solo di avanzamento. ⚠️ Da verificare sul server: `skip_transfer` sui WO / impostazioni
   per scaricare senza trasferimento al WIP

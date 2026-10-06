@@ -4,10 +4,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import startit_docx as S
 from stima_pagine import stima_pagine
 
-NOME = "Guida_Concettuale_Remazel_B7.docx"
+NOME = "Guida_Concettuale_Remazel_B8.docx"
 meta = {
     "Documento": NOME,
-    "Versione": "Bozza 7 — 6 ottobre 2026",
+    "Versione": "Bozza 8 — 6 ottobre 2026",
     "Data": "6 ottobre 2026",
     "Redatto da": "Start I.T. S.r.l.",
     "Destinatario": "Remazel Engineering S.p.A. — BU Combustion",
@@ -29,7 +29,7 @@ bx = lambda k, t, ps: C.append(("box", k, t, ps))
 # ------------------------------------------------------------------ 1
 h(1, "1. A chi è rivolto il documento")
 p("La guida spiega il **perché** e il **come** funziona la produzione sul sistema M.E.S. Remazel, con esempi reali tratti dai prodotti T08-0100 e T09-0100. Non è un manuale operativo: i passi da eseguire a video sono nel **Manuale Utente**, i dettagli tecnici delle personalizzazioni nella **Guida alle Personalizzazioni**.")
-p("La Bozza 7 sostituisce la versione 6 del 1° settembre 2026. Cambia il quadro di fondo: il prodotto in esercizio è la **T09-0100**, la T08-0100 resta la base dati comune, e il **magazzino è gestito in SAP**. ERPNext pianifica la produzione e ne registra l'avanzamento, senza gestire le scorte.")
+p("La Bozza 8 sostituisce la versione 6 del 1° settembre 2026 e recepisce le regole ancora valide del Piano Operativo T08-0100 (Bozza 6). Cambia il quadro di fondo: il prodotto in esercizio è la **T09-0100**, la T08-0100 resta la base dati comune, e il **magazzino è gestito in SAP**. ERPNext pianifica la produzione e ne registra l'avanzamento, senza gestire le scorte.")
 
 # ------------------------------------------------------------------ 2
 h(1, "2. Dalla commessa al prodotto")
@@ -83,6 +83,19 @@ bl([
     "**articolo identico** → si usa il codice T08, con la sua distinta e il suo ciclo;",
     "**articolo diverso** → codice T09, con tutte le fasi del ciclo T09;",
     "nessun codice alternativo: un articolo ha un solo codice.",
+])
+h(2, "3.5 Codici di fase e sigle")
+p("Ogni fase del ciclo ha un codice composto da codice dell'articolo, **progressivo a decine** e **sigla** della lavorazione, senza separatore fra progressivo e sigla.")
+tb([3600, 5460], ["Codice di fase", "Lavorazione"], [
+    ["T08-0100-P3100-10SA", "Saldatura circonferenziale W25"],
+    ["T08-0100-P3100-20RX", "Controllo radiografico W25 (esterno)"],
+    ["T08-0100-P3100-30ML", "Molatura W25"],
+    ["T08-0100-P3100-40LA", "Foratura laser e rifilatura"],
+])
+bl([
+    "**Numerazione a decine**: una fase inserita in seguito fra la 30 e la 40 diventa 35, senza rinumerare le altre.",
+    "**Sigle**: sono ammesse solo le 15 sigle dell'Ufficio Tecnico (appendice del Manuale Utente). Una sigla nuova la introduce solo l'Ufficio Tecnico, aggiornando la tabella: senza questo presidio in pochi mesi convivrebbero sigle diverse per la stessa lavorazione.",
+    "La sigla serve alla lettura immediata; la descrizione completa resta nella descrizione della fase.",
 ])
 
 # ------------------------------------------------------------------ 4
@@ -161,19 +174,37 @@ bl([
 ])
 h(2, "6.3 Ritardi a cascata")
 p("Se una fase finirà più tardi, il ritardo si propaga alle fasi successive dello stesso Work Order, poi agli assiemi che lo contengono, fino al prodotto finito. Il sistema permette prima di **simulare** l'effetto, senza modificare nulla, e confronta la nuova fine del set con la consegna meno il buffer; solo dopo si **applica**.")
+h(2, "6.4 Controlli qualità")
+p("Metà delle fasi del ciclo sono controlli. Il criterio con cui sono collocati sui passaggi con i fornitori è scritto, così chi modifica un ciclo sa perché un controllo c'è o non c'è (criterio approvato da Qualità e Ufficio Tecnico).")
+tb([3700, 1700, 3660], ["Situazione", "Controllo", "Motivazione"], [
+    ["Rientro da lavorazione che altera geometria o struttura (taglio, calandratura, saldatura, brasatura, trattamento termico, lavorazione meccanica)", "In ingresso, obbligatorio", "Il pezzo è stato modificato: la conformità va accertata"],
+    ["Rientro da controllo non distruttivo o trattamento superficiale (radiografia, rivestimento, lavaggio)", "In ingresso, facoltativo", "La geometria non è alterata"],
+    ["Uscita di materiale grezzo e ogni uscita dopo una fase interna produttiva", "In uscita, obbligatorio", "Va documentato lo stato di ciò che si affida"],
+    ["Uscita subito dopo un rientro già controllato", "In uscita, facoltativo", "Lo stato è già documentato"],
+])
+bl([
+    "I controlli sono **registrati ma non bloccanti** finché il ciclo è in validazione: un blocco ostacolerebbe proprio la verifica. L'obbligatorietà si attiva in seguito per articolo, senza rifare nulla; per l'esercizio è proposto il blocco sul rientro.",
+    "I controlli di processo (VT, PT, mappe e valutazione RX, flussaggio) restano nella fase a cui appartengono.",
+])
 
 # ------------------------------------------------------------------ 7
 h(1, "7. Lavorazioni esterne")
-p("Le fasi esterne si seguono per **eventi**, non per date scritte in anticipo: un ordine al fornitore può precedere di mesi l'invio effettivo del materiale.")
+p("Il rientro del materiale lavorato è la prova che la lavorazione è stata eseguita: nessuno deve dichiararla. Le fasi esterne si seguono per **eventi**, non per date scritte in anticipo: un ordine al fornitore può precedere di mesi l'invio effettivo del materiale.")
 tb([2600, 6460], ["Evento", "Effetto"], [
     ["Ordine emesso in SAP", "Si registrano il numero d'ordine e, quando nota, la data promessa dal fornitore"],
     ["Materiale spedito", "Stato «Presso fornitore»; rientro previsto = data promessa, altrimenti uscita + TT"],
     ["Materiale rientrato", "Stato «Rientrato»; la fase è completata"],
     ["Data superata", "La fase è in ritardo e va sollecitata"],
 ])
+tb([2400, 3330, 3330], ["Tempo", "Cos'è", "A cosa serve"], [
+    ["Previsto", "Tempo di attraversamento (TT) dal ciclo, in giorni di calendario", "Pianificare la fase successiva"],
+    ["Effettivo", "Dall'uscita al rientro, misurato dal sistema", "Misurare il ritardo e correggere la stima"],
+])
+p("I due tempi restano distinti. Con lo storico si avrà il tempo reale per fornitore e per tipo di lavorazione, e il TT del ciclo potrà essere aggiornato sui dati invece che sulle dichiarazioni.")
 p("Il fornitore è già indicato in distinta e passa da solo sulla Job Card. Nei cicli non esistono due fasi esterne consecutive: ogni rientro passa da Remazel prima di una nuova uscita.")
 bx("nota", "Evoluzione decisa", [
     "Spedizione e rientro saranno registrati con l'**Ordine conto lavoro**: un documento che raggruppa le fasi inviate allo stesso fornitore e chiude le relative Job Card con un'unica azione, senza indicare un operatore.",
+    "Il **cruscotto** ordina le fasi esterne in tre fasce: scadute, in scadenza, tutte le altre; in testa tre numeri (aperte, scadute, in scadenza). La stessa vista può arrivare come **un solo messaggio giornaliero** a un gruppo con un responsabile indicato, invece di una notifica per ogni ordine.",
     "I movimenti verso e dai magazzini dei fornitori, già presenti in SAP, saranno **letti da SAP** in sola lettura. In prospettiva l'ordine potrà essere emesso da ERPNext verso SAP attraverso le interfacce ufficiali di SAP.",
 ])
 
@@ -183,6 +214,8 @@ bl([
     "**Matricola e marcatura** solo sul prodotto finito (A0001), assegnate alla chiusura del suo Work Order con una numerazione provvisoria; la matricola definitiva si registra nel campo «Matricola reale», senza rinominare il documento.",
     "Gli assiemi intermedi non hanno matricola: sono tracciati dal set e dal Work Order a cui appartengono.",
     "Il **lotto materiale** (colata o certificato) è un punto aperto: campo dedicato non obbligatorio oppure lettura da SAP.",
+    "Il **numero di colata** è l'unico dato del ciclo che non si ricostruisce dopo: va catturato al ricevimento della materia prima (oggi in SAP), prima che il materiale venga tagliato e affidato ai fornitori.",
+    "Gli articoli da **microfusione** (sigla FE) sono acquisti di pezzo finito, non conto lavoro: hanno un Work Order con il solo controllo qualità dopo la fusione.",
 ])
 
 # ------------------------------------------------------------------ 9
@@ -212,6 +245,7 @@ tb([3000, 1400, 4660], ["Reparto", "Fasi", "Contenuto"], [
     ["Lavorazioni Meccaniche", "23", "Formatura e calibratura CNC"],
     ["Montaggio", "18", "Montaggi, raddrizzature, marcature"],
 ])
+p("Le fasi più lunghe (oltre 180 minuti, fino a circa 14 ore) restano un'eccezione da valutare caso per caso: una sola registrazione al termine dice poco sull'avanzamento.")
 p("Metà delle fasi sono controlli qualità: riflette la natura del prodotto, dove ogni saldatura critica richiede esame visivo, liquidi penetranti e spesso radiografia. La domanda da porsi non è quante Job Card creare, ma quali controlli meritino una registrazione separata e quali un unico verbale.")
 h(2, "9.6 Matrice decisionale")
 tb([3060, 2000, 2000, 2000], ["Criterio", "Opzione A", "Opzione B", "Opzione C"], [
@@ -244,6 +278,22 @@ bl([
     "**lotto materiale**: livelli da tracciare e fonte del numero di colata;",
     "**documenti di fase** e loro revisioni sulle Job Card;",
     "**timbratura** delle fasi con codice a barre e regole per i casi anomali.",
+])
+
+# ------------------------------------------------------------------ A
+h(1, "Appendice A. Regole del Piano Operativo T08-0100")
+p("Il Piano Operativo (Bozza 6, 1° settembre 2026) fissava dieci regole per il ciclo T08. Con le decisioni successive alcune sono state recepite in questa guida, altre superate.")
+tb([700, 4560, 1400, 2400], ["N.", "Regola (sintesi)", "Stato", "Dove / perché"], [
+    ["R1", "Il rientro del lavorato è la dichiarazione di esecuzione della fase esterna", "Valida", "Capitolo 7"],
+    ["R2", "Ogni cambio di lavorazione produttiva genera un nuovo codice articolo intermedio", "Superata", "Le fasi si seguono con le Job Card; il magazzino è in SAP"],
+    ["R3", "Codice = articolo + progressivo a decine + sigla; solo sigle dell'Ufficio Tecnico", "Valida", "Capitolo 3.5"],
+    ["R4", "Le lavorazioni esterne non generano schede di lavorazione", "Superata", "Ogni fase esterna ha una Job Card per seguirne spedizione e rientro"],
+    ["R5", "Una scheda per reparto attraversato; schede autonome per i controlli di transizione", "Superata", "Una Job Card per fase del ciclo (capitolo 9)"],
+    ["R6", "Controlli sui passaggi con i fornitori secondo un criterio scritto", "Valida", "Capitolo 6.4"],
+    ["R7", "Controlli registrati e non bloccanti in validazione; obbligo attivabile dopo", "Valida", "Capitolo 6.4"],
+    ["R8", "Lotto materie prime = colata; lotto dei prodotti basato sulla commessa", "In parte", "Colata valida (capitolo 8); lotti dei prodotti superati"],
+    ["R9", "A0001, A1000, A2000, A3000 a numero di serie", "Superata", "Matricola solo sul prodotto finito A0001"],
+    ["R10", "Tempo previsto e tempo effettivo restano distinti", "Valida", "Capitolo 7; previsto = TT del ciclo"],
 ])
 
 doc = S.Documento(meta, titolo, sottotitolo, C)
