@@ -66,7 +66,7 @@ dv.add("N2:N%d" % (len(righe) + 1))
 larg = [12, 18, 20, 22, 6, 16, 20, 50, 22, 28, 14, 17, 17, 10, 14, 12, 12, 16, 14, 30]
 for i, w in enumerate(larg, 1):
     ws.column_dimensions[ws.cell(row=1, column=i).column_letter].width = w
-ws.freeze_panes = "N2"
+ws.freeze_panes = "A2"
 ws.auto_filter.ref = "A1:T%d" % (len(righe) + 1)
 wb.save(OUT)
 print("Scritto", OUT)
