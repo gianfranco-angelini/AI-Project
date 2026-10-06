@@ -1373,7 +1373,7 @@ l'invio effettivo, quindi una data scritta all'ordine non è affidabile. Decisio
 
 ---
 
-## SESSIONE 23 — Riallineamento della memoria (05/10/2026)
+## SESSIONE 23 — Riallineamento memoria, obiettivi, documentazione e riunione di avvio T09 (05-06/10/2026)
 
 ### Incongruenze rilevate e corrette
 - **Copie della memoria divergenti**: repo GitHub aggiornato al 03/10 (sessione 22 completa);
@@ -1443,40 +1443,53 @@ La mail del 02/10 **era stata inviata** (02/10 17:10). Risposte:
   (b) lettura del lotto da SAP con il connettore. Da chiedere a Simone: quali livelli vanno
   tracciati (solo materia prima o anche semilavorati) e dove si registra oggi il numero di colata
 
-### Documentazione del 06/10 (`01_Documentazione_bozze`, generatore docx-startit)
-- `Riepilogo_Personalizzazioni_Avvio_Remazel_B1.docx`, `Analisi_Obiettivi_BU_Combustion_B4.docx`,
-  `Guida_Personalizzazioni_MES_Remazel_B1.docx` (13 pagine: dove si trova e come si modifica ogni
-  personalizzazione). Solo funzioni, nessun nome di persona. Numeri di pagina dell'indice stimati
-- Inventario 06/10 (`inventario_personalizzazioni.py`): 22 Custom Field nostri (gli altri ~120 sono
-  delle app Italia e HRMS), 14 Server Script, 5 Client Script, 1 report, 1 DocType figlio, 6 Number
-  Card + 8 Chart, 34 Property Setter dopo 01/07. ⚠️ Job Card PROJ-0002 = **3.330** (il 05/10 erano
-  3.306): da spiegare con `dettaglio_personalizzazioni.py` (sola lettura, output non ancora ricevuto)
-- 🌐 **Etichette in inglese → fase successiva** (decisione di Gian 06/10). Metodo concordato: glossario
-  IT→EN da validare; 3 livelli (etichette / valori Select nei dati / nomi documento con rename_doc);
-  i fieldname non si toccano mai; proposta lingua per utente (base EN + Translation IT per operatori)
-- Number Card "Ordini Commessa" / "Ordini Commessa T09": nome da correggere (è il Project) nella fase EN
-- Altri documenti 06/10: `Guida_Personalizzazioni_MES_Remazel_B2` (senza cap. Principi), `Manuale_Utente_Remazel_B3`
-  (sostituisce Manuale_Utente B2 + Manuale_Operativo_T080100_v2; passi di avvio fatti dall'utente da interfaccia,
-  nessun contatto), `Guida_Concettuale_Remazel_B7` (T09, magazzino SAP). Superati → `01_Documentazione/Old` (fatto da Gian)
-- `Analisi_Prerequisiti_GoLive_BU_Combustion_B2` (go-live = uso in reparto + conto lavoro; prerequisiti B1 decaduti/chiusi)
-  e `Guida_Concettuale_Remazel_B8` (B7 + regole valide del Piano Operativo: R1, R3, R6, R7, R8 colata, R10; superate
-  R2, R4, R5, R9). Da spostare in Old (Gian): Piano_Operativo, Guida_Produzione, Guida_Test_Pianificazione, Audit,
-  Ciclo_Produttivo, Relazione_Lavorazioni_Esterne, Scenari_Conto_Lavoro, Agenda_Validazione B2, Prerequisiti B1,
-  Guida_Concettuale v6. Restano correnti 7 documenti + Controlli_e_Sigle v3. Da scrivere: analisi Ordine conto lavoro
-- Riunione 06/10: `Scaletta_Riunione_Avvio_T09_Remazel_B1` (uso interno) e `Guida_Avvio_T09_Remazel_B1` (percorso
-  avvio T09 con 6 decisioni "Da decidere": rilevazione set 1-2, reparto pilota, regole reparto, esterne nel transitorio
-  A/B, accesso SAP, controllo settimanale). Script `sessione_23/modulo_rilevazione_set12.py` (sola lettura DB, crea
-  Rilevazione_Set_1_2_T09.xlsx). Manuale di Configurazione per l'utente (key user) → dopo la Guida Avvio
-- ⚠️ **Gantt Project (/desk/project/view/gantt) pagina vuota** anche con Gantt_Fix_Project_Remazel disattivato
-  (riattivato). Ipotesi: nessuna vista Gantt configurata per Project in ERPNext. Da fare: configurarla o puntare la
-  scorciatoia workspace "Master Plan commesse" (da rinominare, no "commesse") su Task gantt `?is_group=1`.
-  Scaletta riunione → B4 (link Master Plan su Task di gruppo, esterne "Da inviare"); Guida_Avvio_T09 → B2 (no Start I.T. nel testo)
-- ✅ **Decisione chiusura WO (06/10)**: opzione (a) — scarico di produzione (Stock Entry Manufacture) con giacenze
-  negative ammesse; valore solo di avanzamento. ⚠️ Da verificare sul server: `skip_transfer` sui WO / impostazioni
-  per scaricare senza trasferimento al WIP
-- ⚠️ Manuale B3 cita come "funzioni in rilascio" due pulsanti da sviluppare sul Production Plan: **pianificazione a
-  ritroso del set** e **generazione punti di monitoraggio (Task)**; da confermare: Submit delle JC fatto da
-  responsabile/Pianificazione (l'operatore non ha submit)
+### Documentazione del 06/10 (`01_Documentazione_bozze`, generatore docx-startit + `linkify.py` per link cliccabili)
+Regole: solo **funzioni**, nessun nome di persona; nel testo niente "Start I.T." come esecutore → **amministratore del
+sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni superate in `Old` (mai cestinate).
+
+| Documento | Contenuto | Stato |
+|---|---|---|
+| `Riepilogo_Personalizzazioni_Avvio_Remazel_B1` | 12 obiettivi, personalizzazioni, avvio, subentro, punti aperti | consegnato; ⚠️ usa "commessa" per Project in qualche titolo → correggere in B2 |
+| `Analisi_Obiettivi_BU_Combustion_B4` | aggiornamento B3: 6/12 completati, piano residuo, decisioni | consegnato |
+| `Guida_Personalizzazioni_MES_Remazel_B2` | **tecnica** (amministratore/IT): dove sta e come si modifica ogni personalizzazione | consegnato (B1 in Old) |
+| `Manuale_Utente_Remazel_B3` | uso per funzione; sostituisce Manuale_Utente B2 + Manuale_Operativo_T080100_v2; nessun contatto | consegnato |
+| `Guida_Concettuale_Remazel_B8` | concetti T09 + magazzino SAP + regole valide Piano Operativo (R1,R3,R6,R7,R8 colata,R10; superate R2,R4,R5,R9) | consegnato (B7 in Old) |
+| `Analisi_Prerequisiti_GoLive_BU_Combustion_B2` | go-live = uso in reparto + conto lavoro; 8 bloccanti, 11 non bloccanti | consegnato |
+| `Guida_Avvio_T09_Remazel_B2` | percorso avvio T09 passo-passo, 6 decisioni "Da decidere" | consegnato (B1 in Old) |
+| `Scaletta_Riunione_Avvio_T09_Remazel_B4` | uso interno, 24 link cliccabili | consegnato (B1-B3 in Old) |
+
+- OneDrive `01_Documentazione` (verificato 06/10): in `Old` Agenda B1, Analisi Obiettivi B3, Manuale_Operativo v2,
+  Manuale_Utente B2. **Da fare (Gian)**: copiare Riepilogo B1, Prerequisiti B2, Guida Concettuale B8 (+ ultime versioni);
+  spostare in `Old` Guida_Concettuale v6, Prerequisiti B1, Piano_Operativo, Guida_Produzione, Guida_Test_Pianificazione,
+  Audit, Ciclo_Produttivo, Relazione_Lavorazioni_Esterne, Scenari_Conto_Lavoro, Agenda_Validazione B2. Correnti a regime:
+  Riepilogo, Analisi Obiettivi, Prerequisiti, Guida Concettuale, Guida Personalizzazioni, Manuale Utente, Guida Avvio T09,
+  Controlli_e_Sigle v3 (riferimento sigle, invariato)
+- Inventario 06/10 (`inventario_personalizzazioni.py`): 22 Custom Field nostri (gli altri ~120 delle app Italia/HRMS),
+  14 Server Script, 5 Client Script, 1 report, 1 DocType figlio, 6 Number Card + 8 Chart, 34 Property Setter dopo 01/07.
+  ⚠️ Job Card PROJ-0002 = **3.330** (05/10: 3.306) → da spiegare con `dettaglio_personalizzazioni.py` (sola lettura, non ancora eseguito)
+
+### Decisioni del 06/10
+- ✅ **Chiusura WO**: opzione (a) — scarico di produzione (Stock Entry Manufacture) con giacenze negative ammesse, valore
+  solo di avanzamento. ⚠️ Verificare sul server `skip_transfer` dei WO (scarico senza trasferimento al WIP)
+- 🌐 **Etichette in inglese → fase successiva**. Metodo: glossario IT→EN da validare; 3 livelli (etichette / valori Select
+  nei dati / nomi documento con rename_doc); fieldname mai toccati; proposta lingua per utente (base EN + Translation IT
+  per operatori). Number Card "Ordini Commessa"/"Ordini Commessa T09" da rinominare (è il Project)
+- **Manuale Utente**: i passi di avvio li fa l'utente da interfaccia; pulsanti da sviluppare sul Production Plan:
+  **pianificazione a ritroso del set** e **generazione punti di monitoraggio**. Da confermare: Submit JC fatto da
+  responsabile/Pianificazione (l'operatore non ha submit); esito QC nei commenti
+- **Manuale di Configurazione** (key user, solo interfaccia: buffer, calendari, reparti, distinta/TT/fornitore, operatori,
+  Task, indicatori, workspace) → dopo la Guida Avvio T09
+- Riunione di avvio T09 (06/10): 6 decisioni attese — rilevazione set 1-2 (chi/quando), reparto pilota + referente
+  (proposta CQ o Saldatura), regole di reparto, esterne nel transitorio (A sulla Job Card / B fuori sistema), accesso SAP
+  sola lettura + info Acquisti, controllo settimanale 30'. **Esiti da ricevere** → Guida Avvio B3
+
+### Problemi aperti emersi il 06/10
+- ⚠️ **Gantt Project** (`/desk/project/view/gantt`) pagina vuota anche con `Gantt_Fix_Project_Remazel` disattivato
+  (poi riattivato). Ipotesi: nessuna vista Gantt configurata per Project. Da fare: configurarla oppure puntare la
+  scorciatoia workspace "Master Plan commesse" (da rinominare) su Task gantt `?is_group=1` (set di tutti i Project)
+- Link `/app/...` reindirizzati a `/desk/...` in v16: funzionano
+- Script pronti, non eseguiti: `sessione_23/modulo_rilevazione_set12.py` (crea `Rilevazione_Set_1_2_T09.xlsx`, sola
+  lettura DB; scaricabile sul server con curl dal raw GitHub finché il repo è pubblico), `dettaglio_personalizzazioni.py`
 
 ### Azioni
 - Fronte ERPNext, Decisioni chiuse e Task aperti **riscritti da zero** al 05/10
@@ -1490,7 +1503,7 @@ La mail del 02/10 **era stata inviata** (02/10 17:10). Risposte:
 
 ---
 
-## 🖥️ FRONTE ERPNEXT — stato al 05/10/2026
+## 🖥️ FRONTE ERPNEXT — stato al 06/10/2026
 
 ### Ambiente
 - **cs-erp01** (VMware, Ubuntu 24.04, 4 vCPU / 8 GB), ERPNext **16.37.0** / Frappe 16.36.1 / HRMS 16.20.1,
@@ -1501,10 +1514,11 @@ La mail del 02/10 **era stata inviata** (02/10 17:10). Risposte:
 ### T09-0100 — in esercizio (PROJ-0002)
 - SAL-ORD-2026-00002, 100 liner in 6 set; Production Plan MFG-PP-2026-00002…00007 (uno per set)
 - **348 WO tutti submitted** (gli ultimi 12, P4000/P5000, il 05/10);
-  **3.306 Job Card**, di cui 768 esterne con fornitore e stato "Da inviare"
+  **3.306 Job Card** al 05/10 (**3.330** all'inventario del 06/10, da spiegare), di cui 768 esterne con fornitore e
+  stato "Da inviare" (nessuna "Presso fornitore")
 - Fine liner pianificata da ERPNext: set 1 26/03/2027 (**+28 gg**), set 2 08/06/2027 (**+39 gg**),
   set 3-6 in anticipo di 7-11 gg sulla consegna (tabella in sessione 22)
-- Fasi esterne = **TT** del ciclo (lotto da 10 liner), Lavorazione Esterna 24h senza calendario;
+- Fasi esterne = **TT** del ciclo (lotto da 10 liner), Lavorazione Esterna 24h con "Calendario Fornitori 2026-2029" (75 gg);
   reparti interni 07-17 (540 min/g) con "Calendario Remazel 2026-2029"
 - Capacità reparti: Saldatura 7, Molatura 5, Montaggio 5, Controllo Qualità 3, Lavorazioni Meccaniche 1;
   Lavorazione Esterna 50
@@ -1518,13 +1532,15 @@ La mail del 02/10 **era stata inviata** (02/10 17:10). Risposte:
 - Utenti: 21 Employee/User "Operatore di Reparto" con filtro per reparto; profilo **"Responsabile
   Processo MES"** per Simone, Sergey, Omar (non System Manager)
 - **Buffer Project** sul singolo Project + Server Script `Project_Deadline_Interna`
-- Ritardo a cascata (`Simula/Applica_Ritardo_JobCard`, menu "Pianificazione"), solo dentro lo stesso WO;
-  confronta ancora con la deadline del Project (da portare sulla consegna del set)
+- Ritardo a cascata (`Simula/Applica_Ritardo_JobCard`, menu "Pianificazione"): fasi successive, WO padre fino al
+  prodotto finito, confronto con consegna set − buffer (1c chiuso il 05/10)
 - Job Card: "Consegna set" e "Production Plan"; sezione **Conto lavoro** (fornitore da BOM, n° ordine
   SAP, data promessa, uscita/rientro in sola lettura, rientro previsto, stato)
 - Matricole solo su A0001, assegnate a fine produzione, provvisorie; `Serial No.custom_matricola_reale`
-- Documenti tecnici su Job Card (2b), template saldature (2d, non agganciato), Workspace "Produzione
-  Remazel" con 3 viste Gantt (T08), report "Carico Reparti Settimanale"
+- Documenti tecnici su Job Card (2b), template saldature (2d, non agganciato), report "Carico Reparti Settimanale"
+  (calendario Remazel)
+- Workspace **pubblico** "Produzione Remazel" (T09 in alto) + Workspace Sidebar 13 voci; 42 Task T09 (7 per set,
+  `Work Order.custom_task`); Number Card/Chart T09; Gantt Project non funzionante (vedi sessione 23)
 - `allow_negative_stock = 1`, **nessuna giacenza in ERPNext**: il magazzino è su SAP
 
 ### Decisioni chiuse
@@ -1543,55 +1559,57 @@ La mail del 02/10 **era stata inviata** (02/10 17:10). Risposte:
 | Terminologia | niente "commessa": **Project** (la commessa è il Job) |
 | Lingua | lavori in italiano, traduzione etichette in **inglese solo alla fine** |
 | Standard documentale | `docx-startit` (+ `docx-remazel`) |
+| Chiusura WO | scarico di produzione con giacenze negative ammesse (solo avanzamento) — 06/10 |
+| Documenti | solo funzioni, nessun nome; versioni superate in `01_Documentazione/Old` — 06/10 |
+| Avvio T09 | go con quello che c'è, reparto pilota, il resto in corsa — 06/10 |
 
 ---
 
-## 🎯 TASK APERTI (aggiornato al 05/10/2026)
+## 🎯 TASK APERTI (aggiornato al 06/10/2026)
 
-### Priorità 1 — Expediting (in corso)
-1. **Ordine conto lavoro**: DocType con n° ordine SAP, fornitore, data promessa, magazzino SAP
-   fornitore, righe = Job Card esterne; pulsanti **Spedito / Rientrato** (anche parziale); al rientro
-   Job Card completate e sottomesse in automatico. Prima: verificare se ERPNext completa una Job Card
-   senza dipendente (altrimenti dipendente tecnico "Conto lavoro")
-2. **Cruscotto expediting**: da ordinare/spedire, presso fornitore, in ritardo, per fornitore
-3. **Lettura SAP**: login SQL **sola lettura** + nome DB della società (da chiedere all'amministratore
-   SAP); su cs-erp01 ambiente `~/sap_conn` (pymssql) e credenziali `~/.sap_ro.json` (chmod 600);
-   script `sessione_22/sap_lettura.py`. In alternativa, query dal client SAP (Gestione interrogazioni)
-4. Da chiarire con Remazel: documenti SAP usati per il conto lavoro; codici articolo con cui viaggia il
-   pezzo a metà ciclo; codici dei magazzini fornitore; accesso al Service Layer
+### Priorità 0 — Dopo la riunione del 06/10
+- Ricevere gli esiti delle 6 decisioni → `Guida_Avvio_T09_Remazel_B3`
+- Eseguire `modulo_rilevazione_set12.py` → Excel alla funzione che rileva → caricamento (script da scrivere, PROVA/SCRIVI)
+- Verifiche iniziali della Guida Avvio: backup, 58 WO/set, fornitore su tutte le esterne, fine set vs consegna,
+  `skip_transfer` per lo scarico di produzione, 3.330 vs 3.306 Job Card (`dettaglio_personalizzazioni.py`)
+- Gantt Project vuoto → configurare vista o puntare il Master Plan sui Task di gruppo; rinominare la scorciatoia
 
-### Priorità 2 — Risposte di Simone
-- ✅ Risposte del 05/10 ricevute e applicate (vedi sessione 23)
-- H.T. SRL vs H.T.S. SRL; selezione Dipendente nei time log senza ruoli HR
-- Avanzamento reale set 1-2 (lo smarca Simone) → poi ripianificare (i WO sono submitted: si usano gli
-  strumenti di ritardo, non `scheduling_wo_t09.py` che lavora sui WO in bozza)
+### Priorità 1 — Expediting
+1. **Analisi Ordine conto lavoro** (documento nuovo, sostituisce Relazione/Scenari conto lavoro)
+2. **Ordine conto lavoro**: DocType con n° ordine SAP, fornitore, data promessa, magazzino SAP fornitore, righe = Job
+   Card esterne; pulsanti **Spedito / Rientrato** (anche parziale), senza operatore; al rientro Job Card completate e
+   sottomesse. Prima: verificare se ERPNext completa una Job Card senza dipendente
+3. **Cruscotto expediting**: tre fasce (scadute / in scadenza / tutte), un messaggio giornaliero a un gruppo con
+   responsabile; fasi a cavallo delle chiusure
+4. **Lettura SAP**: login SQL sola lettura + nome DB; `~/sap_conn` (pymssql), `~/.sap_ro.json` chmod 600, `sap_lettura.py`
+5. Da Remazel: documenti SAP del conto lavoro, codice del pezzo a metà ciclo, magazzini fornitore, Service Layer
 
-### Priorità 3 — Pianificazione
-- Strumenti di ritardo: confronto con la **consegna del set** (`custom_consegna_set`), non con il Project
-- Pagina **"Impostazioni MES Remazel"** (buffer trasporto, buffer per fornitore, regola 2A, calendari,
-  capacità reparti) e sua documentazione nel manuale
-- Gantt / Workspace per PROJ-0002; eventuale "Calendario Fornitori" (chiusure di agosto)
+### Priorità 2 — Sviluppi per l'autonomia
+- Pulsanti sul Production Plan: pianificazione a ritroso del set, generazione punti di monitoraggio
+- Import/export del ciclo da Excel (2a); pagina **"Impostazioni MES Remazel"**
+- Correzione `Gantt_Fix_Project_Remazel` se serve; scorciatoie workspace senza "commesse"
 
-### Priorità 4 — Documentazione (grafica `docx-startit`, naming `{Tipo}_{Oggetto}_Remazel_B{N}`)
-- **Manuale**: pagina impostazioni, expediting (Ordine conto lavoro), uso operativo T09
-- **Guida Produzione → B4**, **Guida Concettuale → B7**, **Analisi Obiettivi → B4**, **Prerequisiti
-  Go-Live → B2**; guida alle funzioni 1c/2b/2d
-- I documenti del 29/09 prendono il naming standard alla versione successiva
-- Salvare `12_Memorie/SKILL_docx-remazel.md` nella skill `docx-remazel`
+### Priorità 3 — Documentazione
+- `Manuale_Configurazione_MES_Remazel_B1` (key user, solo interfaccia)
+- `Riepilogo_Personalizzazioni_Avvio_Remazel_B2` (togliere "commessa" per Project)
+- Guida Personalizzazioni B3 con l'output di `dettaglio_personalizzazioni.py` (WO_Project_Fallback,
+  JobCard_Avviso_Precedenze, Property Setter)
+- Glossario IT→EN (fase etichette inglesi)
 
-### Priorità 5 — Manutenzione e memoria
+### Priorità 4 — Manutenzione e memoria
 - **Copiare questa memoria** in OneDrive `12_Memorie` e nel Project Cowork; archiviare `Old` e `Transfer`
-- Aggiornare la skill `erpnext-remazel` (lista "Fix aperti pre go-live" superata)
-- Eliminare lo snapshot VMware del 02/10
-- QI template su A0001 quando validato; SMTP Microsoft 365; matricole e Job reali
+- ⚠️ Repo GitHub `AI-Project` **pubblico** con dati interni → renderlo privato (Gian)
+- Backup pianificato con copia esterna; sito di prova; eliminare snapshot VMware del 02/10
+- Aggiornare la skill `erpnext-remazel`; salvare `SKILL_docx-remazel.md` nella skill
+- QI template su A0001 quando validato; SMTP Microsoft 365; H.T. SRL vs H.T.S. SRL
 
-### Priorità 6 — T08 (parcheggiata, alla ripresa)
-- Riallineare WO e Job Card T08 ai tempi TT (ripianifica la T08); verificare 581 vs 557 Job Card
+### Priorità 5 — T08 (parcheggiata, alla ripresa)
+- Riallineare WO e Job Card T08 ai tempi TT; verificare 581 vs 557 Job Card; decidere se mantenere o annullare i WO aperti
 
 ### Dopo
-- Traduzione finale in inglese delle etichette; connettore SAP in scrittura (ordini)
-- Motore APS; cascata ritardi tra WO padre/figlio; vista "coda per postazione"
-- Codifica articoli neutra per le commesse future; layout 22 postazioni (TO-BE del 9/09)
+- Traduzione finale in inglese delle etichette; connettore SAP in scrittura (ordini via Service Layer)
+- Timbratura con codice a barre (2c), documenti di fase e stampa scheda (2b), lotto materiale (2d)
+- Motore APS; vista "coda per postazione"; codifica articoli neutra; layout TO-BE
 
 ---
 
