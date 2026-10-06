@@ -4,10 +4,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import startit_docx as S
 from stima_pagine import stima_pagine
 
-NOME = "Scaletta_Riunione_Avvio_T09_Remazel_B2.docx"
+NOME = "Scaletta_Riunione_Avvio_T09_Remazel_B3.docx"
 meta = {
     "Documento": NOME,
-    "Versione": "Bozza 2 — 6 ottobre 2026",
+    "Versione": "Bozza 3 — 6 ottobre 2026",
     "Data": "6 ottobre 2026",
     "Redatto da": "Start I.T. S.r.l.",
     "Destinatario": "Documento interno",
@@ -91,7 +91,7 @@ tb([2900, 6160], ["Cosa", "Link"], [
     ["Gantt punti di monitoraggio T09", "https://combustionerp.remazel.com/app/task/view/gantt?project=PROJ-0002"],
     ["Job Card T09", "https://combustionerp.remazel.com/app/job-card?project=PROJ-0002"],
     ["Job Card per Simula Ritardo", "https://combustionerp.remazel.com/app/job-card/PO-JOB05552"],
-    ["Esterne presso fornitore", "https://combustionerp.remazel.com/app/job-card?custom_stato_cl=Presso%20fornitore"],
+    ["Fasi esterne T09 (stato conto lavoro)", "https://combustionerp.remazel.com/app/job-card?project=PROJ-0002&workstation=Lavorazione%20Esterna"],
     ["Carico Reparti Settimanale", "https://combustionerp.remazel.com/app/query-report/Carico%20Reparti%20Settimanale"],
 ])
 h(2, "7.2 Impostazioni e personalizzazioni")
