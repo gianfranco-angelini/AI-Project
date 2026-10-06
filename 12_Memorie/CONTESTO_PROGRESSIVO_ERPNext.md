@@ -1455,6 +1455,15 @@ La mail del 02/10 **era stata inviata** (02/10 17:10). Risposte:
   IT→EN da validare; 3 livelli (etichette / valori Select nei dati / nomi documento con rename_doc);
   i fieldname non si toccano mai; proposta lingua per utente (base EN + Translation IT per operatori)
 - Number Card "Ordini Commessa" / "Ordini Commessa T09": nome da correggere (è il Project) nella fase EN
+- Altri documenti 06/10: `Guida_Personalizzazioni_MES_Remazel_B2` (senza cap. Principi), `Manuale_Utente_Remazel_B3`
+  (sostituisce Manuale_Utente B2 + Manuale_Operativo_T080100_v2; passi di avvio fatti dall'utente da interfaccia,
+  nessun contatto), `Guida_Concettuale_Remazel_B7` (T09, magazzino SAP). Superati → `01_Documentazione/Old` (fatto da Gian)
+- ✅ **Decisione chiusura WO (06/10)**: opzione (a) — scarico di produzione (Stock Entry Manufacture) con giacenze
+  negative ammesse; valore solo di avanzamento. ⚠️ Da verificare sul server: `skip_transfer` sui WO / impostazioni
+  per scaricare senza trasferimento al WIP
+- ⚠️ Manuale B3 cita come "funzioni in rilascio" due pulsanti da sviluppare sul Production Plan: **pianificazione a
+  ritroso del set** e **generazione punti di monitoraggio (Task)**; da confermare: Submit delle JC fatto da
+  responsabile/Pianificazione (l'operatore non ha submit)
 
 ### Azioni
 - Fronte ERPNext, Decisioni chiuse e Task aperti **riscritti da zero** al 05/10
