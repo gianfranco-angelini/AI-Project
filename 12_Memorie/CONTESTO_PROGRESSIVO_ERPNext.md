@@ -1425,6 +1425,11 @@ La mail del 02/10 **era stata inviata** (02/10 17:10). Risposte:
   348 WO collegati. Struttura generata dall'albero BOM → riusabile come template per famiglia
 - **1f**: Number Card "Ordini Commessa T09", "Pezzi Prodotti T09"; Chart "Ordini di Produzione per Stato T09",
   "Avvio Ordini per Settimana T09" nel Workspace pubblico
+- Workspace pubblico riordinato (`ws_riordino.py`): in alto "Master Plan BU Combustion" + sezione
+  "T09-0100 — in esercizio", sotto "T08-0100 — parcheggiata". **Workspace Sidebar "Produzione Remazel"**
+  creata (`ws_sidebar.py`, 13 voci: Home, Master Plan, Gantt WO/Task T09, WO/JC/Task T09, Production Plan,
+  Project, report) + voce "Produzione Remazel" nel menu Manufacturing. In v16 il menu laterale si gestisce
+  con il DocType **Workspace Sidebar** (link_type ammessi: DocType, Page, Report, Workspace, Dashboard, URL)
 - Script di servizio: `sessione_23/ws_pubblico.py` (copia Workspace). Inventario personalizzazioni del 05/10:
   `sessione_23/inventario_personalizzazioni.py`
 
