@@ -1463,6 +1463,10 @@ La mail del 02/10 **era stata inviata** (02/10 17:10). Risposte:
   R2, R4, R5, R9). Da spostare in Old (Gian): Piano_Operativo, Guida_Produzione, Guida_Test_Pianificazione, Audit,
   Ciclo_Produttivo, Relazione_Lavorazioni_Esterne, Scenari_Conto_Lavoro, Agenda_Validazione B2, Prerequisiti B1,
   Guida_Concettuale v6. Restano correnti 7 documenti + Controlli_e_Sigle v3. Da scrivere: analisi Ordine conto lavoro
+- Riunione 06/10: `Scaletta_Riunione_Avvio_T09_Remazel_B1` (uso interno) e `Guida_Avvio_T09_Remazel_B1` (percorso
+  avvio T09 con 6 decisioni "Da decidere": rilevazione set 1-2, reparto pilota, regole reparto, esterne nel transitorio
+  A/B, accesso SAP, controllo settimanale). Script `sessione_23/modulo_rilevazione_set12.py` (sola lettura DB, crea
+  Rilevazione_Set_1_2_T09.xlsx). Manuale di Configurazione per l'utente (key user) → dopo la Guida Avvio
 - ✅ **Decisione chiusura WO (06/10)**: opzione (a) — scarico di produzione (Stock Entry Manufacture) con giacenze
   negative ammesse; valore solo di avanzamento. ⚠️ Da verificare sul server: `skip_transfer` sui WO / impostazioni
   per scaricare senza trasferimento al WIP
