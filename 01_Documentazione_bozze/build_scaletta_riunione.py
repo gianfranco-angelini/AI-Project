@@ -4,10 +4,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import startit_docx as S
 from stima_pagine import stima_pagine
 
-NOME = "Scaletta_Riunione_Avvio_T09_Remazel_B1.docx"
+NOME = "Scaletta_Riunione_Avvio_T09_Remazel_B2.docx"
 meta = {
     "Documento": NOME,
-    "Versione": "Bozza 1 — 6 ottobre 2026",
+    "Versione": "Bozza 2 — 6 ottobre 2026",
     "Data": "6 ottobre 2026",
     "Redatto da": "Start I.T. S.r.l.",
     "Destinatario": "Documento interno",
@@ -80,8 +80,45 @@ bx("nota", "Prima di entrare", [
     "Provare nel browser il percorso della dimostrazione: spazio di lavoro, Gantt del set, Job Card, Simula Ritardo.",
 ])
 
+h(1, "7. Link alle personalizzazioni")
+p("Collegamenti diretti al sistema (accesso con le proprie credenziali). Nel file Word: Ctrl + clic per aprire.")
+h(2, "7.1 Per la dimostrazione")
+tb([2900, 6160], ["Cosa", "Link"], [
+    ["Spazio di lavoro", "https://combustionerp.remazel.com/app/produzione-remazel"],
+    ["Master Plan (Gantt Project)", "https://combustionerp.remazel.com/app/project/view/gantt"],
+    ["Project T09-0100", "https://combustionerp.remazel.com/app/project/PROJ-0002"],
+    ["Gantt Work Order T09", "https://combustionerp.remazel.com/app/work-order/view/gantt?project=PROJ-0002"],
+    ["Gantt punti di monitoraggio T09", "https://combustionerp.remazel.com/app/task/view/gantt?project=PROJ-0002"],
+    ["Job Card T09", "https://combustionerp.remazel.com/app/job-card?project=PROJ-0002"],
+    ["Job Card per Simula Ritardo", "https://combustionerp.remazel.com/app/job-card/PO-JOB05552"],
+    ["Esterne presso fornitore", "https://combustionerp.remazel.com/app/job-card?custom_stato_cl=Presso%20fornitore"],
+    ["Carico Reparti Settimanale", "https://combustionerp.remazel.com/app/query-report/Carico%20Reparti%20Settimanale"],
+])
+h(2, "7.2 Impostazioni e personalizzazioni")
+tb([2900, 6160], ["Cosa", "Link"], [
+    ["Reparti (postazioni, calendario)", "https://combustionerp.remazel.com/app/workstation"],
+    ["Calendario Remazel", "https://combustionerp.remazel.com/app/holiday-list/Calendario%20Remazel%202026-2029"],
+    ["Calendario Fornitori", "https://combustionerp.remazel.com/app/holiday-list/Calendario%20Fornitori%202026-2029"],
+    ["Impostazioni produzione", "https://combustionerp.remazel.com/app/manufacturing-settings"],
+    ["Production Plan", "https://combustionerp.remazel.com/app/production-plan"],
+    ["Distinte base", "https://combustionerp.remazel.com/app/bom"],
+    ["Indicatori (Number Card)", "https://combustionerp.remazel.com/app/number-card"],
+    ["Grafici (Dashboard Chart)", "https://combustionerp.remazel.com/app/dashboard-chart"],
+    ["Menu laterale", "https://combustionerp.remazel.com/app/workspace-sidebar/Produzione%20Remazel"],
+    ["Operatori (Employee)", "https://combustionerp.remazel.com/app/employee"],
+    ["Permessi per reparto", "https://combustionerp.remazel.com/app/user-permission"],
+    ["Matricole (Serial No)", "https://combustionerp.remazel.com/app/serial-no"],
+    ["Campi Job Card (Personalizza modulo)", "https://combustionerp.remazel.com/app/customize-form?doc_type=Job%20Card"],
+    ["Script lato server", "https://combustionerp.remazel.com/app/server-script"],
+    ["Script lato client", "https://combustionerp.remazel.com/app/client-script"],
+])
+bx("criticita", "In dimostrazione", [
+    "Sulla Job Card usare solo **Simula Ritardo**: Applica Ritardo modifica le date pianificate.",
+])
+
 doc = S.Documento(meta, titolo, sottotitolo, C)
 OUT = "/home/user/AI-Project/01_Documentazione_bozze/" + NOME
 pagine = stima_pagine(C)
 S.scrivi(doc, OUT, "Documento interno", "Scaletta riunione avvio T09", pagine)
-print(OUT, "pagine stimate:", max(pagine.values()))
+from linkify import linkify
+print(OUT, "pagine stimate:", max(pagine.values()), "link:", linkify(OUT))
