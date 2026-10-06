@@ -1467,6 +1467,10 @@ La mail del 02/10 **era stata inviata** (02/10 17:10). Risposte:
   avvio T09 con 6 decisioni "Da decidere": rilevazione set 1-2, reparto pilota, regole reparto, esterne nel transitorio
   A/B, accesso SAP, controllo settimanale). Script `sessione_23/modulo_rilevazione_set12.py` (sola lettura DB, crea
   Rilevazione_Set_1_2_T09.xlsx). Manuale di Configurazione per l'utente (key user) → dopo la Guida Avvio
+- ⚠️ **Gantt Project (/desk/project/view/gantt) pagina vuota** anche con Gantt_Fix_Project_Remazel disattivato
+  (riattivato). Ipotesi: nessuna vista Gantt configurata per Project in ERPNext. Da fare: configurarla o puntare la
+  scorciatoia workspace "Master Plan commesse" (da rinominare, no "commesse") su Task gantt `?is_group=1`.
+  Scaletta riunione → B4 (link Master Plan su Task di gruppo, esterne "Da inviare"); Guida_Avvio_T09 → B2 (no Start I.T. nel testo)
 - ✅ **Decisione chiusura WO (06/10)**: opzione (a) — scarico di produzione (Stock Entry Manufacture) con giacenze
   negative ammesse; valore solo di avanzamento. ⚠️ Da verificare sul server: `skip_transfer` sui WO / impostazioni
   per scaricare senza trasferimento al WIP
