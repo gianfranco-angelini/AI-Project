@@ -1412,6 +1412,22 @@ La mail del 02/10 **era stata inviata** (02/10 17:10). Risposte:
   liner 04/05/2027): da tenere d'occhio (servono al montaggio A0001-10MT)
 - Microfusioni (P2112, P2302, P2305, P2404): già **una sola fase FE + QC finale** ✅
 
+### Obiettivi chiusi il 05/10 (`sessione_23/obiettivi_1a_1b_1c_1f.py`, eseguito)
+- **1c**: Server Script `Simula/Applica_Ritardo_JobCard` riscritti (codice in `sessione_23/ritardo_set_codice.py`):
+  confronto con la **consegna del set** (`custom_consegna_set` − Buffer Project) e **cascata verso i WO padre**
+  (stesso Production Plan, via `production_plan_sub_assembly_item.parent_item_code`) fino al liner
+- **1a**: Workspace pubblico **"Produzione Remazel"** (copia di `Manufacturing-simone.sacchi`, che era
+  **privato di Simone** — la memoria lo dava per pubblico; il privato resta finché Simone non decide) con
+  scorciatoie Master Plan (Gantt Project), Gantt WO T09, Gantt Task T09, Carico Reparti; Client Script
+  `Gantt_Fix_Project_Remazel`; report Carico Reparti su "Calendario Remazel 2026-2029" (era Festivi Italia 2026-2027)
+- **1b**: **42 Task** su PROJ-0002 (per ogni set: gruppo "T09 Set N - consegna" + 6 macro: A1000, A2000, A3000,
+  P4000, P5000, A0001 con dipendenze), date dai WO; campo **`Work Order.custom_task`** ("Punto di monitoraggio"),
+  348 WO collegati. Struttura generata dall'albero BOM → riusabile come template per famiglia
+- **1f**: Number Card "Ordini Commessa T09", "Pezzi Prodotti T09"; Chart "Ordini di Produzione per Stato T09",
+  "Avvio Ordini per Settimana T09" nel Workspace pubblico
+- Script di servizio: `sessione_23/ws_pubblico.py` (copia Workspace). Inventario personalizzazioni del 05/10:
+  `sessione_23/inventario_personalizzazioni.py`
+
 ### Azioni
 - Fronte ERPNext, Decisioni chiuse e Task aperti **riscritti da zero** al 05/10
 - Recuperati in **Appendice tecnica** i dettagli ancora validi di `Cowork_Progetto_T080100.md` e
