@@ -4,10 +4,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import startit_docx as S
 from stima_pagine import stima_pagine
 
-NOME = "Scaletta_Riunione_Avvio_T09_Remazel_B3.docx"
+NOME = "Scaletta_Riunione_Avvio_T09_Remazel_B4.docx"
 meta = {
     "Documento": NOME,
-    "Versione": "Bozza 3 — 6 ottobre 2026",
+    "Versione": "Bozza 4 — 6 ottobre 2026",
     "Data": "6 ottobre 2026",
     "Redatto da": "Start I.T. S.r.l.",
     "Destinatario": "Documento interno",
@@ -33,7 +33,7 @@ bx("positivo", "Da dire in apertura e in chiusura", [
 h(1, "2. Scaletta (45 minuti)")
 tb([1000, 2600, 5460], ["Tempo", "Punto", "Cosa dire o mostrare"], [
     ["5'", "Dove siamo", "6 obiettivi su 12 completati; T09 pianificata: 6 set, 348 Work Order, oltre 3.300 Job Card; 21 operatori con accesso per reparto"],
-    ["10'", "Dimostrazione", "Produzione Remazel → Gantt di un set → una Job Card (descrizione, fornitore) → Pianificazione → Simula Ritardo (solo Simula, non Applica) → effetto sulla consegna"],
+    ["10'", "Dimostrazione", "Produzione Remazel → Master Plan dei set → Gantt di un set → una Job Card (descrizione, fornitore) → Pianificazione → Simula Ritardo (solo Simula, non Applica) → effetto sulla consegna"],
     ["10'", "Il go", "Cosa parte subito e cosa arriva dopo (capitolo 3)"],
     ["15'", "Decisioni", "Le sei decisioni del capitolo 4: per ognuna funzione responsabile e data"],
     ["5'", "Chiusura", "Rilettura delle decisioni; primo controllo settimanale in calendario"],
@@ -85,13 +85,13 @@ p("Collegamenti diretti al sistema (accesso con le proprie credenziali). Nel fil
 h(2, "7.1 Per la dimostrazione")
 tb([2900, 6160], ["Cosa", "Link"], [
     ["Spazio di lavoro", "https://combustionerp.remazel.com/app/produzione-remazel"],
-    ["Master Plan (Gantt Project)", "https://combustionerp.remazel.com/app/project/view/gantt"],
+    ["Master Plan (Gantt dei set, tutti i Project)", "https://combustionerp.remazel.com/app/task/view/gantt?is_group=1"],
     ["Project T09-0100", "https://combustionerp.remazel.com/app/project/PROJ-0002"],
     ["Gantt Work Order T09", "https://combustionerp.remazel.com/app/work-order/view/gantt?project=PROJ-0002"],
     ["Gantt punti di monitoraggio T09", "https://combustionerp.remazel.com/app/task/view/gantt?project=PROJ-0002"],
     ["Job Card T09", "https://combustionerp.remazel.com/app/job-card?project=PROJ-0002"],
     ["Job Card per Simula Ritardo", "https://combustionerp.remazel.com/app/job-card/PO-JOB05552"],
-    ["Fasi esterne T09 (stato conto lavoro)", "https://combustionerp.remazel.com/app/job-card?project=PROJ-0002&workstation=Lavorazione%20Esterna"],
+    ["Fasi esterne da inviare", "https://combustionerp.remazel.com/app/job-card?custom_stato_cl=Da%20inviare"],
     ["Carico Reparti Settimanale", "https://combustionerp.remazel.com/app/query-report/Carico%20Reparti%20Settimanale"],
 ])
 h(2, "7.2 Impostazioni e personalizzazioni")
