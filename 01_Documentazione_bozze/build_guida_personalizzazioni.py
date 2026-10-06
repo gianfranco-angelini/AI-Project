@@ -2,10 +2,10 @@ import sys, os, json, math
 sys.path.insert(0, "/root/.claude/skills/synced/593ea5d8-9a85-4668-a3fb-0290e8e227e7_746b874a-eee2-4e96-b44c-f02049e430c1/docx-startit/scripts")
 import startit_docx as S
 
-NOME = "Guida_Personalizzazioni_MES_Remazel_B1.docx"
+NOME = "Guida_Personalizzazioni_MES_Remazel_B2.docx"
 meta = {
     "Documento": NOME,
-    "Versione": "Bozza 1 — 6 ottobre 2026",
+    "Versione": "Bozza 2 — 6 ottobre 2026",
     "Data": "6 ottobre 2026",
     "Redatto da": "Start I.T. S.r.l.",
     "Destinatario": "Remazel Engineering S.p.A. — BU Combustion",
@@ -34,29 +34,8 @@ bx("info", "Lingua delle etichette", [
     "Tutte le etichette, gli stati e i messaggi sono oggi in italiano. La lingua finale del sistema sarà l'inglese: la conversione è una fase successiva, con un glossario da validare, e non cambia i nomi tecnici dei campi riportati in questa guida.",
 ])
 
-# ------------------------------------------------------------------ 2
-h(1, "2. Principi di intervento")
-p("Tutte le personalizzazioni sono salvate **nel database** del sito, non nel codice dell'applicazione: sopravvivono agli aggiornamenti di versione, ma si perdono con il database se non c'è un backup.")
-bl([
-    "**Backup prima di ogni modifica** strutturale (campi, script, distinte, calendari).",
-    "**Prima in prova, poi in scrittura**: ogni procedura da console si esegue prima in modalità di sola lettura, si controlla l'elenco delle modifiche, solo dopo si scrive.",
-    "**Una modifica alla volta**, verificata a video prima di passare alla successiva.",
-    "**Copia del codice** di ogni script prima di modificarlo, conservata nell'archivio degli script di progetto.",
-    "**Effetto solo in avanti**: capacità, calendari e tempi di distinta valgono per le pianificazioni successive; Work Order e Job Card già creati non si ricalcolano da soli.",
-])
-bx("criticita", "Da non fare mai", [
-    "Cambiare il **nome tecnico** (fieldname) di un campo, ad esempio custom_stato_cl: è usato da script, report e filtri.",
-    "Modificare il database con istruzioni SQL dirette su documenti rilasciati, se non con una procedura di progetto già provata.",
-    "Modificare lo spazio di lavoro privato di un utente: si interviene solo sullo spazio pubblico «Produzione Remazel».",
-    "Usare i pulsanti di rilascio e avvio massivo senza aver controllato quali Work Order sono in bozza (capitolo 5.2).",
-])
-p("Backup completo del sito, da eseguire come utente frappe-user:")
-cd(["cd /home/frappe-user/frappe-bench",
-    "bench --site site1.local backup --with-files",
-    "# file in sites/site1.local/private/backups/"])
-
 # ------------------------------------------------------------------ 3
-h(1, "3. Mappa delle personalizzazioni")
+h(1, "2. Mappa delle personalizzazioni")
 p("Ogni percorso si apre aggiungendolo all'indirizzo del sistema (es. https://combustionerp.remazel.com/app/server-script).")
 tb([2000, 3260, 1300, 2500], ["Area", "Elemento", "Quantità", "Percorso"], [
     ["Campi", "Campi aggiuntivi su Job Card, Project, Work Order, distinta, Employee, Serial No", "22", "/app/customize-form"],
@@ -75,8 +54,8 @@ tb([2000, 3260, 1300, 2500], ["Area", "Elemento", "Quantità", "Percorso"], [
 ])
 
 # ------------------------------------------------------------------ 4
-h(1, "4. Campi aggiuntivi (Custom Field)")
-h(2, "4.1 Elenco dei campi")
+h(1, "3. Campi aggiuntivi (Custom Field)")
+h(2, "3.1 Elenco dei campi")
 p("I campi aggiuntivi hanno nome tecnico che inizia con **custom_**. Le sezioni (Section Break) e le colonne (Column Break) servono solo all'impaginazione del modulo.")
 tb([1700, 2700, 1400, 3260], ["Documento", "Campo (nome tecnico)", "Tipo", "Funzione"], [
     ["Job Card", "custom_descrizione_fase", "Small Text", "Descrizione della fase dal Work Order, in elenco"],
@@ -101,7 +80,7 @@ tb([1700, 2700, 1400, 3260], ["Documento", "Campo (nome tecnico)", "Tipo", "Funz
     ["Employee", "custom_funzione", "Data", "Funzione aziendale del dipendente"],
 ])
 
-h(2, "4.2 Come modificare un campo")
+h(2, "3.2 Come modificare un campo")
 st([
     ["Aprire", ["Personalizza modulo: /app/customize-form, scegliere il documento (es. Job Card).", "In alternativa: /app/custom-field filtrando per documento."]],
     ["Individuare", ["Cercare il campo per etichetta o per nome tecnico; aprire il dettaglio della riga."]],
@@ -116,12 +95,12 @@ bx("nota", "Interventi da valutare prima", [
     "Sulle distinte rilasciate un campo è modificabile solo se ha l'impostazione «Allow on Submit».",
 ])
 
-h(2, "4.3 Campi delle applicazioni standard")
+h(2, "3.3 Campi delle applicazioni standard")
 p("L'elenco dei Custom Field del sistema contiene anche circa 120 campi installati dalle applicazioni **Italia** (fatturazione elettronica, dati fiscali, campi IVA sulle righe dei documenti) e **HRMS** (risorse umane, paghe, approvatori). Non fanno parte del M.E.S. Remazel e **non vanno modificati né eliminati**: sono gestiti dagli aggiornamenti delle rispettive applicazioni. Si riconoscono perché il nome tecnico non inizia con custom_.")
 
 # ------------------------------------------------------------------ 5
-h(1, "5. Script lato server")
-h(2, "5.1 Automatismi sugli eventi dei documenti")
+h(1, "4. Script lato server")
+h(2, "4.1 Automatismi sugli eventi dei documenti")
 p("Si eseguono da soli quando un documento viene creato, salvato o rilasciato. L'evento «Before Save» corrisponde alla validazione e scatta **anche alla creazione**.")
 tb([2900, 1300, 1700, 3160], ["Script", "Documento", "Evento", "Funzione"], [
     ["WorkOrder_Consegna_Set", "Work Order", "Before Insert", "Se manca, copia la data di consegna dalla riga dell'ordine cliente"],
@@ -136,7 +115,7 @@ tb([2900, 1300, 1700, 3160], ["Script", "Documento", "Evento", "Funzione"], [
     ["Project_Deadline_Interna", "Project", "Before Save", "Scadenza interna = fine prevista − Buffer Project"],
 ])
 
-h(2, "5.2 Funzioni richiamabili")
+h(2, "4.2 Funzioni richiamabili")
 p("Sono script di tipo API, richiamati da pulsanti dell'interfaccia. Il campo evento che compare nell'elenco («Before Insert») non ha significato per questo tipo di script.")
 tb([2600, 2300, 4160], ["Script", "Richiamato da", "Funzione"], [
     ["Simula_Ritardo_JobCard", "Job Card → Pianificazione → Simula Ritardo", "Calcola l'effetto di una nuova data di fine fase su fasi successive e Work Order padre, senza scrivere"],
@@ -148,7 +127,7 @@ bx("criticita", "Funzioni massive", [
     "Submit All Draft WO e Start_All_WO agiscono su tutto il sistema, non su un singolo Project. Prima dell'uso controllare l'elenco dei Work Order in bozza filtrato per stato: se ce ne sono di altri Project tenuti volutamente in bozza, non usare la funzione.",
 ])
 
-h(2, "5.3 Come modificare uno script")
+h(2, "4.3 Come modificare uno script")
 st([
     ["Copia", ["Aprire /app/server-script/<nome> e copiare il contenuto del campo Script in un file di testo nell'archivio degli script di progetto."]],
     ["Modifica", ["Modificare il codice nel campo Script e salvare.", "Regole dell'ambiente protetto: **nessun import**; le funzioni si usano per attributo (frappe.utils.getdate, frappe.utils.add_days)."]],
@@ -157,8 +136,8 @@ st([
 ])
 
 # ------------------------------------------------------------------ 6
-h(1, "6. Script lato client e report")
-h(2, "6.1 Script lato client")
+h(1, "5. Script lato client e report")
+h(2, "5.1 Script lato client")
 p("Percorso: /app/client-script/<nome>. Dopo ogni modifica gli utenti devono ricaricare la pagina (Ctrl+Maiusc+R). Per disattivarne uno si toglie la spunta **Enabled**.")
 tb([2900, 1500, 1100, 3560], ["Script", "Documento", "Vista", "Funzione"], [
     ["Job Card-Ritardo", "Job Card", "Modulo", "Menu «Pianificazione» con i pulsanti Simula Ritardo e Applica Ritardo"],
@@ -171,7 +150,7 @@ bx("info", "Correzioni grafiche del Gantt", [
     "I tre script Gantt_Fix diventano superflui quando un aggiornamento di Frappe correggerà il difetto: a ogni aggiornamento di versione si possono disattivare uno alla volta e verificare il Gantt.",
 ])
 
-h(2, "6.2 Report «Carico Reparti Settimanale»")
+h(2, "5.2 Report «Carico Reparti Settimanale»")
 p("Query Report su Job Card. Percorso: /app/report/Carico Reparti Settimanale; la query SQL si modifica nel campo Query del report (utente con ruolo System Manager).")
 bl([
     "**Capacità di reparto** = giorni lavorativi × 540 minuti × postazioni del reparto (production_capacity della Workstation).",
@@ -181,8 +160,8 @@ bl([
 p("Se cambiano l'orario giornaliero dei reparti o il calendario di riferimento, la query va aggiornata di conseguenza: il valore 540 e il nome del calendario sono scritti nel testo.")
 
 # ------------------------------------------------------------------ 7
-h(1, "7. Parametri di pianificazione")
-h(2, "7.1 Reparti (Workstation)")
+h(1, "6. Parametri di pianificazione")
+h(2, "6.1 Reparti (Workstation)")
 tb([2600, 1500, 4960], ["Reparto", "Postazioni", "Calendario"], [
     ["Saldatura", "7", "Calendario Remazel 2026-2029"],
     ["Molatura", "5", "Calendario Remazel 2026-2029"],
@@ -193,7 +172,7 @@ tb([2600, 1500, 4960], ["Reparto", "Postazioni", "Calendario"], [
 ])
 p("Percorso: /app/workstation/<reparto>. Il campo **Production Capacity** è il numero di postazioni che lavorano in parallelo; la Lavorazione Esterna ha 50 postazioni per rappresentare fornitori diversi che lavorano contemporaneamente. Il nome del reparto è una chiave usata da distinte, Job Card e permessi degli operatori: **non si rinomina** da interfaccia.")
 
-h(2, "7.2 Calendari (Holiday List)")
+h(2, "6.2 Calendari (Holiday List)")
 tb([3000, 1300, 4760], ["Calendario", "Giorni", "Contenuto"], [
     ["Calendario Remazel 2026-2029", "493", "Sabati, domeniche, festività nazionali e patronale, chiusure aziendali; reparti interni e default azienda"],
     ["Calendario Fornitori 2026-2029", "75", "Festività e chiusure aziendali senza fine settimana; Lavorazione Esterna"],
@@ -206,7 +185,7 @@ st([
     ["Effetto", ["Vale per le pianificazioni successive e per il report di carico. Le Job Card già pianificate non si spostano: se serve, si ripianifica con Simula/Applica Ritardo."]],
 ])
 
-h(2, "7.3 Tempi delle fasi in distinta")
+h(2, "6.3 Tempi delle fasi in distinta")
 bl([
     "**Fasi interne**: tempo per pezzo in minuti (time_in_mins) sulla riga di operazione della distinta.",
     "**Fasi esterne**: tempo di attraversamento del lotto (TT) dal ciclo dell'Ufficio Tecnico, comprensivo di spedizione, con l'opzione **tempo fisso** attiva: la durata non si moltiplica per la quantità.",
@@ -214,7 +193,7 @@ bl([
     "Il fornitore della fase esterna (campo Fornitore della riga di operazione) va compilato nella nuova distinta: è da lì che lo legge la Job Card.",
 ])
 
-h(2, "7.4 Impostazioni produzione")
+h(2, "6.4 Impostazioni produzione")
 tb([3600, 2000, 3460], ["Parametro", "Valore", "Dove"], [
     ["Capacity planning", "Attivo", "/app/manufacturing-settings"],
     ["Orizzonte di pianificazione", "365 giorni", "/app/manufacturing-settings"],
@@ -225,19 +204,19 @@ bx("nota", "Orizzonte di pianificazione", [
     "Se le fasi di un set non trovano capacità entro l'orizzonte, il rilascio del Work Order si interrompe con un errore di capacità (CapacityError). Prima di aumentare l'orizzonte verificare i tempi in distinta: un tempo per pezzo inserito al posto di un tempo per lotto è la causa più frequente.",
 ])
 
-h(2, "7.5 Buffer Project")
+h(2, "6.5 Buffer Project")
 p("Project → scheda Details → sezione **Timeline** (chiusa per impostazione) → «Buffer Project (giorni)», default 5. Al salvataggio la «Deadline Interna (con buffer)» si ricalcola. Il buffer resta sul singolo Project per consentire margini diversi per ordine. La pianificazione a ritroso dei set usa come fine la data di consegna meno il buffer.")
 
 # ------------------------------------------------------------------ 8
-h(1, "8. Monitoraggio")
-h(2, "8.1 Spazio di lavoro e menu laterale")
+h(1, "7. Monitoraggio")
+h(2, "7.1 Spazio di lavoro e menu laterale")
 bl([
     "**Spazio di lavoro pubblico** «Produzione Remazel»: /app/produzione-remazel. Si modifica con il pulsante **Edit** in alto (ruolo Workspace Manager): i blocchi si trascinano, si aggiungono o si eliminano; poi **Save**.",
     "**Menu laterale**: /app/workspace-sidebar/Produzione Remazel, 13 voci. Ogni voce ha un tipo di collegamento ammesso: DocType, Page, Report, Workspace, Dashboard o URL. Il menu è richiamato anche dal menu laterale Manufacturing.",
     "Gli spazi di lavoro **privati** dei singoli utenti non si modificano: sono personali.",
 ])
 
-h(2, "8.2 Indicatori e grafici")
+h(2, "7.2 Indicatori e grafici")
 tb([3300, 1900, 3860], ["Elemento", "Tipo", "Filtro principale"], [
     ["Ordini Commessa / Ordini Commessa T09", "Number Card", "Work Order del Project"],
     ["Pezzi Prodotti / Pezzi Prodotti T09", "Number Card", "Quantità prodotta dei Work Order"],
@@ -248,7 +227,7 @@ tb([3300, 1900, 3860], ["Elemento", "Tipo", "Filtro principale"], [
 ])
 p("Percorsi: /app/number-card/<nome> e /app/dashboard-chart/<nome>. Per un nuovo Project si **duplica** l'indicatore T09 (menu ... → Duplicate), si cambia il filtro sul Project e lo si aggiunge allo spazio di lavoro. Il nome «Ordini Commessa» è da rivedere nella fase di conversione delle etichette: il termine corretto è Project.")
 
-h(2, "8.3 Punti di monitoraggio (Task)")
+h(2, "7.3 Punti di monitoraggio (Task)")
 bl([
     "Per ogni set: un Task di gruppo e 6 Task di macro-assieme con le dipendenze (42 sulla T09, 21 sulla T08), generati dall'albero di distinta.",
     "Ogni Work Order è collegato al proprio Task con il campo **custom_task** («Punto di monitoraggio (Task)»).",
@@ -257,8 +236,8 @@ bl([
 ])
 
 # ------------------------------------------------------------------ 9
-h(1, "9. Utenti e permessi")
-h(2, "9.1 Ruoli, profili e permessi")
+h(1, "8. Utenti e permessi")
+h(2, "8.1 Ruoli, profili e permessi")
 tb([2800, 1800, 4460], ["Elemento", "Tipo", "Funzione"], [
     ["Operatore di Reparto", "Ruolo", "Accesso alle Job Card in lettura e scrittura, senza creazione, cancellazione e rilascio"],
     ["Permesso per reparto", "User Permission", "Ogni operatore vede solo le Job Card del proprio reparto (Workstation); due permessi per chi lavora su due reparti"],
@@ -269,7 +248,7 @@ bx("criticita", "Permessi personalizzati sulla Job Card", [
     "In Frappe i permessi personalizzati di un documento **sostituiscono** quelli standard. Se da Role Permission Manager si modifica la Job Card, i ruoli standard (System Manager, Manufacturing Manager, Manufacturing User) devono restare nell'elenco, altrimenti perdono l'accesso alle Job Card.",
 ])
 
-h(2, "9.2 Aggiungere un operatore")
+h(2, "8.2 Aggiungere un operatore")
 st([
     ["Dipendente", ["/app/employee/new: nome, stato Active, campo Funzione, tipo di impiego (Dipendente Remazel o Esterno)."]],
     ["Utente", ["/app/user/new: indirizzo nel formato nome.cognome@mes.remazel.com, ruolo Operatore di Reparto; password impostata dall'amministratore."]],
@@ -279,7 +258,7 @@ st([
 ])
 
 # ------------------------------------------------------------------ 10
-h(1, "10. Altre personalizzazioni")
+h(1, "9. Altre personalizzazioni")
 tb([2900, 2100, 4060], ["Elemento", "Percorso", "Note"], [
     ["Operazione Documento Tecnico", "/app/doctype/Operazione Documento Tecnico", "Tabella dei documenti di fase: tipo (Disegno / WPS / Controllo Qualita / Altro), file, nota. Nuovi tipi si aggiungono come opzioni del campo tipo_documento"],
     ["Template controllo saldature", "/app/quality-inspection-template", "40 parametri, da validare; non ancora collegato al prodotto finito"],
@@ -288,7 +267,7 @@ tb([2900, 2100, 4060], ["Elemento", "Percorso", "Note"], [
 ])
 
 # ------------------------------------------------------------------ 11
-h(1, "11. Procedure di progetto da console")
+h(1, "10. Procedure di progetto da console")
 p("Le operazioni massive (allineamenti, generazione dei punti di monitoraggio, ripianificazione dei set) si eseguono con procedure Python dalla console del sito. Le procedure sono conservate nell'archivio del progetto (00_Script_Progetto, una cartella per sessione) e sul server in /home/frappe-user/script_progetto.")
 p("Esecuzione standard, come utente frappe-user:")
 cd(["cd /home/frappe-user/frappe-bench && bench --site site1.local console",
@@ -311,20 +290,20 @@ bx("nota", "Regole della console", [
 ])
 
 # ------------------------------------------------------------------ 12
-h(1, "12. Problemi noti e rimedi")
+h(1, "11. Problemi noti e rimedi")
 tb([3000, 3000, 3060], ["Sintomo", "Causa", "Rimedio"], [
     ["Un campo Select si compila da solo con la prima opzione", "Il valore predefinito di un Select è la prima opzione", "Lasciare vuota la prima riga delle opzioni"],
     ["Un conteggio di campi «compilati» include record vuoti", "Valori stringa vuota invece di NULL", "Nelle query usare IFNULL(campo,'') <> ''"],
     ["Uno script si interrompe con «__import__ not found»", "L'ambiente protetto blocca gli import", "Usare frappe.utils.<funzione>"],
     ["Una modifica di struttura non si vede da console", "Struttura del documento in memoria", "Riaprire la console"],
-    ["Rilascio del Work Order bloccato da CapacityError", "Tempi di fase eccessivi o orizzonte insufficiente", "Verificare i tempi in distinta (capitolo 7.3)"],
+    ["Rilascio del Work Order bloccato da CapacityError", "Tempi di fase eccessivi o orizzonte insufficiente", "Verificare i tempi in distinta (capitolo 6.3)"],
     ["Utenti senza accesso alle Job Card", "Permessi personalizzati incompleti", "Ripristinare i ruoli standard nei permessi della Job Card"],
     ["Barre del Gantt invisibili", "Difetto grafico di Frappe v16", "Verificare che lo script Gantt_Fix del documento sia attivo"],
     ["Date con ora nei campi data di una finestra", "Campo data e ora passato a un campo data", "Usare solo la parte data del valore"],
 ])
 
 # ------------------------------------------------------------------ 13
-h(1, "13. Raccomandazioni")
+h(1, "12. Raccomandazioni")
 bl([
     "**Esportare le personalizzazioni** come fixtures in un'applicazione dedicata (campi, script, report, spazio di lavoro): diventano versionate, confrontabili e reinstallabili su un sito di prova o dopo un ripristino.",
     "**Sito di prova**: una copia del sito di produzione su cui provare le modifiche agli script prima di applicarle.",
