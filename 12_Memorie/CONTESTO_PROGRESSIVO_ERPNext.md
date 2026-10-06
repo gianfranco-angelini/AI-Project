@@ -1645,6 +1645,7 @@ tab **Sub Assembly Items** → **Get Sub Assembly Items** → **Make Work Orders
 
 **Documenti**
 - Si lavora **solo** in `01_Documentazione`, che contiene una sola versione per famiglia (su SharePoint: `Clienti/Remazel/Progetti/Remazel-Combustion`)
+- **Versioni superate → `01_Documentazione/Old`** (decisione di Gian 06/10/2026: si tengono tutte le versioni, niente `_CESTINO` per i documenti). Stessa regola nel repo: `01_Documentazione_bozze/Old`
 - Prima di consegnare: `censimento_remazel.py` dice se qualcosa è fuori standard
 - Ogni variante deve avere l'identificativo di versione nel nome: mai sovrascrivere senza incrementare
 - Il campo `Documento` della tabella info deve coincidere col nome file reale
