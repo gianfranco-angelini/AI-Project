@@ -1439,7 +1439,8 @@ La mail del 02/10 **era stata inviata** (02/10 17:10). Risposte:
   "Consegna set" e "Production Plan" su WO e Job Card). Manca il **lotto materiale** (colata/certificato
   delle leghe). Vincolo: in ERPNext non ci sono giacenze (magazzino su SAP), quindi niente Batch nativo
   senza movimenti. Opzioni: (a) campo "Lotto materiale/colata" registrato sul WO/Job Card della prima
-  fase; (b) lettura del lotto da SAP con il connettore. Da chiedere a Simone: quali livelli vanno
+  fase, **NON obbligatorio** (decisione 06/10: nessun blocco, eventuale segnalazione nel cruscotto);
+  (b) lettura del lotto da SAP con il connettore. Da chiedere a Simone: quali livelli vanno
   tracciati (solo materia prima o anche semilavorati) e dove si registra oggi il numero di colata
 
 ### Azioni
