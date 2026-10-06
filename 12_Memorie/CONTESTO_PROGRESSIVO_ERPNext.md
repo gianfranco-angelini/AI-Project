@@ -1433,6 +1433,15 @@ La mail del 02/10 **era stata inviata** (02/10 17:10). Risposte:
 - Script di servizio: `sessione_23/ws_pubblico.py` (copia Workspace). Inventario personalizzazioni del 05/10:
   `sessione_23/inventario_personalizzazioni.py`
 
+### 2d — cosa resta aperto (06/10, concordato con Gian)
+- Chiuso: **matricola e marcatura solo sul prodotto finito A0001**, a fine produzione, provvisoria
+- **Aperto: tracciabilità dei lotti**. Il lotto di produzione c'è già (= **set**: Production Plan per set,
+  "Consegna set" e "Production Plan" su WO e Job Card). Manca il **lotto materiale** (colata/certificato
+  delle leghe). Vincolo: in ERPNext non ci sono giacenze (magazzino su SAP), quindi niente Batch nativo
+  senza movimenti. Opzioni: (a) campo "Lotto materiale/colata" registrato sul WO/Job Card della prima
+  fase; (b) lettura del lotto da SAP con il connettore. Da chiedere a Simone: quali livelli vanno
+  tracciati (solo materia prima o anche semilavorati) e dove si registra oggi il numero di colata
+
 ### Azioni
 - Fronte ERPNext, Decisioni chiuse e Task aperti **riscritti da zero** al 05/10
 - Recuperati in **Appendice tecnica** i dettagli ancora validi di `Cowork_Progetto_T080100.md` e
