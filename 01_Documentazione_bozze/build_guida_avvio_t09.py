@@ -4,10 +4,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import startit_docx as S
 from stima_pagine import stima_pagine
 
-NOME = "Guida_Avvio_T09_Remazel_B1.docx"
+NOME = "Guida_Avvio_T09_Remazel_B2.docx"
 meta = {
     "Documento": NOME,
-    "Versione": "Bozza 1 — 6 ottobre 2026",
+    "Versione": "Bozza 2 — 6 ottobre 2026",
     "Data": "6 ottobre 2026",
     "Redatto da": "Start I.T. S.r.l.",
     "Destinatario": "Remazel Engineering S.p.A. — BU Combustion",
@@ -58,7 +58,7 @@ tb([3400, 4160, 1500], ["Elemento", "Situazione", "Stato"], [
 
 # ------------------------------------------------------------------ 3
 h(1, "3. Verifiche iniziali")
-p("Prima di coinvolgere i reparti. Funzione: **Start I.T.** con la **Pianificazione di produzione**.")
+p("Prima di coinvolgere i reparti. Funzione: **Amministratore del sistema** con la **Pianificazione di produzione**.")
 tb([600, 3000, 3960, 1500], ["N.", "Verifica", "Esito atteso", "Stato"], [
     ["1", "Backup completo del sistema", "Copia del database e dei file, conservata fuori dal server", "Da fare"],
     ["2", "Numeri per set", "58 Work Order per set; Job Card coerenti; differenza 3.330 / 3.306 spiegata", "Da fare"],
@@ -72,9 +72,9 @@ tb([600, 3000, 3960, 1500], ["N.", "Verifica", "Esito atteso", "Stato"], [
 h(1, "4. Allineamento dei set 1 e 2")
 p("I set 1 e 2 sono in produzione da maggio, ma il sistema li ha pianificati come se partissero il 2 ottobre. Finché lo stato reale non è registrato, date e ritardi di questi set non sono attendibili.")
 st([
-    ["Modulo", ["Start I.T. estrae dal sistema il modulo Excel di rilevazione: una riga per ogni fase dei set 1 e 2, con Work Order, articolo, codice e descrizione della fase, reparto."]],
+    ["Modulo", ["L'amministratore del sistema estrae dal sistema il modulo Excel di rilevazione: una riga per ogni fase dei set 1 e 2, con Work Order, articolo, codice e descrizione della fase, reparto."]],
     ["Rilevazione", ["La Pianificazione di produzione compila per ogni fase: eseguita (Sì / No / In corso), data di fine reale; per le esterne in corso: data di uscita, n° ordine SAP, data promessa.", "Funzione responsabile e data: " + DA + "."]],
-    ["Caricamento", ["Start I.T. carica il modulo: fasi eseguite chiuse con le date reali, fasi esterne in corso registrate presso il fornitore. Prima una prova che elenca le modifiche, poi la scrittura."]],
+    ["Caricamento", ["L'amministratore del sistema carica il modulo: fasi eseguite chiuse con le date reali, fasi esterne in corso registrate presso il fornitore. Prima una prova che elenca le modifiche, poi la scrittura."]],
     ["Ripianificazione", ["Le fasi ancora da eseguire ripartono dallo stato reale; il sistema ricalcola la fine di ciascun set."]],
     ["Verifica", ["Master Plan e Gantt dei set 1 e 2: fine prevista contro consegna. Eventuali ritardi residui si governano con Simula Ritardo."]],
 ])
@@ -94,9 +94,9 @@ tb([3200, 3860, 2000], ["Regola", "Proposta", "Stato"], [
 h(1, "6. Preparazione degli utenti")
 tb([600, 3400, 3560, 1500], ["N.", "Attività", "Funzione", "Stato"], [
     ["1", "Consegna delle credenziali agli operatori, una per persona", "Pianificazione di produzione", "Da fare"],
-    ["2", "Formazione degli operatori del reparto pilota (30 minuti, sulle Job Card reali)", "Pianificazione, con Start I.T.", "Da fare"],
-    ["3", "Formazione della Pianificazione: Master Plan, Gantt, ritardi, conferma Job Card", "Start I.T.", "Da fare"],
-    ["4", "Formazione di chi segue le lavorazioni esterne", "Start I.T.", "Da fare"],
+    ["2", "Formazione degli operatori del reparto pilota (30 minuti, sulle Job Card reali)", "Pianificazione di produzione", "Da fare"],
+    ["3", "Formazione della Pianificazione: Master Plan, Gantt, ritardi, conferma Job Card", "Amministratore del sistema", "Da fare"],
+    ["4", "Formazione di chi segue le lavorazioni esterne", "Amministratore del sistema", "Da fare"],
     ["5", "Copia del Manuale Utente disponibile in reparto", "Pianificazione di produzione", "Da fare"],
 ])
 
@@ -132,7 +132,7 @@ tb([1900, 4360, 2800], ["Frequenza", "Cosa", "Dove"], [
     ["Ogni settimana", "Fine prevista di ogni set contro consegna; saturazione dei reparti nelle settimane successive; ritardi da simulare", "Master Plan, Gantt del set, Carico Reparti Settimanale"],
     ["Ogni mese", "Tempi effettivi contro tempi pianificati delle fasi più ricorrenti; aggiornamento dei calendari", "Job Card, calendari"],
 ])
-p("Controllo settimanale di 30 minuti con Pianificazione e Start I.T.: giorno e partecipanti **" + DA + "**.")
+p("Controllo settimanale di 30 minuti con Pianificazione di produzione e amministratore del sistema: giorno e partecipanti **" + DA + "**.")
 
 # ------------------------------------------------------------------ 11
 h(1, "11. Chiusura dei Work Order e dei set")
