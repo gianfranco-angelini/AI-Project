@@ -1443,6 +1443,19 @@ La mail del 02/10 **era stata inviata** (02/10 17:10). Risposte:
   (b) lettura del lotto da SAP con il connettore. Da chiedere a Simone: quali livelli vanno
   tracciati (solo materia prima o anche semilavorati) e dove si registra oggi il numero di colata
 
+### Documentazione del 06/10 (`01_Documentazione_bozze`, generatore docx-startit)
+- `Riepilogo_Personalizzazioni_Avvio_Remazel_B1.docx`, `Analisi_Obiettivi_BU_Combustion_B4.docx`,
+  `Guida_Personalizzazioni_MES_Remazel_B1.docx` (13 pagine: dove si trova e come si modifica ogni
+  personalizzazione). Solo funzioni, nessun nome di persona. Numeri di pagina dell'indice stimati
+- Inventario 06/10 (`inventario_personalizzazioni.py`): 22 Custom Field nostri (gli altri ~120 sono
+  delle app Italia e HRMS), 14 Server Script, 5 Client Script, 1 report, 1 DocType figlio, 6 Number
+  Card + 8 Chart, 34 Property Setter dopo 01/07. ⚠️ Job Card PROJ-0002 = **3.330** (il 05/10 erano
+  3.306): da spiegare con `dettaglio_personalizzazioni.py` (sola lettura, output non ancora ricevuto)
+- 🌐 **Etichette in inglese → fase successiva** (decisione di Gian 06/10). Metodo concordato: glossario
+  IT→EN da validare; 3 livelli (etichette / valori Select nei dati / nomi documento con rename_doc);
+  i fieldname non si toccano mai; proposta lingua per utente (base EN + Translation IT per operatori)
+- Number Card "Ordini Commessa" / "Ordini Commessa T09": nome da correggere (è il Project) nella fase EN
+
 ### Azioni
 - Fronte ERPNext, Decisioni chiuse e Task aperti **riscritti da zero** al 05/10
 - Recuperati in **Appendice tecnica** i dettagli ancora validi di `Cowork_Progetto_T080100.md` e
