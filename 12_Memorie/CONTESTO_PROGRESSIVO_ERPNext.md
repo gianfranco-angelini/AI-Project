@@ -1488,7 +1488,11 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
   (poi riattivato). Ipotesi: nessuna vista Gantt configurata per Project. Da fare: configurarla oppure puntare la
   scorciatoia workspace "Master Plan commesse" (da rinominare) su Task gantt `?is_group=1` (set di tutti i Project)
 - Link `/app/...` reindirizzati a `/desk/...` in v16: funzionano
-- Script pronti, non eseguiti: `sessione_23/modulo_rilevazione_set12.py` (crea `Rilevazione_Set_1_2_T09.xlsx`, sola
+- ✅ `Rilevazione_Set_1_2_T09.xlsx` **estratto** (fine sessione 23) e scaricato da Gian in `C:\temp` (scp). Primo file con
+  riquadri bloccati fino alla colonna M (scorrimento orizzontale bloccato): in Excel Sblocca riquadri → Blocca riga
+  superiore; script corretto (`freeze_panes = "A2"`, commit 739eec8). Prossimo: compilazione da parte della funzione
+  incaricata, poi script di caricamento PROVA/SCRIVI
+- Script: `sessione_23/modulo_rilevazione_set12.py` (crea `Rilevazione_Set_1_2_T09.xlsx`, sola
   lettura DB; scaricabile sul server con curl dal raw GitHub finché il repo è pubblico), `dettaglio_personalizzazioni.py`
 
 ### Azioni
