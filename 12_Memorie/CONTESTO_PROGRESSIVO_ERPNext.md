@@ -1644,6 +1644,18 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
 - Nota: il sito su disco è `site1.local` (`bench --site combustionerp.remazel.com` → "does not exist"); i comandi
   bench vanno dati da `/home/frappe-user/frappe-bench`
 
+### Confronto fasi T09 ERPNext ↔ codici 371 monitor (09/10, `sessione_24/confronto_371/`, sola lettura)
+- Estrazione `estrai_operazioni_t09.py`: 57 BOM, 540 operazioni tutte con codice fase, 3.330 JC tutte collegate
+- Differenze con il file 26-19008 usato da Fabio: nessuna fase mancante (P1600 contato 2 volte da Fabio, numerazioni QC
+  diverse, 95 prefissi T08↔T09 per nostra regola)
+- ⚠️ Anomalia: **P2104-10SA** (180 min) e **P2202-10SA** (15 min) hanno "(H.T.S. SRL)" in descrizione ma sono interne;
+  le analoghe P2105/2107/2111/2201 sono esterne (3.000-12.000 min) → da chiarire (**non con Simone**: non si occupa di
+  questo tema)
+- Dati reali: 50 JC completate su 3.330 (31 est., 19 int.); nessuna JC completata sulle fasi produttive interne
+- Mappatura nostra 132 fasi produttive: univoca 52, probabile 22, ambigua 37, generica 18, nessuna 3; concorde con
+  Fabio 103/132, discordi 25 (Cap inner/outer body, swirler A2000, P1104) → solo Brozzoni può decidere
+- Esito: corrispondenza sicura 1:1 solo ~56%; confronto credibile per gruppo (Liner/Venturi/Cap/Molle/Final)
+
 ### Implicazioni
 - Esiste già una **timbratura a barcode** su monitor Timesheet con codici attività propri (~77% senza corrispondenza
   con le fasi ERPNext). Trascodifica e capacità per postazione sono **richieste di Romeo: non si fanno** (09/10)
@@ -1846,6 +1858,7 @@ tab **Sub Assembly Items** → **Get Sub Assembly Items** → **Make Work Orders
 **Perimetro e richieste (decisione di Gian 09/10/2026)**
 - **Le richieste di Romeo Brunasso (Controllo di Gestione) NON vanno eseguite** e non vanno più messe in scaletta
   né nei task aperti (es. capacità per postazione, trascodifica codici monitor ↔ fasi, slide dello steering)
+- **Simone Sacchi non va coinvolto** su trascodifica/confronto monitor e anomalie collegate (09/10)
 - **Si considera solo ciò che riguarda Combustion**: ignorare mail e attività non Combustion (phishing, ordini
   Start I.T., altri clienti/BU)
 
