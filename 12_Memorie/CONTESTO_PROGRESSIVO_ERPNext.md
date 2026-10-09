@@ -1576,6 +1576,10 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
 - Ritardi aggiornati (fine A0001 vs consegna − buffer): set 1 **33 gg**, set 2 **44 gg**, set 3-6 0
 - Lezioni: ERPNext v16 applica `OperationSequenceError` anche al save di una JC successiva se la precedente non è
   completa; raw.githubusercontent per ramo è in cache qualche minuto → scaricare per hash di commit
+- ✅ Verifica a video (Gian): WO MFG-WO-2026-01221 In Process con data fine effettiva aggiornata; PO-JOB05551 Completed
+  (SOMECAR, uscita 30/08); PO-JOB07996 Open con nota; **50 Job Card Completed** su PROJ-0002 (query di conteggio)
+- Decisione: l'eventuale anticipo delle fasi successive dei set 1-2 lo valuta **Simone** con Simula/Applica Ritardo.
+  Bozza mail: `sessione_24/Mail_Simone_Allineamento.md`
 - Il modulo `Rilevazione_Set_1_2_T09.xlsx` non è più necessario
 - Da valutare: le fasi successive dei set 1-2 restano pianificate dopo le vecchie date → possibile anticipo
 
