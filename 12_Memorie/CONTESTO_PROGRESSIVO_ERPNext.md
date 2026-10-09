@@ -1594,7 +1594,15 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
   Entry, inutile: magazzino in SAP), "Macro-fasi" (T08); sidebar "Master Plan commesse", "Commesse (Project)"
 - Esterne T09: 749 Da inviare, 31 Rientrato; 17 fornitori (A.M.C. CONTROL 222 JC ... H.T. SRL 6). Job Card ha vista
   Gantt nativa (start/end = expected_start/end_date, title "subject", color/progress non presenti)
-- Proposta "modifica unica" in attesa di approvazione: avanzamento Task da JC (pesato su time_required, esterne contano
+- **Lingua (ribadito da Gian 09/10)**: tutto deve essere in inglese → i NUOVI elementi si creano direttamente in
+  inglese; gli esistenti restano fino alla fase glossario
+- Decisioni 09/10: colori T09 blu #3a6bbf, T08 verde #2e8b57; "Commesse" → "Project"; "Movimenti Magazzino" NON si
+  toglie (lo scarico di produzione è uno Stock Entry) → "Production Entries" filtrato su Manufacture
+- Script `sessione_24/modifica_gantt.py` (prova con rollback / scrivi): Server Script Task_Progress_JobCard_Submit,
+  Task_Progress_Daily, Task_Progress_API (`recalculate_task_progress`), Task_Color_By_Project; Client Script
+  Gantt_Remazel_Task / _Work_Order / _Job_Card (vecchi Gantt_Fix_* solo disattivati); workspace Master Plan
+  (Task gantt is_group=1), Project, Production Entries, Supplier Gantt (Job Card gantt Lavorazione Esterna)
+- Proposta "modifica unica": avanzamento Task da JC (pesato su time_required, esterne contano
   al rientro) + colori per Project + frecce grigio/rosso (escluse padre-figlio) + Master Plan su Task di gruppo +
   pulizia etichette "commesse" + Gantt fornitori su Job Card colorato per stato CL
 
