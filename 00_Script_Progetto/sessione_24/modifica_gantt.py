@@ -129,7 +129,7 @@ JS = r'''
         return "#" + [f(n >> 16), f((n >> 8) & 255), f(n & 255)].map((v) => v.toString(16).padStart(2, "0")).join("");
     }
     function fields() {
-        if (DT === "Task") return ["name", "project", "color", "parent_task"];
+        if (DT === "Task") return ["name", "project", "color", "parent_task", "act_start_date", "progress"];
         if (DT === "Job Card") return ["name", "custom_stato_cl", "expected_end_date", "custom_descrizione_fase", "custom_fornitore", "docstatus", "project"];
         return ["name", "project"];
     }
@@ -140,6 +140,14 @@ JS = r'''
             if (!d) return;
             let c = PROJECT_COLORS[d.project] || "#3a6bbf";
             if (DT === "Task" && d.color) c = d.color;
+            if (DT === "Task") {
+                const lab = w.querySelector(".bar-label");
+                if (lab) {
+                    if (!lab.dataset.rmzOrig) lab.dataset.rmzOrig = lab.textContent;
+                    const da = d.act_start_date ? " · from " + d.act_start_date.split("-").reverse().slice(0, 2).join("/") : "";
+                    lab.textContent = lab.dataset.rmzOrig + da + " · " + (Math.round((d.progress || 0) * 10) / 10) + "%";
+                }
+            }
             if (DT === "Job Card") {
                 c = STATE_COLORS[d.custom_stato_cl] || "#7a7a7a";
                 if (d.custom_stato_cl !== "Rientrato" && d.docstatus !== 1 && d.expected_end_date && d.expected_end_date < now) c = LATE;
