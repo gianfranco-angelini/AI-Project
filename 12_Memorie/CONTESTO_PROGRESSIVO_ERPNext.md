@@ -1507,6 +1507,54 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
 
 ---
 
+## SESSIONE 24 — Punto e lettura mail (09/10/2026)
+
+### Mail lette (06-09/10)
+- **Simone, 06/10 "Com. 26-19008: fasi completate"**: allegato `26-19008_EG.xlsx` = ciclo T09 con le **fasi già
+  completate** (concordato a voce). È la base dati per l'allineamento dei set in corso → da incrociare con
+  `Rilevazione_Set_1_2_T09.xlsx` (allegato non ancora analizzato)
+- **Romeo (Controllo di Gestione), 08-09/10**:
+  - riunione 09/10 "Aggiornamento CdG - IT - progetto commessa-prodotto combustion" (Romeo, Paolo Scaglia, Gian, Marco
+    Lasorella, Fabio Picco). Gian ha proposto 6 punti "Finance & IT: attività in sviluppo" (tracciamento costi conto
+    lavoro, tempi esterni reali, collegamento SAP materiali presso fornitori, potenziamento sistema produzione, capacità
+    produttiva, confronto pianificato/effettivo). **Romeo approva con integrazione al punto 5: capacità produttiva per
+    POSTAZIONE, non per reparto** (saturazione e carico per la programmazione) → impatta il modello Workstation (oggi
+    6 reparti con production_capacity aggregata; TO-BE 22 postazioni del 9/09)
+  - **Steering Combustion lunedì 12/10**: slide (2) inviate a Marco per abbellimento; nella slide 2 il punto 5 dice
+    ancora "per ogni reparto" (incoerente con la nota di Romeo). Roadmap in slide: entro set 2026 verifica prodotti/fasi/
+    tempi ✅; 30/09 chiusura analisi valorizzazione MH-timesheet e magazzini FIFO; 31/10 chiusura analisi SAL e magazzino
+    senza double counting, metodo POC; **30/11 test preliminare con commessa in avanzamento e avvio cicli**; **31/12 fine
+    popolamento in parallelo a SAP**; **01/01/2027 avvio a regime su ERPNext**. Progetto 06/07/2026 → 31/05/2027
+    (consegna 2° e 3° set 26-19008). Output breve: **costo di produzione di 1 liner 26-19008**; lungo: modello di
+    costificazione BU. Team: Scaglia, Brunasso, Picco, Mylnikov. Cantieri: valorizzazione MH/timesheet, magazzini FIFO,
+    SAL/POC
+  - "analisi commessa/prodotto": Romeo chiede a Sergey la logica di **trascodifica** tra codici attività dei monitor
+    di produzione (es. V120) e codici fase RZL, per confrontare all'inizio i dati ERPNext con il monitoraggio attuale.
+    File codici gestito da Sergio Brozzoni (R:\Bruciatori\Produzione\Programmi e Carichi\Processi e Cicli Produttivi)
+  - 08/10 "file per trascodifica T08-0100-A0001" a Paolo Scaglia (`trascodifica fasi combustion_T08-0100-A0001.xlsx`)
+  - 08/10 "documentazione aggiornata": Romeo chiede un punto "inter nos" con Gian (Gian aveva inviato il 06/10 la
+    documentazione a Simone, cc Marco, Fabio, Sergey, Romeo, Paolo, Luca Verzeroli)
+- **Fabio (IT), 09/10**:
+  - "I: cicli": file `Cicli Combustion - Barcode.xlsx` (lavorazioni inserite oggi sui **monitor Timesheet** tramite
+    schede **codice a barre** preparate da Sergio Brozzoni, capo produzione) e `Ore Bruciatori 2026.xlsx` (originale);
+    tentativo di corrispondenza con i cicli ERPNext: 26-19008 = 598 fasi, corrispondenza alta 53-56, media 54-56,
+    bassa 23-28, **nessuna 463 (~77%)**; 24-19006 = 629 fasi, nessuna 487
+  - "Richiesta File": chiede il file di produzione delle linee 07-08-19 (tabellone); Sergey invia ultima versione
+  - "Quotazioni": sollecito a Gian e Michele per stampanti etichette barcode, pistole RFID, pistole barcode wireless
+    Zebra, sistema… (hardware per timbratura 2c)
+- Sergio Brozzoni = **Combustion Production Manager** (capo produzione), referente dei cicli barcode oggi in uso
+
+### Implicazioni
+- Esiste già una **timbratura a barcode** su monitor Timesheet con codici attività propri: per 2c e per il confronto
+  CdG serve una **tabella di trascodifica** codice attività monitor ↔ codice fase ERPNext (oggi ~77% senza
+  corrispondenza)
+- Capacità per postazione → rivedere Workstation (una per postazione o Workstation Type = reparto + Workstation =
+  postazione, soluzione nativa v16) e report di carico
+- Date di progetto del cliente: test 30/11, parallelo fino al 31/12, regime 01/01/2027; obiettivo costo del liner →
+  servono MH effettive (timesheet) e costi conto lavoro
+
+---
+
 ## 🖥️ FRONTE ERPNEXT — stato al 06/10/2026
 
 ### Ambiente
