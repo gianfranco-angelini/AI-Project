@@ -178,14 +178,15 @@ JS = r'''
         const svg = document.querySelector(".gantt-container svg") || document.querySelector("svg.gantt");
         if (!svg) return;
         const wrappers = Array.from(svg.querySelectorAll(".bar-wrapper[data-id]"));
-        if (!wrappers.length) return;
+        if (!wrappers.length || !wrappers.some((w) => !w.dataset.rmzP)) return;
+        const cache = (window["__rmz_c_" + DT] = window["__rmz_c_" + DT] || {});
         const ids = wrappers.map((w) => w.getAttribute("data-id"));
-        const key = ids.join(",");
-        if (svg.dataset.rmz === key) return;
-        svg.dataset.rmz = key;
+        const missing = ids.filter((i) => !cache[i]);
+        const go = () => { paint(svg, wrappers, cache); wrappers.forEach((w) => (w.dataset.rmzP = "1")); };
+        if (!missing.length) return go();
         frappe.call({method: "frappe.client.get_list",
-            args: {doctype: DT, filters: [["name", "in", ids]], fields: fields(), limit_page_length: ids.length},
-            callback: (res) => { const m = {}; (res.message || []).forEach((d) => (m[d.name] = d)); paint(svg, wrappers, m); }});
+            args: {doctype: DT, filters: [["name", "in", missing]], fields: fields(), limit_page_length: missing.length},
+            callback: (res) => { (res.message || []).forEach((d) => (cache[d.name] = d)); go(); }});
     }
     if (!window["__rmz_obs_" + DT]) {
         window["__rmz_obs_" + DT] = new MutationObserver(() => { clearTimeout(window["__rmz_t_" + DT]); window["__rmz_t_" + DT] = setTimeout(apply, 300); });
@@ -199,7 +200,7 @@ JS = r'''
             lv.page.add_inner_button(__("Recalculate progress"), () => {
                 const f = (lv.filters || []).find((x) => x[1] === "project");
                 frappe.call({method: "recalculate_task_progress", args: {project: f ? f[3] : ""},
-                    callback: (r) => { frappe.show_alert(r.message || "Done"); lv.refresh(); }});
+                    callback: (r) => { window["__rmz_c_Task"] = {}; frappe.show_alert(r.message || "Done"); lv.refresh(); }});
             });
         };
     }
