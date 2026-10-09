@@ -1606,6 +1606,24 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
   al rientro) + colori per Project + frecce grigio/rosso (escluse padre-figlio) + Master Plan su Task di gruppo +
   pulizia etichette "commesse" + Gantt fornitori su Job Card colorato per stato CL
 
+### ✅ Modifica unica Gantt eseguita (09/10, `sessione_24/modifica_gantt.py` SCRIVI, con backup)
+- Server Script: `Task_Progress_JobCard_Submit` (After Submit JC), `Task_Progress_Daily` (Scheduler Daily),
+  `Task_Progress_API` (`recalculate_task_progress`), `Task_Color_By_Project` (Before Insert Task)
+- Avanzamento Task = minuti pianificati (time_required) JC completate / totali dei WO collegati (esterne contano al
+  rientro); gruppo = somma figli; `act_start_date` = primo time log; **se l'inizio reale è precedente, `exp_start_date`
+  = inizio reale** (la barra parte dal passato). Valori al 09/10: set 1 3,4% da 30/08; set 2 3,1% da 03/09; set 3-6
+  2-3% da 23-28/09; A3000 ~10% (pesano i tagli esterni)
+- Colori: T09 #3a6bbf, T08 #2e8b57 su tutti i Task. Client Script `Gantt_Remazel_Task/_Work_Order/_Job_Card` (barra per
+  Project, completato più scuro, frecce grigie/rosse escluse padre-figlio, Job Card per stato CL + etichetta
+  "codice · fornitore", pulsante "Recalculate progress"); `Gantt_Fix_*` disattivati (rollback: riattivarli)
+- Workspace/sidebar: Master Plan (`/app/task/view/gantt?is_group=1`), Project, Production Entries
+  (`/app/stock-entry?stock_entry_type=Manufacture`), Supplier Gantt (`/app/job-card/view/gantt?workstation=Lavorazione%20Esterna`)
+- Aggiornamenti successivi: `gantt_etichette.py` (etichetta Task "· from gg/mm · x%") eseguito; **da eseguire/verificare**:
+  `gantt_scroll.py` (area alta quanto la finestra, scrollbar visibile; intanto Maiusc+rotella) e `gantt_ricolora.py`
+  (ricolora al cambio scala Day/Week/Month senza Ctrl+Maiusc+R; cache dati per DT, svuotata da Recalculate)
+- Da verificare a video: etichette con scala Month, Supplier Gantt, frecce rosse in caso di conflitto
+- Lezione: il Gantt si ridisegna al cambio di scala → marcare le barre colorate (data-rmzP), non l'intero svg
+
 ### Implicazioni
 - Esiste già una **timbratura a barcode** su monitor Timesheet con codici attività propri: per 2c e per il confronto
   CdG serve una **tabella di trascodifica** codice attività monitor ↔ codice fase ERPNext (oggi ~77% senza
@@ -1679,9 +1697,17 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
 
 ---
 
-## 🎯 TASK APERTI (aggiornato al 06/10/2026)
+## 🎯 TASK APERTI (aggiornato al 09/10/2026)
 
-### Priorità 0 — Dopo la riunione del 06/10
+### Priorità 0 — Ripresa (al 09/10)
+- Eseguire `gantt_scroll.py` e `gantt_ricolora.py` (prova → scrivi) e verificare a video Gantt Task/Month, Supplier Gantt
+- Inviare a Simone la mail `sessione_24/Mail_Simone_Allineamento.md` (allineamento 50 JC, parziali set 5, ritardi 33/44 gg,
+  anticipo a sua scelta con Simula Ritardo)
+- Trascodifica codici attività monitor barcode ↔ codici fase (file di Fabio, ~77% senza corrispondenza)
+- Capacità per postazione (richiesta CdG) → nuovo modello Workstation; steering 12/10 (slide punto 5)
+- Quotazioni hardware barcode/RFID (sollecito Fabio a Gian e Michele)
+
+### Priorità 0 bis — Dopo la riunione del 06/10
 - Ricevere gli esiti delle 6 decisioni → `Guida_Avvio_T09_Remazel_B3`
 - Eseguire `modulo_rilevazione_set12.py` → Excel alla funzione che rileva → caricamento (script da scrivere, PROVA/SCRIVI)
 - Verifiche iniziali della Guida Avvio: backup, 58 WO/set, fornitore su tutte le esterne, fine set vs consegna,
