@@ -1562,6 +1562,23 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
 - **Il modulo `Rilevazione_Set_1_2_T09.xlsx` diventa superfluo** per l'allineamento: si carica direttamente da questo
   file (script PROVA/SCRIVI). Da decidere: data di completamento (nel file non c'è) e gestione delle quantità parziali
 
+### ✅ Allineamento fasi completate ESEGUITO (09/10/2026, `sessione_24/allineamento_fasi.py`, SCRIVI, commit e98a572)
+- Backup prima della scrittura. Prova con rollback (esegue anche il submit) → scrittura: **52 Job Card, 0 errori**
+- **50 Job Card confermate** (Completed; esterne → stato CL "Rientrato") con date e tempi **STIMATI** e nota in
+  `remarks`: "Allineamento da avanzamento 06/10/2026 (file 26-19008_EG) - date e tempi STIMATI da piano, non
+  consuntivo" → **da escludere dal consuntivo ore del Controllo di Gestione**
+- Date: set 1-2 = date di piano attuali − ritardo del set (33 e 44 gg) = "data prevista" (scelta di Gian); se cadono
+  dopo l'ancora o set 3-6 (ritardo 0) → a ritroso dall'ancora (set 6 = 06/10 17:00, set precedenti un giorno
+  lavorativo prima) con la durata pianificata; controlli dello stesso set scaglionati (capacità CQ 3, max 1)
+- **2 parziali** set 5 T08-0200-P3302 (10LT PO-JOB07996, 10QC PO-JOB07997): solo nota "completati 10 su 20" scritta con
+  `frappe.db.set_value` (il save attiva l'OperationSequenceError); restano Open/Da inviare, da registrare a fase completa
+- P1800 in ERPNext è `T08-0100-P1800` (nel file Simone T09-0100-P1800): ricerca per parte finale del codice
+- Ritardi aggiornati (fine A0001 vs consegna − buffer): set 1 **33 gg**, set 2 **44 gg**, set 3-6 0
+- Lezioni: ERPNext v16 applica `OperationSequenceError` anche al save di una JC successiva se la precedente non è
+  completa; raw.githubusercontent per ramo è in cache qualche minuto → scaricare per hash di commit
+- Il modulo `Rilevazione_Set_1_2_T09.xlsx` non è più necessario
+- Da valutare: le fasi successive dei set 1-2 restano pianificate dopo le vecchie date → possibile anticipo
+
 ### Implicazioni
 - Esiste già una **timbratura a barcode** su monitor Timesheet con codici attività propri: per 2c e per il confronto
   CdG serve una **tabella di trascodifica** codice attività monitor ↔ codice fase ERPNext (oggi ~77% senza
