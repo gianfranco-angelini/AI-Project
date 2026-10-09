@@ -1544,6 +1544,24 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
     Zebra, sistema… (hardware per timbratura 2c)
 - Sergio Brozzoni = **Combustion Production Manager** (capo produzione), referente dei cicli barcode oggi in uso
 
+### Analisi `26-19008_EG.xlsx` (Simone, 06/10) — fasi completate
+- Foglio "Ciclo e fasi": 591 righe (559 fasi + 32 materie prime), colonne di avanzamento **TRUE/FALSE per 10 lotti da
+  10 liner**: "1° SET", "2° e 3° SET", "4° e 5°", "6° e 7°", "8° e 9°", "10° SET". Mappa sui nostri 6 set (10/20/20/20/
+  20/10): col1→set1, col2-3→set2, col4-5→set3, col6-7→set4, col8-9→set5, col10→set6. Nessuna data nel file
+- **Solo 10 fasi completate**, tutte prime fasi (taglio/calandratura + QC), e su **tutti** i lotti, non solo set 1-2:
+  P1800-10LT (lotti 1-10), P1400-10LT/10QC (lotti 1-5), P3104-10LT/10QC (1-10), T08-0200-P3203-10LT/10QC (1-10),
+  T08-0200-P3302-10LT/10QC (1-8), P2108-10LA (1-10). Nessun montaggio/saldatura iniziato
+- Effetto: circa **50 Job Card da chiudere** su tutti i set + 2 parziali (set 5 P3302, 10 su 20). I ritardi calcolati
+  per set 1 (+28 gg) e set 2 (+39 gg) sono quindi **in buona parte reali**: oltre alle prime fasi non è iniziato nulla
+- Materie prime segnate TRUE per lotto (disponibilità materiale, dato SAP)
+- Foglio "Fasi critiche": 33 fasi critiche con motivazione, fornitore, categoria (errore fornitore / inefficienza di
+  processo / lavorazione complessa) e soluzione → utile per expediting e qualità. **H.T. SRL e H.T.S. SRL compaiono
+  come fornitori distinti** (chiude il dubbio anagrafica)
+- Foglio "Matricole + avanzamento RX": modello vuoto (Job TBD) con S.N. Ethos, S.N. e matricola RZL e saldature W1-W61
+  → riferimento per 2d
+- **Il modulo `Rilevazione_Set_1_2_T09.xlsx` diventa superfluo** per l'allineamento: si carica direttamente da questo
+  file (script PROVA/SCRIVI). Da decidere: data di completamento (nel file non c'è) e gestione delle quantità parziali
+
 ### Implicazioni
 - Esiste già una **timbratura a barcode** su monitor Timesheet con codici attività propri: per 2c e per il confronto
   CdG serve una **tabella di trascodifica** codice attività monitor ↔ codice fase ERPNext (oggi ~77% senza
