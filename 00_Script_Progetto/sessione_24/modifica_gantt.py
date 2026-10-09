@@ -41,9 +41,14 @@ def rmz_ricalcola(t):
         if a[5] and (not fin or a[5] > fin):
             fin = a[5]
     perc = round(100.0 * fatto / tot, 1) if tot else 0
-    frappe.db.set_value("Task", t, {"progress": perc,
+    vals = {"progress": perc,
         "act_start_date": frappe.utils.getdate(ini) if ini else None,
-        "act_end_date": frappe.utils.getdate(fin) if (fin and n and nch == n) else None}, update_modified=False)
+        "act_end_date": frappe.utils.getdate(fin) if (fin and n and nch == n) else None}
+    # la barra del Gantt parte dall'inizio reale se il lavoro è iniziato prima del pianificato
+    exp = frappe.db.get_value("Task", t, "exp_start_date")
+    if ini and (not exp or frappe.utils.get_datetime(ini) < frappe.utils.get_datetime(exp)):
+        vals["exp_start_date"] = ini
+    frappe.db.set_value("Task", t, vals, update_modified=False)
     return [tot, fatto, n, nch, ini, fin]
 
 def rmz_radice(t):
@@ -213,8 +218,9 @@ try:
     for pr in ["PROJ-0002", "PROJ-0001"]:
         for r in frappe.get_all("Task", filters={"project": pr, "parent_task": ["is", "not set"]}, pluck="name"):
             rmz_ricalcola(r)
-    for t in frappe.get_all("Task", filters={"project": "PROJ-0002"}, fields=["name", "subject", "is_group", "progress", "act_start_date", "act_end_date"], order_by="name"):
-        p(("GROUP " if t.is_group else "   ") + t.name, "|", t.subject, "| %", t.progress, "| act", t.act_start_date, "->", t.act_end_date or "-")
+    for t in frappe.get_all("Task", filters={"project": "PROJ-0002"}, fields=["name", "subject", "is_group", "progress", "act_start_date", "act_end_date", "exp_start_date", "exp_end_date"], order_by="name"):
+        p(("GROUP " if t.is_group else "   ") + t.name, "|", t.subject, "| %", t.progress, "| act", t.act_start_date, "->", t.act_end_date or "-",
+          "| barra", t.exp_start_date, "->", t.exp_end_date)
 
     # ---------- 2. Colori Task
     for pr, col in COLORI.items():
