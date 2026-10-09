@@ -136,8 +136,8 @@ for r in sorted(piano, key=lambda r: (r["set"], r["wo"], r["jc"].sequence_id or 
         if r["frazione"] < 1:
             # parziale: nessun tempo registrato (la sequenza impedisce il controllo prima della fase esterna completa);
             # solo nota, la Job Card resta da eseguire e si registra quando la fase è completa
-            doc.remarks = ((doc.remarks or "") + "\n" + "Al 06/10/2026 (file 26-19008_EG) completati %s su %s pezzi: da registrare a fase completa" % (r["qta"], doc.for_quantity)).strip()
-            doc.save()
+            # nota scritta direttamente sul campo: il salvataggio del documento attiverebbe il controllo di sequenza
+            frappe.db.set_value("Job Card", doc.name, "remarks", ((doc.remarks or "") + "\n" + "Al 06/10/2026 (file 26-19008_EG) completati %s su %s pezzi: da registrare a fase completa" % (r["qta"], doc.for_quantity)).strip(), update_modified=False)
             azione = "solo nota (parziale)"
         else:
             doc.expected_start_date = r["start"]
