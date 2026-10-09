@@ -67,6 +67,24 @@ for dt in ["Task", "Project", "Work Order"]:
         p("List View Settings", r.name, r.disable_count, r.disable_auto_refresh)
     p(dt, "| filtri salvati:", frappe.get_all("List Filter", filters={"reference_doctype": dt}, pluck="filter_name"))
 
+# 7. Lavorazioni esterne: base per un Gantt fornitori
+p("=== 7. LAVORAZIONI ESTERNE ===")
+import os
+for dt, app in [("job_card", "erpnext"), ("work_order", "erpnext"), ("task", "erpnext")]:
+    mod = "manufacturing" if dt != "task" else "projects"
+    path = os.path.join(frappe.get_app_path(app), mod, "doctype", dt, dt + "_calendar.js")
+    p("Vista calendario/Gantt nativa", dt, ":", os.path.exists(path), "|", (open(path).read()[:400].replace("\n", " ") if os.path.exists(path) else ""))
+for r in frappe.db.sql("""SELECT IFNULL(jc.custom_stato_cl,'') stato, COUNT(*) n FROM `tabJob Card` jc JOIN `tabWork Order` wo ON wo.name=jc.work_order
+        WHERE wo.project='PROJ-0002' AND jc.docstatus<2 AND IFNULL(jc.workstation, jc.workstation_type)='Lavorazione Esterna'
+        GROUP BY stato""", as_dict=True):
+    p("Esterne T09 per stato CL |", r.stato or "(vuoto)", "|", r.n)
+for r in frappe.db.sql("""SELECT IFNULL(jc.custom_fornitore,'(senza)') forn, COUNT(*) n, MIN(jc.expected_start_date) da, MAX(jc.expected_end_date) a,
+        ROUND(SUM(IFNULL(jc.time_required,0))/60) ore FROM `tabJob Card` jc JOIN `tabWork Order` wo ON wo.name=jc.work_order
+        WHERE wo.project='PROJ-0002' AND jc.docstatus<2 AND IFNULL(jc.workstation, jc.workstation_type)='Lavorazione Esterna'
+        GROUP BY forn ORDER BY n DESC""", as_dict=True):
+    p("Fornitore |", r.forn, "| JC", r.n, "| ore TT", r.ore, "|", r.da, "->", r.a)
+p("Job Card ha campo color:", bool(frappe.get_meta("Job Card").get_field("color")))
+
 with open(OUT, "w") as f:
     f.write("\n".join(righe) + "\n")
 print("Scritto", OUT, "-", len(righe), "righe")
