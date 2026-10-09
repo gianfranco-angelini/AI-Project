@@ -1720,7 +1720,9 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
 - ✅ `gantt_scroll.py` e `gantt_ricolora.py` già applicati; resta la verifica a video Gantt Task/Month, Supplier Gantt
 - Inviare a Simone la mail `sessione_24/Mail_Simone_Allineamento.md` (allineamento 50 JC, parziali set 5, ritardi 33/44 gg,
   anticipo a sua scelta con Simula Ritardo)
-- Analizzare `Ordini Bonsi Combustion.xlsx` (Marco Lasorella, 06/10: ordini SAP conto lavoro) → base per Ordine conto lavoro
+- Analizzare `Ordini Bonsi Combustion.xlsx` (Marco Lasorella, 06/10; **Bonsi = Ufficio Acquisti Remazel, coordina e
+  monitora gli acquisti Combustion**) → base per Ordine conto lavoro/expediting. Allegato non leggibile dal connettore
+  (5,3 MB): da salvare su SharePoint `Remazel-Combustion/Dati`
 - Quotazioni hardware barcode/RFID (sollecito Fabio a Gian e Michele)
 
 ### Priorità 0 bis — Dopo la riunione del 06/10
