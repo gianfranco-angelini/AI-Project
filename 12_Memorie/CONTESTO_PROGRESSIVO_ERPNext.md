@@ -1618,7 +1618,7 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
   "codice · fornitore", pulsante "Recalculate progress"); `Gantt_Fix_*` disattivati (rollback: riattivarli)
 - Workspace/sidebar: Master Plan (`/app/task/view/gantt?is_group=1`), Project, Production Entries
   (`/app/stock-entry?stock_entry_type=Manufacture`), Supplier Gantt (`/app/job-card/view/gantt?workstation=Lavorazione%20Esterna`)
-- Aggiornamenti successivi: `gantt_etichette.py` (etichetta Task "· from gg/mm · x%") eseguito; **da eseguire/verificare**:
+- Aggiornamenti successivi: `gantt_etichette.py` (etichetta Task "· from gg/mm · x%") eseguito; **eseguiti (verificato 09/10: "già aggiornato")**:
   `gantt_scroll.py` (area alta quanto la finestra, scrollbar visibile; intanto Maiusc+rotella) e `gantt_ricolora.py`
   (ricolora al cambio scala Day/Week/Month senza Ctrl+Maiusc+R; cache dati per DT, svuotata da Recalculate)
 - Da verificare a video: etichette con scala Month, Supplier Gantt, frecce rosse in caso di conflitto
@@ -1700,7 +1700,7 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
 ## 🎯 TASK APERTI (aggiornato al 09/10/2026)
 
 ### Priorità 0 — Ripresa (al 09/10)
-- Eseguire `gantt_scroll.py` e `gantt_ricolora.py` (prova → scrivi) e verificare a video Gantt Task/Month, Supplier Gantt
+- ✅ `gantt_scroll.py` e `gantt_ricolora.py` già applicati; resta la verifica a video Gantt Task/Month, Supplier Gantt
 - Inviare a Simone la mail `sessione_24/Mail_Simone_Allineamento.md` (allineamento 50 JC, parziali set 5, ritardi 33/44 gg,
   anticipo a sua scelta con Simula Ritardo)
 - Trascodifica codici attività monitor barcode ↔ codici fase (file di Fabio, ~77% senza corrispondenza)
