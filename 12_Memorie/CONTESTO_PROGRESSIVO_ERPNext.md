@@ -1583,6 +1583,21 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
 - Il modulo `Rilevazione_Set_1_2_T09.xlsx` non è più necessario
 - Da valutare: le fasi successive dei set 1-2 restano pianificate dopo le vecchie date → possibile anticipo
 
+### Analisi struttura Gantt (09/10, `sessione_24/analisi_gantt.py`, sola lettura)
+- **Project non ha vista Gantt nativa** (esistono `_calendar.js` per Task, Work Order, Job Card) → causa della pagina
+  vuota del Master Plan. Project senza campo color; % completamento Project = "Task Completion", oggi 0
+- Task: campo `color` presente ma vuoto, `progress` 0 su tutti; T09 42 Task (6 gruppi), 66 dipendenze; **il Task di
+  gruppo dipende dai suoi 6 figli** e A0001 dai 5 macro-assiemi. T08 21 Task, ma **0 WO T08 collegati a Task**
+- I 3 Client Script Gantt forzano `.bar` #3a6bbf e `.bar-progress` #2E74B5 (quasi uguali) → la parte completata
+  non si distinguerebbe; frecce #8ab4f8 solo sul Task
+- Workspace: scorciatoie "Commesse" (Project), "Master Plan commesse (Gantt)" (vuota), "Movimenti Magazzino" (Stock
+  Entry, inutile: magazzino in SAP), "Macro-fasi" (T08); sidebar "Master Plan commesse", "Commesse (Project)"
+- Esterne T09: 749 Da inviare, 31 Rientrato; 17 fornitori (A.M.C. CONTROL 222 JC ... H.T. SRL 6). Job Card ha vista
+  Gantt nativa (start/end = expected_start/end_date, title "subject", color/progress non presenti)
+- Proposta "modifica unica" in attesa di approvazione: avanzamento Task da JC (pesato su time_required, esterne contano
+  al rientro) + colori per Project + frecce grigio/rosso (escluse padre-figlio) + Master Plan su Task di gruppo +
+  pulizia etichette "commesse" + Gantt fornitori su Job Card colorato per stato CL
+
 ### Implicazioni
 - Esiste già una **timbratura a barcode** su monitor Timesheet con codici attività propri: per 2c e per il confronto
   CdG serve una **tabella di trascodifica** codice attività monitor ↔ codice fase ERPNext (oggi ~77% senza
