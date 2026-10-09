@@ -117,6 +117,7 @@ JS = r'''
             .gantt .grid-row:nth-child(even) { fill: #232323 !important; }
             .gantt .row-line, .gantt .tick { stroke: #3a3a3a !important; }
             .gantt .today-highlight { fill: #5a4a2a !important; opacity: 0.35 !important; }
+            .gantt-container { max-height: calc(100vh - 230px) !important; overflow: auto !important; }
         `;
         document.head.appendChild(s);
     }
