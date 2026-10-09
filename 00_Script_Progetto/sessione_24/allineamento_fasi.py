@@ -133,15 +133,20 @@ for r in sorted(piano, key=lambda r: (r["set"], r["wo"], r["jc"].sequence_id or 
         if doc.docstatus != 0 or doc.time_logs:
             p("SALTATA", j.name, "(già con tempi o confermata)")
             continue
-        doc.expected_start_date = r["start"]
-        doc.expected_end_date = r["end"]
-        doc.append("time_logs", {"from_time": r["start"], "to_time": r["end"],
-                                 "time_in_mins": (r["end"] - r["start"]).total_seconds() / 60.0,
-                                 "completed_qty": r["qta"]})
-        doc.remarks = ((doc.remarks or "") + "\n" + NOTA).strip()
-        doc.save()
-        azione = "salvata (parziale)"
-        if r["frazione"] >= 1:
+        if r["frazione"] < 1:
+            # parziale: nessun tempo registrato (la sequenza impedisce il controllo prima della fase esterna completa);
+            # solo nota, la Job Card resta da eseguire e si registra quando la fase è completa
+            doc.remarks = ((doc.remarks or "") + "\n" + "Al 06/10/2026 (file 26-19008_EG) completati %s su %s pezzi: da registrare a fase completa" % (r["qta"], doc.for_quantity)).strip()
+            doc.save()
+            azione = "solo nota (parziale)"
+        else:
+            doc.expected_start_date = r["start"]
+            doc.expected_end_date = r["end"]
+            doc.append("time_logs", {"from_time": r["start"], "to_time": r["end"],
+                                     "time_in_mins": (r["end"] - r["start"]).total_seconds() / 60.0,
+                                     "completed_qty": r["qta"]})
+            doc.remarks = ((doc.remarks or "") + "\n" + NOTA).strip()
+            doc.save()
             doc.submit()
             azione = "confermata"
         doc.reload()
