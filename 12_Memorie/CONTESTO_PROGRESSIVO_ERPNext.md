@@ -1645,11 +1645,8 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
   bench vanno dati da `/home/frappe-user/frappe-bench`
 
 ### Implicazioni
-- Esiste già una **timbratura a barcode** su monitor Timesheet con codici attività propri: per 2c e per il confronto
-  CdG serve una **tabella di trascodifica** codice attività monitor ↔ codice fase ERPNext (oggi ~77% senza
-  corrispondenza)
-- Capacità per postazione → rivedere Workstation (una per postazione o Workstation Type = reparto + Workstation =
-  postazione, soluzione nativa v16) e report di carico
+- Esiste già una **timbratura a barcode** su monitor Timesheet con codici attività propri (~77% senza corrispondenza
+  con le fasi ERPNext). Trascodifica e capacità per postazione sono **richieste di Romeo: non si fanno** (09/10)
 - Date di progetto del cliente: test 30/11, parallelo fino al 31/12, regime 01/01/2027; obiettivo costo del liner →
   servono MH effettive (timesheet) e costi conto lavoro
 
@@ -1723,8 +1720,7 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
 - ✅ `gantt_scroll.py` e `gantt_ricolora.py` già applicati; resta la verifica a video Gantt Task/Month, Supplier Gantt
 - Inviare a Simone la mail `sessione_24/Mail_Simone_Allineamento.md` (allineamento 50 JC, parziali set 5, ritardi 33/44 gg,
   anticipo a sua scelta con Simula Ritardo)
-- Trascodifica codici attività monitor barcode ↔ codici fase (file di Fabio, ~77% senza corrispondenza)
-- Capacità per postazione (richiesta CdG) → nuovo modello Workstation; steering 12/10 (slide punto 5)
+- Analizzare `Ordini Bonsi Combustion.xlsx` (Marco Lasorella, 06/10: ordini SAP conto lavoro) → base per Ordine conto lavoro
 - Quotazioni hardware barcode/RFID (sollecito Fabio a Gian e Michele)
 
 ### Priorità 0 bis — Dopo la riunione del 06/10
@@ -1844,6 +1840,12 @@ tab **Sub Assembly Items** → **Get Sub Assembly Items** → **Make Work Orders
 ---
 
 ## 📌 REGOLE OPERATIVE CONSOLIDATE
+
+**Perimetro e richieste (decisione di Gian 09/10/2026)**
+- **Le richieste di Romeo Brunasso (Controllo di Gestione) NON vanno eseguite** e non vanno più messe in scaletta
+  né nei task aperti (es. capacità per postazione, trascodifica codici monitor ↔ fasi, slide dello steering)
+- **Si considera solo ciò che riguarda Combustion**: ignorare mail e attività non Combustion (phishing, ordini
+  Start I.T., altri clienti/BU)
 
 **Documenti**
 - Si lavora **solo** in `01_Documentazione`, che contiene una sola versione per famiglia (su SharePoint: `Clienti/Remazel/Progetti/Remazel-Combustion`)
