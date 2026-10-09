@@ -1624,6 +1624,26 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
 - Da verificare a video: etichette con scala Month, Supplier Gantt, frecce rosse in caso di conflitto
 - Lezione: il Gantt si ridisegna al cambio di scala → marcare le barre colorate (data-rmzP), non l'intero svg
 
+### Sidebar "Produzione Remazel": Gantt in nuova scheda con cambio menu (09/10, prove annullate, stato invariato)
+- Problema: le 4 voci URL della sidebar (Master Plan, Supplier Gantt, Gantt Work Order T09, Gantt monitoraggio T09)
+  aprono una **nuova scheda** e il menu passa a Projects/Manufacturing
+- Causa (codice Frappe v16): `sidebar_item.html` ha `target="_blank"` fisso per `link_type = URL`; la nuova scheda
+  sceglie il menu "canonico" del DocType. Nella stessa scheda il menu resta se la sidebar ha una voce **DocType** per
+  quel DocType (`shell_can_show` in `sidebar.js`): già presenti (Task = "Punti di monitoraggio T09", Job Card T09,
+  Work Order T09)
+- Prove fallite, tutte annullate: `sidebar_shell.py` (prefisso `/desk/produzione-remazel/` → nuova scheda + home;
+  annullato con `sidebar_ripristino.py`); `sidebar_doctype.py` (voci DocType con filtri → apre la vista Lista e
+  duplica "Punti di monitoraggio T09"/"Work Order T09"; annullato con `sidebar_gantt_url.py`, SCRIVI eseguito)
+- Stato attuale = di partenza: 4 voci URL `/app/.../view/gantt?...`; scorciatoie Workspace con URL `/app/...`
+- **Soluzione individuata, NON prioritaria**: app custom `remazel_ui` con JS globale (`app_include_js`, ~15 righe) che
+  intercetta il clic sulle voci URL interne della sidebar e naviga nella stessa scheda (Gantt + filtri + menu
+  mantenuti). Passi: backup → `bench new-app remazel_ui` → `install-app` → hooks + JS → `bench build --app
+  remazel_ui` → `bench restart`. Da verificare prima: comportamento di `bench update` con app senza remote; clic
+  delle scorciatoie Workspace. Rimozione: `uninstall-app` + `remove-app`. Diventa la sede per future
+  personalizzazioni JS/Python globali
+- Nota: il sito su disco è `site1.local` (`bench --site combustionerp.remazel.com` → "does not exist"); i comandi
+  bench vanno dati da `/home/frappe-user/frappe-bench`
+
 ### Implicazioni
 - Esiste già una **timbratura a barcode** su monitor Timesheet con codici attività propri: per 2c e per il confronto
   CdG serve una **tabella di trascodifica** codice attività monitor ↔ codice fase ERPNext (oggi ~77% senza
@@ -1728,6 +1748,8 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
 - Pulsanti sul Production Plan: pianificazione a ritroso del set, generazione punti di monitoraggio
 - Import/export del ciclo da Excel (2a); pagina **"Impostazioni MES Remazel"**
 - Correzione `Gantt_Fix_Project_Remazel` se serve; scorciatoie workspace senza "commesse"
+- (Non prioritario) App custom `remazel_ui`: Gantt della sidebar nella stessa scheda mantenendo il menu
+  Produzione Remazel (vedi sessione 24, "Sidebar Produzione Remazel")
 
 ### Priorità 3 — Documentazione
 - `Manuale_Configurazione_MES_Remazel_B1` (key user, solo interfaccia)
