@@ -1,0 +1,133 @@
+codice_fase;esterna;time_in_mins;codici_371;livello;descrizione
+T08-0100-P1100-10MT;0;30.0;V126|V150;Ambigua;T08-0100-P1100-10MT — Montaggio + Puntatura W12 (n.2 X-Fire), W11 (n.3 STOP)
+T08-0100-P1100-10SA;0;120.0;V128|V152;Ambigua;T08-0100-P1100-10SA — Saldatura n.2 X-Fire W12 e n.3 STOP W11
+T08-0100-P1100-10ML;0;180.0;V130|V191;Generica;T08-0100-P1100-10ML — Molatura W12
+T08-0100-P1100-20SA;0;30.0;V146;Probabile;T08-0100-P1100-20SA — Saldatura circonferenziale W9
+T08-0100-P1100-20ML;0;45.0;V148;Probabile;T08-0100-P1100-20ML — Molatura W9
+T08-0100-P1100-20MT;0;30.0;V124|V116;Ambigua;T08-0100-P1100-20MT — Calibratura + Raddrizzamento ovalità diametri lato CAP, Molla, X-fire
+T08-0100-P1101-10SA;0;12.0;V104;Univoca;T08-0100-P1101-10SA — Saldatura longitudinale W1
+T08-0100-P1101-10ML;0;12.0;V106;Univoca;T08-0100-P1101-10ML — Molatura W1 a filo entrambi lati
+T08-0100-P1101-10ST;0;6.0;V108;Univoca;T08-0100-P1101-10ST — Calibratura con espantore manuale
+T08-0100-P1102-10SA;0;30.0;V104;Univoca;T08-0100-P1102-10SA — Saldatura longitudinale W2
+T08-0100-P1102-10ML;0;30.0;V106;Univoca;T08-0100-P1102-10ML — Molatura W2 a filo entrambi lati
+T08-0100-P1102-10ST;0;12.0;V108;Univoca;T08-0100-P1102-10ST — Preformatura CNC
+T08-0100-P1102-20ST;0;12.0;V108;Univoca;T08-0100-P1102-20ST — Formatura finale CNC
+T08-0100-P1103-10SA;0;30.0;V134|V140|V146;Ambigua;T08-0100-P1103-10SA — Saldatura circonferenziale W8
+T08-0100-P1103-10ML;0;45.0;V136|V142|V148;Ambigua;T08-0100-P1103-10ML — Molatura W8 lato interno (solo eccessi saldatura)
+T08-0100-P1104-10SA;0;30.0;V134|V140|V146;Ambigua;T08-0100-P1104-10SA — Saldatura circonferenziale W10
+T08-0100-P1104-10ML;0;30.0;V136|V142|V148;Ambigua;T08-0100-P1104-10ML — Molatura a filo lato interno W10
+T08-0100-P1110-10SA;0;30.0;V134|V140|V146;Ambigua;T08-0100-P1110-10SA — Saldatura circonferenziale W7
+T08-0100-P1110-10ML;0;30.0;V136|V142|V148;Ambigua;T08-0100-P1110-10ML — Molatura W7 lato interno (solo eccessi saldatura)
+T08-0100-P1120-10MT;0;45.0;V126;Generica;T08-0100-P1120-10MT — Pulizia + Posizionamento anelli + Puntatura
+T08-0100-P1120-10SA;0;60.0;V128;Generica;T08-0100-P1120-10SA — Saldatura a resistenza W60 anellI
+T08-0100-P1120-20MT;0;60.0;V191;Generica;T08-0100-P1120-20MT — Raddrizzamento difetti dei punti e gap tra anelli e liner
+T08-0100-P1120-10ML;0;18.0;V605;Generica;T08-0100-P1120-10ML — Lavaggio
+T08-0100-P1130-10MT;0;12.0;V126;Generica;T08-0100-P1130-10MT — Pulizia + Posizionamento anello + Puntatura a resistenza
+T08-0100-P1130-10SA;0;12.0;V128;Generica;T08-0100-P1130-10SA — Saldatura a resistenza W60 anello
+T08-0100-P1130-20MT;0;20.0;V191;Generica;T08-0100-P1130-20MT — Raddrizzamneto difetti dei punti e gap tra anello e liner
+T08-0100-P1130-10ML;0;12.0;V605;Generica;T08-0100-P1130-10ML — Lavaggio
+T08-0100-P1200-10SA;0;30.0;V104;Univoca;T08-0100-P1200-10SA — Saldatura longitudinale W3
+T08-0100-P1200-10ML;0;30.0;V106;Univoca;T08-0100-P1200-10ML — Molatura a filo entrambi lati W3
+T08-0100-P1200-10ST;0;12.0;V108;Univoca;T08-0100-P1200-10ST — Formatura CNC
+T08-0100-P1300-10SA;0;45.0;V104;Univoca;T08-0100-P1300-10SA — Saldatura longitudinale W4
+T08-0100-P1300-10ML;0;60.0;V106;Univoca;T08-0100-P1300-10ML — Molatura a filo entrambi lati W4
+T08-0100-P1300-10ST;0;12.0;V108;Univoca;T08-0100-P1300-10ST — Calibratura con espantore manuale
+T08-0100-P1400-10SA;0;18.0;V104;Univoca;T08-0100-P1400-10SA — Saldatura longitudinale W5
+T08-0100-P1400-10ML;0;18.0;V106;Univoca;T08-0100-P1400-10ML — Molatura a filo entrambi lati W5
+T08-0100-P1400-10ST;0;12.0;V108;Univoca;T08-0100-P1400-10ST — Formatura CNC
+T08-0100-P1600-10SA;0;15.0;V104|V204;Ambigua;T08-0100-P1600-10SA — Saldatura longitudinale W58
+T08-0100-P1600-10ML;0;18.0;V106|V206;Ambigua;T08-0100-P1600-10ML — Molatura entrambi lati W58
+T08-0100-P1600-10ST;0;12.0;V108|V208;Ambigua;T08-0100-P1600-10ST — Calibratura con espantore manuale
+T08-0100-P1600-20ST;0;6.0;V108|V208;Ambigua;T08-0100-P1600-20ST — Formatura CNC
+T08-0100-P2101-10SA;0;15.0;V304|V312;Ambigua;T08-0100-P2101-10SA — Saldatura longitudinale W53
+T08-0100-P2101-10ML;0;15.0;V306|V314;Ambigua;T08-0100-P2101-10ML — Molatura W53 a filo entrambi lati
+T08-0100-P2101-10ST;0;5.0;V308;Ambigua;T08-0100-P2101-10ST — Formatura CNC
+T08-0100-P2102-10SA;0;45.0;V318;Probabile;T08-0100-P2102-10SA — Saldatura W57 (anellino + piastra forata)
+T08-0100-P2102-10ML;0;15.0;V320;Probabile;T08-0100-P2102-10ML — Molatura W57 + Lucidatura interna
+T08-0100-P2104-10SA;0;180.0;V304|V312;Ambigua;T08-0100-P2104-10SA — Saldatura longitudinale W56 (H.T.S. SRL)
+T08-0100-P2104-10ML;0;25.0;V306|V314;Ambigua;T08-0100-P2104-10ML — Conformatura manuale + Molatura W56 a filo entrambi lati
+T08-0100-P2104-10ST;0;5.0;V308;Ambigua;T08-0100-P2104-10ST — Calibratura espantore CNC
+T08-0100-P2105-10SA;1;12000.0;V304|V312;Ambigua;T08-0100-P2105-10SA — Saldatura W55 (H.T.S. SRL)
+T08-0100-P2105-10ML;0;15.0;V306|V314;Ambigua;T08-0100-P2105-10ML — Molatura W55 a filo lato interno (garantire montaggio dentro piastra P2102)
+T08-0100-P2105-10ST;0;5.0;V308;Ambigua;T08-0100-P2105-10ST — Conformatura diametro con CNC
+T08-0100-P2107-10SA;1;9000.0;V304|V312;Ambigua;T08-0100-P2107-10SA — Saldatura longitudinale W54 (H.T.S. SRL)
+T08-0100-P2107-10ML;0;15.0;V306|V314;Ambigua;T08-0100-P2107-10ML — Molatura W54 a filo entrambi lati
+T08-0100-P2107-10ST;0;5.0;V308;Ambigua;T08-0100-P2107-10ST — Calibratura espantore CNC
+T08-0100-P2109-10SA;1;3000.0;V376;Univoca;T08-0100-P2109-10SA — Saldatura circonferenziale W40 (H.T.S. SRL)
+T08-0100-P2109-10ML;0;15.0;V378;Univoca;T08-0100-P2109-10ML — Molatura W40 a filo lato interno (garantire montaggio dentro bicchiere esterno P2105)
+T08-0100-P2109-10MT;0;30.0;V191;Generica;T08-0100-P2109-10MT — Raddrizzamento piano P2110
+T08-0100-P2111-10SA;1;3000.0;V304|V312;Ambigua;T08-0100-P2111-10SA — Saldatura longitudinale W39 (H.T.S. SRL)
+T08-0100-P2111-10ML;0;10.0;V306|V314;Ambigua;T08-0100-P2111-10ML — Molatura W39 a filo entrambi lati
+T08-0100-P2111-10ST;0;5.0;V308;Ambigua;T08-0100-P2111-10ST — Calibratura espantore CNC
+T08-0100-P2200-10MT;0;120.0;V338;Probabile;T08-0100-P2200-10MT — Pulizia + Montaggio + Puntatura assieme
+T08-0100-P2200-10SA;0;50.0;V340;Probabile;T08-0100-P2200-10SA — Saldatura a resistenza W61
+T08-0100-P2200-20ML;0;20.0;V605;Generica;T08-0100-P2200-20ML — Lavaggio
+T08-0100-P2201-10SA;1;3000.0;V358;Univoca;T08-0100-P2201-10SA — Saldatura longitudinale W37 (H.T.S. SRL)
+T08-0100-P2201-10ML;0;20.0;V360;Univoca;T08-0100-P2201-10ML — Conformatura manuale + Molatura W37 a filo entrambi lati
+T08-0100-P2201-10ST;0;10.0;V362;Univoca;T08-0100-P2201-10ST — Formatura CNC
+T08-0100-P2202-10SA;0;15.0;V358;Univoca;T08-0100-P2202-10SA — Saldatura longitudinale W37 (H.T.S. SRL)
+T08-0100-P2202-10ML;0;20.0;V360;Univoca;T08-0100-P2202-10ML — Conformatura manuale + Molatura W37 a filo entrambi lati
+T08-0100-P2202-10ST;0;10.0;V362;Univoca;T08-0100-P2202-10ST — Formatura CNC
+T08-0100-P2300-10SA;0;50.0;V366;Univoca;T08-0100-P2300-10SA — Saldatura W34, W35
+T08-0100-P2300-10ML;0;45.0;V372;Probabile;T08-0100-P2300-10ML — Molatura W34 a filo
+T08-0100-P2300-20SA;0;20.0;V370;Probabile;T08-0100-P2300-20SA — Saldatura W36
+T08-0100-P2301-10SA;0;30.0;V385;Univoca;T08-0100-P2301-10SA — Saldatura longitudinale W30
+T08-0100-P2301-10ML;0;45.0;V386;Univoca;T08-0100-P2301-10ML — Conformatura manuale + Molatura W30 a filo entrambi lati
+T08-0100-P2301-10ST;0;10.0;V387;Univoca;T08-0100-P2301-10ST — Formatura CNC
+T08-0100-P2303-10SA;0;30.0;V389;Univoca;T08-0100-P2303-10SA — Saldatura circonferenziale W33
+T08-0100-P2303-10ML;0;20.0;V386;Probabile;T08-0100-P2303-10ML — Molatura W33 a filo lato interno (ripristino diametro interno)
+T08-0100-P2304-10SA;0;20.0;V385;Univoca;T08-0100-P2304-10SA — Saldatura longitudinale W32
+T08-0100-P2304-10ML;0;20.0;V386;Univoca;T08-0100-P2304-10ML — Conformatura manuale + Molatura W32 a filo entrambi lati
+T08-0100-P2307-10SA;0;10.0;V385;Univoca;T08-0100-P2307-10SA — Saldatura longitudinale W31
+T08-0100-P2307-10ML;0;15.0;V386;Univoca;T08-0100-P2307-10ML — Conformatura manuale + Molatura W31 a filo entrambi lati
+T08-0100-P2307-10ST;0;2.0;V387;Univoca;T08-0100-P2307-10ST — Calibratura CNC
+T08-0100-P6000-10SA;1;6000.0;V404;Univoca;T08-0100-P6000-10SA — Saldatura longitudinale W6 (H.T. SRL)
+T08-0100-P6000-10ML;0;15.0;V406;Univoca;T08-0100-P6000-10ML — Molatura a filo entrambi lati W6
+T08-0100-P6000-10ST;0;12.0;V408;Univoca;T08-0100-P6000-10ST — Formatura CNC
+T08-0100-P6000-20ST;0;5.0;V408|V410;Ambigua;T08-0100-P6000-20ST — Bombatura molle a diametro finale richiesto
+T08-0200-P3203-10SA;0;90.0;V204;Univoca;T08-0200-P3203-10SA — Saldatura longitudinale W15
+T08-0200-P3203-10ML;0;30.0;V206;Univoca;T08-0200-P3203-10ML — Conformatura manuale + Molatura W15
+T08-0200-P3300-10SA;0;30.0;V212;Probabile;T08-0200-P3300-10SA — Saldatura circonferenziale W18 Throat ring con parte conica
+T08-0200-P3300-10ML;0;60.0;V214;Probabile;T08-0200-P3300-10ML — Molatura W18 a filo lato interno
+T08-0200-P3300-20SA;0;30.0;V224;Probabile;T08-0200-P3300-20SA — Saldatura circonferenziale W17 (parte conica con parte cilindrica)
+T08-0200-P3300-20ML;0;60.0;V226;Probabile;T08-0200-P3300-20ML — Molatura W17 a filo lato interno
+T08-0200-P3300-30SA;0;90.0;V230;Univoca;T08-0200-P3300-30SA — Saldatura due Spacers W??
+T08-0200-P3302-10SA;0;30.0;V204;Univoca;T08-0200-P3302-10SA — Saldatura longitudinale W13
+T08-0200-P3302-10ML;0;30.0;V206;Univoca;T08-0200-P3302-10ML — Conformatura manuale + Molatura w13 a filo entrambi lati
+T08-0200-P3302-10ST;0;5.0;V208;Univoca;T08-0200-P3302-10ST — Calibratura con espantore manuale
+T09-0100-A0001-10MT;0;180.0;V502;Univoca;T09-0100-A0001-10MT — Montaggio Body + Venturi + Puntatura Pin Venturi
+T09-0100-A0001-20MT;0;30.0;V506;Univoca;T09-0100-A0001-20MT — Montaggio Body + CAP + Puntatura Pin Cap
+T09-0100-A0001-10SA;0;150.0;V504+V508;Univoca;T09-0100-A0001-10SA — Saldatura PIN W64, W65
+T09-0100-A0001-10ML;0;45.0;V605;Generica;T09-0100-A0001-10ML — Pulizia saldature finale
+T09-0100-A0001-30MT;0;30.0;V191|V596;Generica;T09-0100-A0001-30MT — Raddrizzamento gap tra CAP e liner
+T09-0100-A0001-40MT;0;5.0;;Nessuna;T09-0100-A0001-40MT — Marcatura DOTPEEN
+T09-0100-A1000-10ML;0;19.8;V605;Generica;T09-0100-A1000-10ML — Lucidatura esterna discolorazione + lavaggio
+T09-0100-A1000-10MT;0;5.0;;Nessuna;T09-0100-A1000-10MT — Marcatura DOTPEEN
+T09-0100-A1000-20MT;0;45.0;V510;Univoca;T09-0100-A1000-20MT — Pulizia montaggio + Puntatura molla con body
+T09-0100-A1000-10SA;0;30.0;V512;Univoca;T09-0100-A1000-10SA — Saldatura a resistenza W62 (P6000 + P1100)
+T09-0100-A2000-10SA;0;45.0;V350;Probabile;T09-0100-A2000-10SA — Montaggio raggiera + Saldatura a tratti W41
+T09-0100-A2000-20SA;0;30.0;V348;Probabile;T09-0100-A2000-20SA — Montaggio + Puntatura Outer Swirler W52
+T09-0100-A2000-30SA;0;50.0;V350;Probabile;T09-0100-A2000-30SA — Saldatura circonferenziale Outer Swirler W52
+T09-0100-A2000-40SA;0;30.0;V350;Probabile;T09-0100-A2000-40SA — Saldatura chiodi W43 + Saldatura circonferenziale mozzo W42
+T09-0100-A2000-10ML;0;30.0;V346;Probabile;T09-0100-A2000-10ML — Molatura W52 a filo con vorticatore
+T09-0100-A2000-10MT;0;60.0;V191;Generica;T09-0100-A2000-10MT — Raddrizzamento tutti gap a disegno e pulizia
+T09-0100-A3000-10MT;0;30.0;V246|V238;Ambigua;T09-0100-A3000-10MT — Conformatura P3200 per accoppiamento con Throat ring saldato
+T09-0100-A3000-10SA;0;75.0;V248;Probabile;T09-0100-A3000-10SA — Saldatura circonferenziale W19 (puntatura 8X tratti di fissaggio)
+T09-0100-A3000-10ML;0;90.0;V250;Probabile;T09-0100-A3000-10ML — Molatura W19, sporgenze 8X
+T09-0100-A3000-20MT;0;5.0;;Nessuna;T09-0100-A3000-20MT — Marcatura DOTPEEN
+T09-0100-A3000-20ML;0;20.0;V605;Generica;T09-0100-A3000-20ML — Lavaggio
+T09-0100-P2100-10SA;0;200.0;V324|V330;Ambigua;T09-0100-P2100-10SA — Montaggio + Saldatura piastra forata con n.6 Heat Shield W47
+T09-0100-P2100-20SA;0;120.0;V324|V330;Ambigua;T09-0100-P2100-20SA — Montaggio + Saldatura W44 n.6 anelli (P2108)
+T09-0100-P2100-10ML;0;5.0;V326|V332;Ambigua;T09-0100-P2100-10ML — Molatura W44 (garantire montaggio bicchieri interni P2109)
+T09-0100-P2100-10ST;0;5.0;V308;Generica;T09-0100-P2100-10ST — Conformatura semimanuale diametro bicchieri P2105 lato Heat Shield con CNC
+T09-0100-P2100-30SA;0;240.0;V340;Probabile;T09-0100-P2100-30SA — Montaggio + Saldatura W46 in unica passata, W45 n.6 bicchieri interni P2109 e Retainer P2113 con Floating Collar
+T09-0100-P2100-40SA;0;60.0;V336;Univoca;T09-0100-P2100-40SA — Montaggio + Saldatura W48 virola esterna P2101
+T09-0100-P2100-10MT;0;5.0;V191;Generica;T09-0100-P2100-10MT — Raddrizzamento planarità con riferimento piano Floating Collars
+T09-0100-P2100-50SA;0;60.0;V393;Probabile;T09-0100-P2100-50SA — Montaggio Center Body P2200 + Saldatura W51, W50
+T09-0100-P3100-10SA;0;30.0;V218|V234;Ambigua;T09-0100-P3100-10SA — Saldatura circonferenziale W25 (due coni)
+T09-0100-P3100-10ML;0;30.0;V220|V236;Ambigua;T09-0100-P3100-10ML — Molatura W25 lato convesso del cordone
+T09-0100-P3100-20SA;0;30.0;V218|V234;Ambigua;T09-0100-P3100-20SA — Saldatura W24
+T09-0100-P3100-20ML;0;45.0;V220|V236;Ambigua;T09-0100-P3100-20ML — Molatura W24 lato esterno
+T09-0100-P3104-10SA;0;30.0;V204;Univoca;T09-0100-P3104-10SA — Saldatura longitudinale W21
+T09-0100-P3104-10ML;0;30.0;V206;Univoca;T09-0100-P3104-10ML — Conformatura manuale + Molatura W21 a filo entrambi lati
+T09-0100-P3104-10ST;0;5.0;V208;Univoca;T09-0100-P3104-10ST — Calibratura con espantore manuale
