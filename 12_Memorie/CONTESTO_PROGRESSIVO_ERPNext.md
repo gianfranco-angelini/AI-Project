@@ -1648,9 +1648,8 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
 - Estrazione `estrai_operazioni_t09.py`: 57 BOM, 540 operazioni tutte con codice fase, 3.330 JC tutte collegate
 - Differenze con il file 26-19008 usato da Fabio: nessuna fase mancante (P1600 contato 2 volte da Fabio, numerazioni QC
   diverse, 95 prefissi T08↔T09 per nostra regola)
-- ⚠️ Anomalia: **P2104-10SA** (180 min) e **P2202-10SA** (15 min) hanno "(H.T.S. SRL)" in descrizione ma sono interne;
-  le analoghe P2105/2107/2111/2201 sono esterne (3.000-12.000 min) → da chiarire (**non con Simone**: non si occupa di
-  questo tema)
+- P2104-10SA e P2202-10SA interne con "(H.T.S. SRL)" in descrizione: **non è un'anomalia**, dato già confermato
+  (le saldature in conto lavoro sono le 6 decise: P6000, P2201, P2109, P2111, P2105, P2107)
 - Dati reali: 50 JC completate su 3.330 (31 est., 19 int.); nessuna JC completata sulle fasi produttive interne
 - Mappatura nostra 132 fasi produttive: univoca 52, probabile 22, ambigua 37, generica 18, nessuna 3; concorde con
   Fabio 103/132, discordi 25 (Cap inner/outer body, swirler A2000, P1104) → solo Brozzoni può decidere
