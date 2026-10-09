@@ -1654,6 +1654,8 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
 - Mappatura nostra 132 fasi produttive: univoca 52, probabile 22, ambigua 37, generica 18, nessuna 3; concorde con
   Fabio 103/132, discordi 25 (Cap inner/outer body, swirler A2000, P1104) → solo Brozzoni può decidere
 - Esito: corrispondenza sicura 1:1 solo ~56%; confronto credibile per gruppo (Liner/Venturi/Cap/Molle/Final)
+- Documento: **`Analisi_Confronto_Fasi_Monitor_Remazel_B1.docx`** (`01_Documentazione_bozze`, generatore
+  `build_confronto_fasi_monitor.py`, 6 pagine, validato) — da copiare in OneDrive `01_Documentazione`
 
 ### Implicazioni
 - Esiste già una **timbratura a barcode** su monitor Timesheet con codici attività propri (~77% senza corrispondenza
