@@ -16,6 +16,7 @@ domani non riesco a partecipare allo steering, vi lascio un breve aggiornamento 
 - Confronto fra le fasi del ciclo e i codici dei monitor Timesheet: la corrispondenza c'è sulle fasi produttive; controlli e lavorazioni esterne non sono codificati sui monitor. Il confronto delle ore sarà possibile per gruppo di lavorazione quando i reparti registreranno l'avanzamento sul sistema.
 
 PAGINE UTILI (promemoria)
+Le pagine sono provvisorie e servono a mostrare i risultati ottenuti finora sulla T09-0100: con l'ingresso di altri prodotti verranno rese generali, con la scelta del prodotto direttamente nella pagina.
 - Menu Produzione Remazel: https://combustionerp.remazel.com/app/produzione-remazel
 - Master Plan (set): https://combustionerp.remazel.com/app/task/view/gantt?is_group=1
 - Gantt punti di monitoraggio T09: https://combustionerp.remazel.com/app/task/view/gantt?project=PROJ-0002

@@ -1759,6 +1759,9 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
 - Pulsanti sul Production Plan: pianificazione a ritroso del set, generazione punti di monitoraggio
 - Import/export del ciclo da Excel (2a); pagina **"Impostazioni MES Remazel"**
 - Correzione `Gantt_Fix_Project_Remazel` se serve; scorciatoie workspace senza "commesse"
+- **Dopo lo steering del 12/10**: rendere generali le pagine filtrate su PROJ-0002 (voce unica WO/JC/punti di
+  monitoraggio con filtro Project scelto dall'utente, indicatori) e colore automatico per ogni nuovo Project nei Gantt
+  (oggi fissi T09 blu, T08 verde). Pagine attuali dichiarate "provvisorie" nella mail dello steering
 - (Non prioritario) App custom `remazel_ui`: Gantt della sidebar nella stessa scheda mantenendo il menu
   Produzione Remazel (vedi sessione 24, "Sidebar Produzione Remazel")
 
