@@ -1665,29 +1665,147 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
 
 ---
 
-## 🖥️ FRONTE ERPNEXT — stato al 06/10/2026
+## SESSIONE 25 — Site di staging per simulazione T08 (12/10/2026)
+
+> Scritta da Gian come "Sessione 24" nella copia OneDrive del 12/10; rinumerata 25 in sessione 26 perché la 24 (09/10, Punto e lettura mail) esisteva già nel repo.
+
+### Idea e decisione
+- Gian propone di usare la **T08** come banco di prova: simulare che sia partita nel passato e
+  completata all'**80-90%**, per ottenere un report su **tempi ciclo e costi**
+- Si fa **solo su un site di staging**, non su `site1.local`: gli avanzamenti retrodatati sporcano
+  stock ledger, valutazioni e date reali. Non contraddice la decisione del 02/10 (T08 parcheggiata in
+  produzione): la T08 resta la base dati comune, qui è solo materiale di test
+- **Nessun clone del server**: secondo site sullo stesso bench di cs-erp01 (spazio e risorse non sono un
+  problema, confermato da Gian)
+
+### Staging
+- Nome site: **`stgcombustion.remazel.com`** (scelta di Gian); DB previsto `stg_combustion`
+- Procedura concordata (da `/home/frappe-user/frappe-bench`): backup `--with-files` di `site1.local` →
+  `new-site` → `restore` con file public/private → `migrate` → `disable-scheduler`
+- Verifica post-restore: **58 WO T08** e **557 Job Card**
+- Il restore porta utenti, password e Server Script di produzione; SMTP non è configurato, scheduler
+  spento comunque sullo staging
+- ⏳ **Passi non ancora eseguiti**: Gian li fa più tardi; l'esito della verifica va riportato in chat
+
+### Cosa il test dà e cosa no
+- **Dà**: report planned vs actual dei tempi ciclo per fase e reparto; verifica del flusso
+  Inizia/Completa sulle Job Card esterne e del cruscotto expediting con dati realistici; controllo del
+  cammino critico (~94% del ciclo è conto lavoro)
+- **Costi solo indicativi**: mancano prezzi fornitore reali, i microfusi sono su placeholder `F000`, il
+  prezzo del Sales Order è un segnaposto. Il costo delle fasi esterne è `hour_rate × ore` della
+  postazione "Lavorazione Esterna" (24 h/giorno, capacità 50): servono hour rate e prezzi di prova per
+  renderlo sensato
+- I 58 WO T08 hanno ancora i tempi **pre-TT** (non riallineati): rigenerarli prima, se si vuole
+  misurare con i tempi aggiornati
+- Simulazione: time log retrodatati sulle Job Card, `allow_negative_stock` (già attivo), scostamenti
+  realistici (±10-30% sui tempi interni, ritardi casuali sui rientri esterni). Valgono le trappole note
+  (`doc.save()` mai su record submitted, `create_job_card()` sovrascrive `planned_end_date`)
+
+### Punti aperti
+- **Esposizione web dello staging**: come è pubblicato `combustionerp.remazel.com` (nginx diretto o
+  reverse proxy/FortiGate) e se il bench è in `dns_multitenant` → DNS o file hosts + config nginx
+- **Script di simulazione**: file completo, solo staging, da scrivere dopo la verifica del restore
+- Aggiornamento memoria: scelto da Gian di farlo con **Claude Code** (qui si produce il file completo)
+
+---
+
+## SESSIONE 26 — Riallineamento memoria e Guida operativa Pianificazione (16/10/2026)
+
+Sessione in Claude Code **cloud** (repo `AI-Project`, branch `claude/clever-davinci-odhm0s`). Nessun intervento
+su ERPNext.
+
+### Riallineamento delle copie della memoria
+- Esistevano **tre versioni divergenti**:
+  - OneDrive `12_Memorie` del **12/10** (126 KB): sessioni 1-22 + "23 Riallineamento (05/10)" ridotta +
+    "**24 Staging** (12/10)", scritta da Gian
+  - branch `claude/compassionate-hopper-72i76n` dell'**11/10** (148 KB): sessioni 1-22 identiche + **23 completa
+    (05-06/10)** + **24 Punto e lettura mail (09/10)** con allineamento fasi, Gantt, sidebar, confronto 371, mail steering
+  - branch `claude/clever-davinci-odhm0s`: fermo alla sessione 19
+- Le sessioni 1-22, l'Appendice tecnica e le Regole coincidono (a parte i CRLF di OneDrive); il branch dell'11/10 ha in
+  più nelle Regole il blocco "Perimetro e richieste" (09/10) e la regola delle versioni in `Old` (06/10)
+- **Unione**: base = branch dell'11/10; la sessione "24 Staging" di OneDrive diventa **Sessione 25 (12/10)**
+  (numerazione cronologica, come proposto il 12/10 nella chat "Memoria aggiornata al 12/10" e mai confermato:
+  qui applicata); questa è la **26**. Fronte ERPNext e Task aperti riscritti al 16/10 unendo le due liste (09/10 e 12/10)
+- Chat lette: sessioni Claude Code "Situazione e riparazioni" (02-09/10), "Chat regola CV sito" (07-11/10, in realtà
+  sessione 24), "Memoria aggiornata al 12/10", "Personalizzazione allegati documenti" (29/09), "Lettura CLAUDE.md"
+  (01/10), "Exchange online connection" (14-15/10, solo Chiapparoli). **Le chat del Project Cowork non sono
+  leggibili da Claude Code**: eventuali sessioni Cowork dopo il 12/10 vanno aggiunte a mano
+
+### Esiti comunicati da Gian (16/10)
+- **Allineamento dei set confermato**: si prosegue sullo stato del 09/10 (50 Job Card completate con date e tempi
+  stimati, 2 parziali set 5, ritardi set 1 = 33 gg e set 2 = 44 gg)
+- **Lavorazioni esterne nel transitorio: modalità A "transitoria manuale" sulla Job Card** (decisione 4 della
+  riunione di avvio): N° ordine SAP e data promessa sulla Job Card, **Start Job = spedizione, Complete Job = rientro**,
+  una registrazione per Job Card, fino all'Ordine conto lavoro. Supera, **solo per il periodo transitorio**, la regola
+  "niente Start/Complete sulle Job Card esterne" della scelta B (che resta la soluzione finale)
+- Le altre decisioni della riunione di avvio (reparto pilota e referente, regole di reparto, accesso SAP, controllo
+  settimanale) **non comunicate**: nella guida restano come attività da concordare
+- Destinatari del nuovo manuale: **li decide Gian**
+
+### Documento prodotto
+**`Guida_Operativa_Pianificazione_Remazel_B1.docx`** (16/10, 13 pagine, `docx-startit` + `docx-remazel`,
+`validate.py` OK, 14 link cliccabili, controllo visivo di tutte le pagine), in `01_Documentazione_bozze/` con il
+generatore `build_guida_operativa_pianificazione.py` (due passate reali con `pdftotext`) e `linkify.py`.
+Destinatario per funzione: **Pianificazione di produzione** (nessun nome). Organizzata per cadenza:
+1. Scopo e modo d'uso (rapporto con Manuale Utente B3, Guida Concettuale B8, Guida Avvio B2 superata)
+2. Punto di partenza al 16/10 (allineamento, date stimate, parziali set 5, ritardi 33/44 gg, transitoria)
+3. Ruolo della Pianificazione (profilo Responsabile Processo MES) vs amministratore; funzioni da non usare
+   (Submit All Draft, Applica Ritardo senza Simula)
+4. Prima settimana: accesso, **nome nell'elenco dipendenti per Start Job**, set 1-2, materiale già presso fornitori,
+   reparti interni, controllo settimanale
+5. Ogni giorno: conferma Job Card (link `status=Completed&docstatus=0`), JC in corso, spedizioni/rientri, esterne in
+   ritardo, avvisi di precedenza; regole di reparto
+6. Esterne in modalità transitoria: campi, fasi da spedire, ordine/spedizione/rientro, uscita registrata in ritardo
+   (correzione Time Log), rientro parziale (nota "N su M", come PO-JOB07996/07997), spedizione multipla,
+   **errore di sequenza se la fase precedente non è chiusa**, chiusure fornitori
+7. Ogni settimana: Master Plan + Recalculate progress, Gantt del set, perni P4000/P5000, Carico Reparti, controllo
+   settimanale
+8. Ritardi e anticipi (Simula/Applica; anticipo set 1-2 con data anteriore; limite della cascata)
+9. A evento · 10. Chiusura WO/set (prima chiusura con l'amministratore: verifica `skip_transfer`) · 11. Ogni mese
+   (escludere le 50 JC stimate dal consuntivo) · 12. Nuovo ordine · 13. Cosa arriva in corsa · 14. Messaggi frequenti
+- Appendici: checklist giornaliera, checklist settimanale, 13 collegamenti
+
+### Punti da verificare emersi scrivendo la guida
+- Chi registra le spedizioni deve avere un **Employee**: verificare se Simone/Sergey/Omar ne hanno uno (Start Job
+  chiede il dipendente; i 21 Employee sono operatori di reparto)
+- In v16 l'**OperationSequenceError** può bloccare lo Start della Job Card esterna se la fase interna precedente non è
+  registrata (finché i reparti non registrano è il caso normale): valutare se disattivare il controllo di sequenza o
+  registrare le fasi precedenti
+- Filtro `docstatus=0` negli URL della lista Job Card e pulsante "Recalculate progress" sul Gantt Task: da provare a video
+
+---
+
+## 🖥️ FRONTE ERPNEXT — stato al 16/10/2026
 
 ### Ambiente
 - **cs-erp01** (VMware, Ubuntu 24.04, 4 vCPU / 8 GB), ERPNext **16.37.0** / Frappe 16.36.1 / HRMS 16.20.1,
-  MariaDB buffer pool 2 GB, HTTPS con catena completa (wildcard `*.remazel.com` + RapidSSL)
-- Ultimo backup: **02/10/2026 18:35** (`site1.local`). Snapshot VMware del 02/10 da eliminare
+  MariaDB buffer pool 2 GB, HTTPS con catena completa (wildcard `*.remazel.com` + RapidSSL, scade 15/02/2027)
+- Sito su disco **`site1.local`** (`bench --site combustionerp.remazel.com` → "does not exist")
+- Backup: 02/10/2026 18:35 (`site1.local`) + backup prima dell'allineamento e della modifica Gantt del 09/10.
+  Snapshot VMware del 02/10 da eliminare
 - Rete verso SAP: cs-erp01 → **cs-sql03.remazel.local:1433** (10.101.1.100) raggiungibile
+- **Staging** `stgcombustion.remazel.com` (sessione 25): deciso il 12/10, **non ancora creato** (esito non comunicato)
 
 ### T09-0100 — in esercizio (PROJ-0002)
 - SAL-ORD-2026-00002, 100 liner in 6 set; Production Plan MFG-PP-2026-00002…00007 (uno per set)
-- **348 WO tutti submitted** (gli ultimi 12, P4000/P5000, il 05/10);
-  **3.306 Job Card** al 05/10 (**3.330** all'inventario del 06/10, da spiegare), di cui 768 esterne con fornitore e
-  stato "Da inviare" (nessuna "Presso fornitore")
-- Fine liner pianificata da ERPNext: set 1 26/03/2027 (**+28 gg**), set 2 08/06/2027 (**+39 gg**),
-  set 3-6 in anticipo di 7-11 gg sulla consegna (tabella in sessione 22)
-- Fasi esterne = **TT** del ciclo (lotto da 10 liner), Lavorazione Esterna 24h con "Calendario Fornitori 2026-2029" (75 gg);
-  reparti interni 07-17 (540 min/g) con "Calendario Remazel 2026-2029"
+- **348 WO tutti submitted**; **3.330 Job Card** (3.306 al 05/10, differenza da spiegare), ~770 esterne
+- **Avanzamento allineato il 09/10** dal file di Simone `26-19008_EG.xlsx` (06/10): **50 Job Card completate** su tutti i
+  set (prime fasi di taglio/calandratura + QC; esterne → "Rientrato") con **date e tempi STIMATI** (nota in
+  `remarks`, da escludere dal consuntivo ore); **2 parziali** set 5 T08-0200-P3302 (PO-JOB07996 10LT, PO-JOB07997 10QC)
+  Open con nota "10 su 20". Allineamento **confermato da Gian il 16/10**
+- Ritardi dopo l'allineamento (fine A0001 vs consegna − buffer): **set 1 33 gg, set 2 44 gg**, set 3-6 in linea.
+  Anticipo delle fasi successive dei set 1-2: lo valuta Simone con Simula/Applica Ritardo
+- Esterne al 09/10: 749 "Da inviare", 31 "Rientrato"; **modalità transitoria A** decisa il 16/10 (Start = spedizione,
+  Complete = rientro)
+- Fasi esterne = **TT** del ciclo (lotto da 10 liner), Lavorazione Esterna 24h con "Calendario Fornitori 2026-2029"
+  (75 gg); reparti interni 07-17 (540 min/g) con "Calendario Remazel 2026-2029"
 - Capacità reparti: Saldatura 7, Molatura 5, Montaggio 5, Controllo Qualità 3, Lavorazioni Meccaniche 1;
   Lavorazione Esterna 50
 
 ### T08-0100 — parcheggiata (PROJ-0001)
 - 58 WO "In Process" e Job Card con i **tempi esterni vecchi** (riallineamento al TT rinviato);
-  130 Job Card esterne con fornitore. Discrepanza 581 vs 557 Job Card mai verificata (non urgente)
+  130 Job Card esterne con fornitore; 21 Task, **0 WO T08 collegati a Task**. Discrepanza 581 vs 557 Job Card mai
+  verificata (non urgente)
 - Le BOM T08 sono aggiornate al TT e restano la base dati comune
 
 ### Funzioni disponibili
@@ -1695,14 +1813,17 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
   Processo MES"** per Simone, Sergey, Omar (non System Manager)
 - **Buffer Project** sul singolo Project + Server Script `Project_Deadline_Interna`
 - Ritardo a cascata (`Simula/Applica_Ritardo_JobCard`, menu "Pianificazione"): fasi successive, WO padre fino al
-  prodotto finito, confronto con consegna set − buffer (1c chiuso il 05/10)
+  prodotto finito, confronto con consegna set − buffer
 - Job Card: "Consegna set" e "Production Plan"; sezione **Conto lavoro** (fornitore da BOM, n° ordine
-  SAP, data promessa, uscita/rientro in sola lettura, rientro previsto, stato)
+  SAP, data promessa, uscita/rientro in sola lettura da Start/Complete, rientro previsto, stato)
+- **Gantt (09/10)**: avanzamento Task da Job Card (`Task_Progress_JobCard_Submit`, `Task_Progress_Daily`,
+  `Task_Progress_API`), colori per Project (`Task_Color_By_Project`: T09 #3a6bbf, T08 #2e8b57), Client Script
+  `Gantt_Remazel_Task/_Work_Order/_Job_Card` (pulsante "Recalculate progress"; `Gantt_Fix_*` disattivati);
+  Master Plan = `/app/task/view/gantt?is_group=1`; Supplier Gantt = Job Card gantt Lavorazione Esterna
+- Workspace **pubblico** "Produzione Remazel" + Workspace Sidebar (voci URL dei Gantt aprono una nuova scheda:
+  limite v16, soluzione `remazel_ui` non prioritaria); pagine filtrate su PROJ-0002, dichiarate **provvisorie**
 - Matricole solo su A0001, assegnate a fine produzione, provvisorie; `Serial No.custom_matricola_reale`
 - Documenti tecnici su Job Card (2b), template saldature (2d, non agganciato), report "Carico Reparti Settimanale"
-  (calendario Remazel)
-- Workspace **pubblico** "Produzione Remazel" (T09 in alto) + Workspace Sidebar 13 voci; 42 Task T09 (7 per set,
-  `Work Order.custom_task`); Number Card/Chart T09; Gantt Project non funzionante (vedi sessione 23)
 - `allow_negative_stock = 1`, **nessuna giacenza in ERPNext**: il magazzino è su SAP
 
 ### Decisioni chiuse
@@ -1713,73 +1834,84 @@ sistema** (resta solo in intestazione/piè/Redatto da per standard); versioni su
 | Tempi fasi esterne | **TT** del ciclo (lotto da 10 liner), ore di calendario; buffer trasporto 0 |
 | Scheduling | 3B: fine set = consegna − Buffer Project; 2A: inizio non prima di oggi |
 | Buffer | sul **singolo Project** (default 5), non nella pagina impostazioni |
-| Conto lavoro / expediting | **scelta B**: Ordine conto lavoro in ERPNext, magazzino e magazzini fornitore su **SAP**, connettore SAP → ERPNext in lettura; scrittura ordini (futuro) via Service Layer. **Niente** conto lavoro nativo v16, **niente** Start/Complete sulle Job Card esterne |
+| Conto lavoro / expediting (finale) | **scelta B**: Ordine conto lavoro in ERPNext, magazzino e magazzini fornitore su **SAP**, connettore SAP → ERPNext in lettura; scrittura ordini (futuro) via Service Layer. Niente conto lavoro nativo v16 |
+| Esterne nel transitorio | **modalità A** sulla Job Card: Start = spedizione, Complete = rientro, n° ordine SAP e data promessa — 16/10 |
+| Allineamento set | eseguito il 09/10 (50 JC, date stimate), confermato il 16/10 |
 | Ordini al fornitore | oggi li emette **SAP**; in futuro generati da ERPNext e inviati a SAP |
 | Matricole | solo prodotto finito A0001, a fine produzione, provvisorie |
 | Microfusi | codici `F000` e €1.000 provvisori |
 | `allow_negative_stock` | resta a 1 |
 | Terminologia | niente "commessa": **Project** (la commessa è il Job) |
-| Lingua | lavori in italiano, traduzione etichette in **inglese solo alla fine** |
-| Standard documentale | `docx-startit` (+ `docx-remazel`) |
+| Lingua | nuovi elementi direttamente in inglese (09/10); esistenti tradotti nella fase glossario |
+| Standard documentale | `docx-startit` (+ `docx-remazel`); solo funzioni, nessun nome; versioni superate in `Old` |
 | Chiusura WO | scarico di produzione con giacenze negative ammesse (solo avanzamento) — 06/10 |
-| Documenti | solo funzioni, nessun nome; versioni superate in `01_Documentazione/Old` — 06/10 |
 | Avvio T09 | go con quello che c'è, reparto pilota, il resto in corsa — 06/10 |
+| Richieste Controllo di Gestione | non si eseguono (09/10), vedi Regole |
 
 ---
 
-## 🎯 TASK APERTI (aggiornato al 09/10/2026)
+## 🎯 TASK APERTI (aggiornato al 16/10/2026)
 
-### Priorità 0 — Ripresa (al 09/10)
-- ✅ `gantt_scroll.py` e `gantt_ricolora.py` già applicati; resta la verifica a video Gantt Task/Month, Supplier Gantt
-- Inviare a Simone la mail `sessione_24/Mail_Simone_Allineamento.md` (allineamento 50 JC, parziali set 5, ritardi 33/44 gg,
-  anticipo a sua scelta con Simula Ritardo)
-- Analizzare `Ordini Bonsi Combustion.xlsx` (Marco Lasorella, 06/10; **Bonsi = Ufficio Acquisti Remazel, coordina e
-  monitora gli acquisti Combustion**) → base per Ordine conto lavoro/expediting. Allegato non leggibile dal connettore
-  (5,3 MB): da salvare su SharePoint `Remazel-Combustion/Dati`
+### Priorità 0 — Avvio dell'uso quotidiano
+- **Guida operativa**: Gian decide destinatari e invio di `Guida_Operativa_Pianificazione_Remazel_B1.docx`; copiarla in
+  OneDrive `01_Documentazione` (con `Analisi_Confronto_Fasi_Monitor_Remazel_B1.docx`, ancora solo nel repo)
+- Verificare che chi registra le spedizioni (Simone/Sergey/Omar o logistica) abbia un **Employee** per Start Job
+- Verificare se l'**OperationSequenceError** blocca lo Start delle Job Card esterne con fase precedente non registrata
+  (caso normale finché i reparti non registrano) → decidere se registrare le fasi precedenti o allentare il controllo
+- Provare a video i link della guida (`docstatus=0`, Recalculate progress, Supplier Gantt, etichette scala Month)
+- Esiti mancanti della riunione di avvio: reparto pilota e referente, regole di reparto, accesso SAP, controllo
+  settimanale → aggiornare la guida (B2)
+- Inviare a Simone `sessione_24/Mail_Simone_Allineamento.md` (invio non confermato); invio della mail di steering del
+  12/10 non confermato
+- `Ordini Bonsi Combustion.xlsx` (Ufficio Acquisti): salvarlo su SharePoint `Remazel-Combustion/Dati` e analizzarlo
+  per l'Ordine conto lavoro
 - Quotazioni hardware barcode/RFID (sollecito Fabio a Gian e Michele)
-
-### Priorità 0 bis — Dopo la riunione del 06/10
-- Ricevere gli esiti delle 6 decisioni → `Guida_Avvio_T09_Remazel_B3`
-- Eseguire `modulo_rilevazione_set12.py` → Excel alla funzione che rileva → caricamento (script da scrivere, PROVA/SCRIVI)
-- Verifiche iniziali della Guida Avvio: backup, 58 WO/set, fornitore su tutte le esterne, fine set vs consegna,
-  `skip_transfer` per lo scarico di produzione, 3.330 vs 3.306 Job Card (`dettaglio_personalizzazioni.py`)
-- Gantt Project vuoto → configurare vista o puntare il Master Plan sui Task di gruppo; rinominare la scorciatoia
 
 ### Priorità 1 — Expediting
 1. **Analisi Ordine conto lavoro** (documento nuovo, sostituisce Relazione/Scenari conto lavoro)
 2. **Ordine conto lavoro**: DocType con n° ordine SAP, fornitore, data promessa, magazzino SAP fornitore, righe = Job
    Card esterne; pulsanti **Spedito / Rientrato** (anche parziale), senza operatore; al rientro Job Card completate e
-   sottomesse. Prima: verificare se ERPNext completa una Job Card senza dipendente
+   sottomesse. Prima: verificare se ERPNext completa una Job Card senza dipendente. Deve subentrare alla modalità
+   transitoria A senza rifare i dati (Job Card già "Presso fornitore")
 3. **Cruscotto expediting**: tre fasce (scadute / in scadenza / tutte), un messaggio giornaliero a un gruppo con
-   responsabile; fasi a cavallo delle chiusure
+   responsabile; evidenza delle 51 fasi esterne che attraversano chiusure
 4. **Lettura SAP**: login SQL sola lettura + nome DB; `~/sap_conn` (pymssql), `~/.sap_ro.json` chmod 600, `sap_lettura.py`
 5. Da Remazel: documenti SAP del conto lavoro, codice del pezzo a metà ciclo, magazzini fornitore, Service Layer
 
 ### Priorità 2 — Sviluppi per l'autonomia
 - Pulsanti sul Production Plan: pianificazione a ritroso del set, generazione punti di monitoraggio
 - Import/export del ciclo da Excel (2a); pagina **"Impostazioni MES Remazel"**
-- Correzione `Gantt_Fix_Project_Remazel` se serve; scorciatoie workspace senza "commesse"
-- **Dopo lo steering del 12/10**: rendere generali le pagine filtrate su PROJ-0002 (voce unica WO/JC/punti di
-  monitoraggio con filtro Project scelto dall'utente, indicatori) e colore automatico per ogni nuovo Project nei Gantt
-  (oggi fissi T09 blu, T08 verde). Pagine attuali dichiarate "provvisorie" nella mail dello steering
-- (Non prioritario) App custom `remazel_ui`: Gantt della sidebar nella stessa scheda mantenendo il menu
-  Produzione Remazel (vedi sessione 24, "Sidebar Produzione Remazel")
+- Rendere generali le pagine filtrate su PROJ-0002 e colore automatico per ogni nuovo Project (dopo lo steering del 12/10)
+- Verifiche rimaste dalla Guida Avvio: `skip_transfer` per lo scarico di produzione, 3.330 vs 3.306 Job Card
+  (`dettaglio_personalizzazioni.py`)
+- (Non prioritario) App custom `remazel_ui`: Gantt della sidebar nella stessa scheda
 
 ### Priorità 3 — Documentazione
+- `Guida_Operativa_Pianificazione_Remazel_B2` con gli esiti della riunione di avvio e le verifiche di Priorità 0
+- `Manuale_Utente_Remazel_B4`: capitolo 6 da allineare alla modalità transitoria e alle regole della guida operativa
 - `Manuale_Configurazione_MES_Remazel_B1` (key user, solo interfaccia)
 - `Riepilogo_Personalizzazioni_Avvio_Remazel_B2` (togliere "commessa" per Project)
-- Guida Personalizzazioni B3 con l'output di `dettaglio_personalizzazioni.py` (WO_Project_Fallback,
-  JobCard_Avviso_Precedenze, Property Setter)
+- Guida Personalizzazioni B3 con Gantt del 09/10 e output di `dettaglio_personalizzazioni.py`
+- `Guida_Avvio_T09_Remazel_B2` superata dalla guida operativa: spostarla in `Old`
 - Glossario IT→EN (fase etichette inglesi)
 
 ### Priorità 4 — Manutenzione e memoria
-- **Copiare questa memoria** in OneDrive `12_Memorie` e nel Project Cowork; archiviare `Old` e `Transfer`
+- **Copiare questa memoria** in OneDrive `12_Memorie` (sostituisce quella del 12/10, che va in `Old`) e nel Project
+  Cowork; archiviare `Old` e `Transfer`
 - ⚠️ Repo GitHub `AI-Project` **pubblico** con dati interni → renderlo privato (Gian)
-- Backup pianificato con copia esterna; sito di prova; eliminare snapshot VMware del 02/10
+- Backup pianificato con copia esterna; eliminare snapshot VMware del 02/10
 - Aggiornare la skill `erpnext-remazel`; salvare `SKILL_docx-remazel.md` nella skill
-- QI template su A0001 quando validato; SMTP Microsoft 365; H.T. SRL vs H.T.S. SRL
+- QI template su A0001 quando validato; SMTP Microsoft 365
 
-### Priorità 5 — T08 (parcheggiata, alla ripresa)
+### Priorità 5 — Staging e simulazione T08 (sessione 25)
+1. Backup fresco di `site1.local`, creazione site `stgcombustion.remazel.com`, restore, `migrate`,
+   `disable-scheduler`; verifica 58 WO / 557 Job Card (a cura di Gian)
+2. Chiarire esposizione web dello staging (nginx / reverse proxy / `dns_multitenant`)
+3. Scrivere lo **script di simulazione** (file completo, solo staging): avanzamento T08 all'80-90% nel
+   passato, time log retrodatati, scostamenti realistici
+4. Report tempi ciclo planned vs actual e costi (indicativi: servono hour rate e prezzi di prova)
+
+### Priorità 6 — T08 (parcheggiata, alla ripresa)
 - Riallineare WO e Job Card T08 ai tempi TT; verificare 581 vs 557 Job Card; decidere se mantenere o annullare i WO aperti
 
 ### Dopo
@@ -1904,5 +2036,5 @@ tab **Sub Assembly Items** → **Get Sub Assembly Items** → **Make Work Orders
 
 ---
 
-*Ultimo aggiornamento: **Sessione 23** — 5 ottobre 2026 (riallineamento della memoria: copie divergenti, parti superate rimosse, Fronte ERPNext / Decisioni / Task riscritti. Sessione 22 del 02-03/10: carico e pianificazione T09, tempi esterni TT, expediting e scelta B con SAP)*
+*Ultimo aggiornamento: **Sessione 26** — 16 ottobre 2026 (riallineamento delle tre copie della memoria: sessioni 23-24 dal repo, staging come sessione 25; allineamento set confermato; esterne in modalità transitoria A; Guida_Operativa_Pianificazione_Remazel_B1)*
 *⚠️ A fine ogni sessione: aggiornare questo file in OneDrive `12_Memorie`, nel Project Cowork e nel repo, aggiungendo la sezione della sessione.*
