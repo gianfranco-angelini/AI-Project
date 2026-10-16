@@ -1785,6 +1785,8 @@ Destinatario per funzione: **Pianificazione di produzione** (nessun nome). Organ
   PO-JOB05639 (P3203 W15) pianificate 12-14/10, PO-JOB05774 (P3104 W21) 26/10; QC PO-JOB05834 (P2108) e PO-JOB05906
   (P1800). Da sapere: quali delle 203 esterne sono già presso il fornitore (il file di Simone del 06/10 segnava solo le
   fasi completate)
+- **Guida B2** (16/10, decisione di Gian): `Guida_Operativa_Pianificazione_Remazel_B2.docx` (15 pagine, validata, controllo visivo) = B1 + **Appendice C "Prime attività di avvio"** (situazione al 16/10: 203 esterne per fornitore, 12 Job Card interne set 1-2) + nota al 5.1 "elenco vuoto = nessuna scheda da confermare" + cap. 4 passo 4 con il modulo per gli Acquisti; collegamenti spostati in Appendice D. B1 in `01_Documentazione_bozze/Old`
+- **Modulo per gli Acquisti** `Verifica_Esterne_Avvio_T09.xlsx` (script `sessione_26/modulo_verifica_esterne.py`, sola lettura, legge il CSV di `prossime_fasi.py`): 203 righe, colonne grigie dal sistema + gialle da compilare (già presso fornitore Sì/No, data uscita, N° ordine SAP, data promessa, note). Dopo la compilazione: script di caricamento PROVA/SCRIVI (da scrivere) che registra le uscite come "Presso fornitore"
 - Nota: username di Simone `simone.sachi` (refuso, una "c"); login per email, non toccato
 - **Chi fa cosa fra i tre** (pianificazione, conferma JC, spedizioni/rientri esterne): non deciso; proposta
   (Simone pianificazione e conferme, Sergey/Omar o logistica le esterne) **lasciata in sospeso da Gian** (16/10, "poi

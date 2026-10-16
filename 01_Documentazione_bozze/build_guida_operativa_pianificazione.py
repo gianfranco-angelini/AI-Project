@@ -10,12 +10,13 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import startit_docx as S
 from linkify import linkify
 
-NOME = "Guida_Operativa_Pianificazione_Remazel_B1.docx"
+NOME = "Guida_Operativa_Pianificazione_Remazel_B2.docx"
 DATA = "16 ottobre 2026"
 URL = "https://combustionerp.remazel.com"
+MODULO = "Verifica_Esterne_Avvio_T09.xlsx"
 meta = {
     "Documento": NOME,
-    "Versione": "Bozza 1 — " + DATA,
+    "Versione": "Bozza 2 — " + DATA,
     "Data": DATA,
     "Redatto da": "Start I.T. S.r.l.",
     "Destinatario": "Remazel Engineering S.p.A. — BU Combustion",
@@ -63,6 +64,7 @@ tb([2800, 6260], ["Elemento", "Situazione"], [
     ["Parziali del set 5", "T08-0200-P3302, taglio e controllo: 10 pezzi su 20. Le due Job Card (PO-JOB07996, PO-JOB07997) restano aperte con una nota"],
     ["Stato dei set", "Set 1 in ritardo di 33 giorni e set 2 di 44 giorni rispetto alla consegna meno il buffer; set 3-6 in linea"],
     ["Lavorazioni esterne", "Seguite sulla Job Card in **modalità transitoria** (capitolo 6), fino all'arrivo dell'Ordine conto lavoro"],
+    ["Fasi da avviare", "234 fasi pronte, quasi tutte presso i fornitori; l'elenco al " + DATA + " è nell'Appendice C"],
     ["Monitoraggio", "Spazio di lavoro «Produzione Remazel»: Master Plan, Gantt dei set, Gantt fornitori, Carico Reparti Settimanale. Le pagine sono oggi filtrate sulla T09-0100"],
 ])
 bx("info", "Perché i set 1 e 2 risultano in ritardo", [
@@ -96,7 +98,8 @@ st([
                                      "Se il nome non c'è, chiederlo all'amministratore: senza nominativo non si registrano spedizioni e rientri (capitolo 6)."]],
     ["Set 1 e 2", ["Aprire il Master Plan e il Gantt dei set 1 e 2 e valutare quali fasi si possono anticipare rispetto al piano (capitolo 8.2).",
                    "Verifica: per ogni set è nota la fine prevista contro la consegna."]],
-    ["Fasi esterne già fuori", ["Per ogni materiale che oggi si trova presso un fornitore, registrare l'uscita sulla Job Card con la data reale (capitolo 6.3).",
+    ["Fasi esterne già fuori", ["Far compilare agli Acquisti il modulo **" + MODULO + "** (Appendice C): per ogni fase esterna pronta, se il materiale è già presso il fornitore, con data di uscita, N° ordine SAP e data promessa.",
+                                "Il modulo compilato si consegna all'amministratore, che registra le uscite in un unico passaggio.",
                                 "Verifica: nell'elenco Job Card con stato conto lavoro «Presso fornitore» c'è tutto il materiale fuori casa."]],
     ["Reparti interni", ["Concordare il reparto da cui partono le registrazioni sulle Job Card e il suo referente; consegnare le credenziali agli operatori (una per persona).",
                          "Le regole di reparto sono nel capitolo 5.3."]],
@@ -110,7 +113,8 @@ st([
     ["Job Card da confermare", ["Elenco Job Card con stato Completed e non ancora confermate:",
                                 URL + "/app/job-card?status=Completed&docstatus=0",
                                 "Controllare quantità e operatore, selezionare le schede → Actions → Submit.",
-                                "Verifica: l'elenco si svuota; il Work Order aggiorna l'avanzamento."]],
+                                "Verifica: l'elenco si svuota; il Work Order aggiorna l'avanzamento.",
+                                "Se l'elenco è già vuoto all'apertura, non ci sono schede da confermare: non è un errore."]],
     ["Job Card in corso", ["Elenco Job Card in lavorazione:",
                            URL + "/app/job-card?status=Work%20In%20Progress",
                            "Una scheda avviata da più di un giorno senza pause va verificata con il reparto: fase realmente in corso, oppure dimenticata aperta."]],
@@ -337,7 +341,51 @@ tb([600, 6460, 2000], ["N.", "Attività", "Fatto"], [
     ["7", "Controllo settimanale con l'amministratore del sistema", ""],
 ])
 
-h(1, "Appendice C. Collegamenti utili")
+h(1, "Appendice C. Prime attività di avvio")
+p("Situazione al **" + DATA + "**, ricavata dal sistema: per ogni Work Order aperto della T09-0100 la prossima fase del ciclo.")
+tb([4530, 1500, 3030], ["Stato della prossima fase", "Fasi", "Cosa fare"], [
+    ["Pronta, presso un fornitore", "203", "Verifica con gli Acquisti e registrazione (C.1)"],
+    ["Pronta, in Saldatura", "19", "Avvio in reparto (C.2)"],
+    ["Pronta, in Controllo Qualità", "12", "Avvio in reparto (C.2)"],
+    ["In attesa dei componenti", "114", "Nessuna: si sbloccano al completamento dei componenti"],
+])
+h(2, "C.1 Lavorazioni esterne da avviare")
+p("Sono le prime lavorazioni presso i fornitori, uguali su tutti i set; inizio pianificato già superato. L'elenco completo, riga per riga, è nel modulo **" + MODULO + "**, da far compilare agli Acquisti.")
+tb([3600, 1400, 4060], ["Fornitore", "Fasi", "Per set"], [
+    ["INOXEA SRL", "66", "11 per ciascun set"],
+    ["SOMECAR SRL", "65", "10 nei set 1-3, 11 nel set 4, 12 nei set 5-6"],
+    ["A.R.T.I.L. SNC", "30", "5 per ciascun set"],
+    ["ATS MICROFUSIONE SRL", "12", "2 per ciascun set"],
+    ["EPIS SRL", "12", "2 per ciascun set"],
+    ["ZARE", "12", "2 per ciascun set"],
+    ["M.B.L. SRL", "6", "1 per ciascun set"],
+])
+st([
+    ["Già presso il fornitore", ["Registrare l'uscita con la data reale, N° ordine SAP e data promessa: con il modulo compilato lo fa l'amministratore in un unico passaggio; per singole fasi, capitolo 6.3."]],
+    ["Ancora da spedire", ["Emettere l'ordine in SAP partendo dal set 1, poi il 2 e così via; alla partenza Start Job sulla Job Card (capitolo 6.3)."]],
+])
+h(2, "C.2 Job Card interne da avviare")
+p("Saldatura e Controllo Qualità sono gli unici reparti interni con fasi pronte: sono i reparti da cui partire con le registrazioni.")
+tb([1700, 900, 4160, 2300], ["Job Card", "Set", "Fase", "Inizio pianificato"], [
+    ["PO-JOB05553", "1", "T08-0100-P1400-10SA — Saldatura longitudinale W5", "12/10/2026, superato"],
+    ["PO-JOB05729", "1", "T08-0200-P3302-10SA — Saldatura longitudinale W13", "12/10/2026, superato"],
+    ["PO-JOB05639", "1", "T08-0200-P3203-10SA — Saldatura longitudinale W15", "14/10/2026, superato"],
+    ["PO-JOB05774", "1", "T09-0100-P3104-10SA — Saldatura longitudinale W21", "26/10/2026"],
+    ["PO-JOB05834", "1", "T08-0100-P2108-10QC — QC dimensionale finale", "03/11/2026"],
+    ["PO-JOB05906", "1", "T08-0100-P1800-10QC — QC dimensionale", "13/11/2026"],
+    ["PO-JOB06252", "2", "T08-0100-P1400-10SA — Saldatura longitudinale W5", "27/10/2026"],
+    ["PO-JOB06265", "2", "T08-0200-P3203-10SA — Saldatura longitudinale W15", "02/11/2026"],
+    ["PO-JOB06297", "2", "T08-0200-P3302-10SA — Saldatura longitudinale W13", "10/11/2026"],
+    ["PO-JOB06344", "2", "T09-0100-P3104-10SA — Saldatura longitudinale W21", "23/11/2026"],
+    ["PO-JOB06389", "2", "T08-0100-P2108-10QC — QC dimensionale finale", "18/11/2026"],
+    ["PO-JOB06469", "2", "T08-0100-P1800-10QC — QC dimensionale", "14/12/2026"],
+])
+p("I due controlli dimensionali si possono eseguire subito: la fase precedente è chiusa e il materiale è rientrato. La data pianificata più avanti dipende solo dalla capacità del reparto. Le stesse fasi dei set 3-6 seguono nel 2027.")
+bx("info", "Elenco valido alla data indicata", [
+    "L'elenco cambia a ogni registrazione. La versione aggiornata, con lo stesso criterio, si chiede all'amministratore del sistema.",
+])
+
+h(1, "Appendice D. Collegamenti utili")
 p("Accesso con le proprie credenziali. Nel file Word: Ctrl + clic per aprire.")
 tb([3200, 5860], ["Cosa", "Collegamento"], [
     ["Spazio di lavoro", URL + "/app/produzione-remazel"],
