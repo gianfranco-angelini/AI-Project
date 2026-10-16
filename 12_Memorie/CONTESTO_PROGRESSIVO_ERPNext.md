@@ -1773,6 +1773,9 @@ Destinatario per funzione: **Pianificazione di produzione** (nessun nome). Organ
   Processo MES", `date_of_joining` = 16/10/2026 **segnaposto**, genere e data di nascita vuoti, `insert(ignore_mandatory)`).
   **Non collegati all'utente** (`user_id` vuoto, `create_user_permission = 0`) per evitare `User.save()` e la User
   Permission automatica su Employee. Employee totali ora 24
+- **Chi fa cosa fra i tre** (pianificazione, conferma JC, spedizioni/rientri esterne): non deciso; proposta
+  (Simone pianificazione e conferme, Sergey/Omar o logistica le esterne) **lasciata in sospeso da Gian** (16/10, "poi
+  ci pensiamo") → da riprendere per la tabella "chi fa cosa" della guida B2
 - Permessi: i ruoli del profilo (Manufacturing Manager/User, Projects User, Quality Manager) hanno **select=1, read=0**
   su Employee (DocPerm e Custom DocPerm, 14 Custom DocPerm su Employee) → sufficiente per il campo Link di Start Job,
   nessuna modifica
