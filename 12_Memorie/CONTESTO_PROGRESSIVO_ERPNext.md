@@ -1773,6 +1773,11 @@ Destinatario per funzione: **Pianificazione di produzione** (nessun nome). Organ
   Processo MES", `date_of_joining` = 16/10/2026 **segnaposto**, genere e data di nascita vuoti, `insert(ignore_mandatory)`).
   **Non collegati all'utente** (`user_id` vuoto, `create_user_permission = 0`) per evitare `User.save()` e la User
   Permission automatica su Employee. Employee totali ora 24
+- **Passo 3** (Start Job con il profilo di Simone, via Impersonate — pulsante presente sul form User in v16): **non
+  eseguito per scelta di Gian** (16/10: "risolviamo il problema se si presenta di volta in volta"). Vale lo stesso
+  criterio per le altre verifiche pre-consegna (Simula/Applica Ritardo, OperationSequenceError): la guida le copre con
+  il cap. 4 passo 2 e i messaggi frequenti; i problemi si risolvono quando Simone li segnala
+- Nota: username di Simone `simone.sachi` (refuso, una "c"); login per email, non toccato
 - **Chi fa cosa fra i tre** (pianificazione, conferma JC, spedizioni/rientri esterne): non deciso; proposta
   (Simone pianificazione e conferme, Sergey/Omar o logistica le esterne) **lasciata in sospeso da Gian** (16/10, "poi
   ci pensiamo") → da riprendere per la tabella "chi fa cosa" della guida B2
