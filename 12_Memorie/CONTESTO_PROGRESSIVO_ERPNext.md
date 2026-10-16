@@ -1772,6 +1772,14 @@ Destinatario per funzione: **Pianificazione di produzione** (nessun nome). Organ
   registrata (finché i reparti non registrano è il caso normale): valutare se disattivare il controllo di sequenza o
   registrare le fasi precedenti
 - Filtro `docstatus=0` negli URL della lista Job Card e pulsante "Recalculate progress" sul Gantt Task: da provare a video
+- ⚠️ **Simula/Applica Ritardo nella versione del 05/10** (cascata sui WO padre, confronto con consegna set) **mai provati
+  nel browser**: il test su PO-JOB05552 non è stato confermato e quella Job Card è stata chiusa dall'allineamento del
+  09/10. La guida (cap. 8) li usa anche per anticipare i set 1-2 → provarli su una Job Card aperta prima di consegnarla
+- Dalla lettura di "Situazione e riparazioni": la prova del 02/10 su PO-JOB05551 conferma che Start Job chiede
+  l'Employee (usato HR-EMP-00013); il 02/10 Gian aveva giudicato la registrazione sulla singola Job Card poco pratica,
+  scelta ora come transitoria fino all'Ordine conto lavoro; sui WO `skip_transfer = 0` (chiusura senza trasferimento
+  al WIP da verificare); `modifica_gantt.py` SCRIVI e `ws_riordino.py`/`ws_sidebar.py` senza output incollato ma
+  risultato visibile a video; `sidebar_shell.py` poi provato e annullato (sessione 24)
 
 ---
 
@@ -1859,6 +1867,8 @@ Destinatario per funzione: **Pianificazione di produzione** (nessun nome). Organ
 - Verificare se l'**OperationSequenceError** blocca lo Start delle Job Card esterne con fase precedente non registrata
   (caso normale finché i reparti non registrano) → decidere se registrare le fasi precedenti o allentare il controllo
 - Provare a video i link della guida (`docstatus=0`, Recalculate progress, Supplier Gantt, etichette scala Month)
+- **Provare Simula/Applica Ritardo (versione 05/10)** su una Job Card aperta della T09, anche con data anteriore
+  (anticipo): mai testati nel browser, la guida li usa al cap. 8
 - Esiti mancanti della riunione di avvio: reparto pilota e referente, regole di reparto, accesso SAP, controllo
   settimanale → aggiornare la guida (B2)
 - Inviare a Simone `sessione_24/Mail_Simone_Allineamento.md` (invio non confermato); invio della mail di steering del
