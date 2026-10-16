@@ -1765,6 +1765,18 @@ Destinatario per funzione: **Pianificazione di produzione** (nessun nome). Organ
    (escludere le 50 JC stimate dal consuntivo) · 12. Nuovo ordine · 13. Cosa arriva in corsa · 14. Messaggi frequenti
 - Appendici: checklist giornaliera, checklist settimanale, 13 collegamenti
 
+### Verifiche pre-consegna della guida (16/10, passo per passo con Gian)
+- **Passo 1** (sola lettura): i 3 utenti con profilo "Responsabile Processo MES" (`simone.sacchi@`, `sergey.mylnikov@`,
+  `omar.ferrari@remazel.com`) **non avevano Employee** → non potevano usare Start Job
+- **Passo 2** ✅ eseguito in console (prova + SCRIVI): creati **HR-EMP-00023 Simone Sacchi, HR-EMP-00024 Sergey
+  Mylnikov, HR-EMP-00025 Omar Ferrari** (Active, Employment Type "Dipendente Remazel", `custom_funzione` "Responsabile
+  Processo MES", `date_of_joining` = 16/10/2026 **segnaposto**, genere e data di nascita vuoti, `insert(ignore_mandatory)`).
+  **Non collegati all'utente** (`user_id` vuoto, `create_user_permission = 0`) per evitare `User.save()` e la User
+  Permission automatica su Employee. Employee totali ora 24
+- Permessi: i ruoli del profilo (Manufacturing Manager/User, Projects User, Quality Manager) hanno **select=1, read=0**
+  su Employee (DocPerm e Custom DocPerm, 14 Custom DocPerm su Employee) → sufficiente per il campo Link di Start Job,
+  nessuna modifica
+
 ### Punti da verificare emersi scrivendo la guida
 - Chi registra le spedizioni deve avere un **Employee**: verificare se Simone/Sergey/Omar ne hanno uno (Start Job
   chiede il dipendente; i 21 Employee sono operatori di reparto)
