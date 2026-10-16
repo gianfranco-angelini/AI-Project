@@ -1777,6 +1777,14 @@ Destinatario per funzione: **Pianificazione di produzione** (nessun nome). Organ
   eseguito per scelta di Gian** (16/10: "risolviamo il problema se si presenta di volta in volta"). Vale lo stesso
   criterio per le altre verifiche pre-consegna (Simula/Applica Ritardo, OperationSequenceError): la guida le copre con
   il cap. 4 passo 2 e i messaggi frequenti; i problemi si risolvono quando Simone li segnala
+- **Fasi da avviare T09** (`sessione_26/prossime_fasi.py`, sola lettura, CSV
+  `/home/frappe-user/script_progetto/prossime_fasi_t09.csv`): 348 WO aperti → **234 fasi PRONTE** (203 esterne,
+  19 Saldatura, 12 Controllo Qualità) e 114 IN ATTESA dei componenti. Esterne pronte = prime fasi su tutti i 6 set,
+  inizio pianificato 02/10 (regola 2A) quindi tutte "in ritardo": INOXEA 66, SOMECAR 65, A.R.T.I.L. 30, ATS
+  MICROFUSIONE 12, EPIS 12, ZARE 12, M.B.L. 6. Interne set 1: saldature PO-JOB05553 (P1400 W5), PO-JOB05729 (P3302 W13),
+  PO-JOB05639 (P3203 W15) pianificate 12-14/10, PO-JOB05774 (P3104 W21) 26/10; QC PO-JOB05834 (P2108) e PO-JOB05906
+  (P1800). Da sapere: quali delle 203 esterne sono già presso il fornitore (il file di Simone del 06/10 segnava solo le
+  fasi completate)
 - Nota: username di Simone `simone.sachi` (refuso, una "c"); login per email, non toccato
 - **Chi fa cosa fra i tre** (pianificazione, conferma JC, spedizioni/rientri esterne): non deciso; proposta
   (Simone pianificazione e conferme, Sergey/Omar o logistica le esterne) **lasciata in sospeso da Gian** (16/10, "poi
