@@ -6,7 +6,7 @@
 ---
 
 ## ⚠️ NOTA DI SCALATA
-Chi riceve questo contesto deve, **a fine sessione**, aggiornarlo con i progressi fatti e riscriverlo nel Project Cowork "Ciclo produzione Remazel Combustion". La catena non si interrompe. Il blocco aggiornato va anche restituito all'utente da incollare nella chat successiva come primo messaggio, nel caso il Project non sia ancora caricato.
+Chi riceve questo contesto deve, **a fine sessione**, aggiornarlo con i progressi fatti e riscriverlo nel Project Cowork "Ciclo produzione Remazel Combustion". La catena non si interrompe. **La numerazione delle sessioni è unica e cronologica**, qualunque strumento si usi (Cowork o Claude Code). Il blocco aggiornato va anche restituito all'utente da incollare nella chat successiva come primo messaggio, nel caso il Project non sia ancora caricato.
 
 ---
 
@@ -15,13 +15,13 @@ Chi riceve questo contesto deve, **a fine sessione**, aggiornarlo con i progress
 - Cliente: **Remazel Engineering S.p.A.**, divisione **BU Combustion**
 - Fornitore/implementatore: **Start I.T. S.r.l.** — Gian è il lead implementor
 - Progetto: **M.E.S. Remazel** (Manufacturing Execution System) su ERPNext v16
-- Go-live target: **30 settembre 2026**
+- Go-live target: ~~30 settembre 2026~~ → slittato; dal **02/10/2026** in esercizio la **T09-0100** (pianificata, 336 WO), T08-0100 parcheggiata (sessione 22)
 - Contatto cliente primario: **Simone** (Responsabile Produzione)
 - Altri utenti ERPNext: Fabio Picco, Omar Ferrari, Sergey Mylnikov
 - Marco Lasorella: in copia email, nessun account ERPNext
 - Commesse centrali:
-  - **T08-0100** (Job 24-19006, ASSY LINER COMPLETE) — pilota, già a regime
-  - **T09-0100** (Job 26-19008, Liner FR7EA DLN 24k) — struttura identica a T08
+  - **T08-0100** (Job 24-19006, ASSY LINER COMPLETE) — pilota, **parcheggiata dal 02/10/2026**; resta la base dati (codici, BOM, fasi)
+  - **T09-0100** (Job 26-19008, Liner FR7EA DLN 24k) — **focus attuale**, 100 liner in 6 set, WO pianificati il 02/10/2026
 
 ⚠️ **CORREZIONE IMPORTANTE**: il nome prodotto corretto è **"M.E.S. Remazel"**. Le varianti "E.M.S. Remazel" e "M.S.E." sono **errori confermati** — non usarle più in nessun documento, anche se compaiono nelle sessioni storiche sotto riportate.
 
@@ -387,7 +387,7 @@ Risultato: **58 WO "In Process"**, Job Card rigenerate con la descrizione parlan
 
 ### Trappole aggiuntive bench console (raccolte, valide per tutte le sessioni successive)
 - Console va sempre lanciata da `/home/frappe-user/frappe-bench`; `In [n]:` = Python, `$` = bash.
-- ~~Blocchi lunghi richiedono `%cpaste` … `--`~~ (superato in sessione 18: la console attuale non lo richiede, `--` dà SyntaxError); le funzioni definite nello stesso blocco incollato non vedono le variabili del blocco — usare codice inline o passare tutto come parametro.
+- ~~Blocchi lunghi richiedono `%cpaste` … `--`~~ (**superato in sessione 18**: la console attuale non lo richiede e dà `SyntaxError` se usato; per blocchi lunghi si usa il pattern gzip+base64+`exec(open(...).read())`); le funzioni definite nello stesso blocco incollato non vedono le variabili del blocco — usare codice inline o passare tutto come parametro.
 - `frappe.db.set_value(..., update_modified=False)` per aggiornare documenti submitted; mai `doc.save()` su record submitted.
 - `create_job_card()` sovrascrive silenziosamente `planned_end_date` sul Work Order — ripristinare sempre le date WO dopo la chiamata.
 - `set_operation_start_end_time(row, idx)` richiede due argomenti posizionali.
@@ -395,6 +395,7 @@ Risultato: **58 WO "In Process"**, Job Card rigenerate con la descrizione parlan
 - `parent_page` del Workspace deve essere `''` (stringa vuota), non NULL, per la visibilità in sidebar.
 - Dashboard Chart/Number Card con `Sum` su tabelle figlie falliscono in browser — usare il doctype `Job Card` con il campo `time_required`.
 - Nei Query Report i segni `%` vanno raddoppiati (`%%`) per evitare l'interpretazione come placeholder di formato MySQLdb.
+- **Console e snapshot MariaDB (REPEATABLE READ)**: dopo DELETE/UPDATE in console, la sessione non vede i dati creati nel frattempo dal web server. Rimedio: `frappe.db.commit()` prima di rileggere, oppure `frappe.db.close()` + `frappe.db.connect()`.
 
 ---
 
@@ -565,7 +566,7 @@ precedente 2500/7000 sommava a 9500, incoerente), stili TOC1/TOC2 con `after=100
 
 ## SESSIONE 18 — Anagrafica, accessi, capacità, HTTPS, obiettivi 1g/1c/2b/2d, analisi conto lavoro (25-27/09/2026)
 
-⚠️ **Lacuna di registrazione**: tra la sessione 17 (15/09) e questa sessione sono state fatte in altre chat attività che qui non risultano documentate: viste Gantt su PROJ-0001 (WO, Task Dettaglio, Task Macro-fasi, Client Script `Gantt_Fix_Remazel`), 21 Task su 2 livelli con 25 dipendenze, Server Script `JobCard_Avviso_Precedenze`. Da recuperare dalle chat precedenti e registrare a parte.
+⚠️ **Lacuna di registrazione**: tra la sessione 17 (15/09) e questa sessione sono state fatte in altre chat attività non documentate qui. Viste Gantt recuperate in sessione 20 (punto 13); restano da dettagliare le 25 dipendenze tra i 21 Task e il Server Script `JobCard_Avviso_Precedenze`.
 
 ### 1. Anagrafica dipendenti
 Fonte: mail di Simone del 22/09 "Informazioni mancati ERPNext", allegato `Anagrafica del personale.xlsx`.
@@ -643,7 +644,7 @@ A fine sessione 16 il documento B3 dichiarava 11/12 obiettivi **fattibili**, ma 
 - Custom Field su Project: `custom_fine_produzione_stimata` (Date, sola lettura), `custom_buffer_giorni` (Int, modificabile, default **5**), `custom_deadline_interna` (Date, sola lettura)
 - PROJ-0001: buffer 5 gg, deadline interna **13/12/2026** (reale 18/12/2026)
 - Lezione: con lo scheduling backward la fine produzione coincide sempre con la deadline, quindi il buffer è un **parametro di input**, non un valore calcolato
-- ⚠️ `custom_deadline_interna` è stata calcolata da script: **non si ricalcola da sola** se si modifica il buffer. Serve un Server Script `Before Save` su Project
+- ✅ (sessione 22) `custom_deadline_interna` si ricalcola a ogni salvataggio: Server Script `Project_Deadline_Interna` (Before Save su Project)
 
 **1c — Riprogrammazione agile ✅ (livello 1)**
 - Server Script API `Simula_Ritardo_JobCard` (`/api/method/simula_ritardo_jobcard`, nessuna scrittura) e `Applica_Ritardo_JobCard` (`/api/method/applica_ritardo_jobcard`, scrive le date). Parametri: `job_card_name`, `nuova_data_fine`
@@ -699,7 +700,7 @@ A fine sessione 16 il documento B3 dichiarava 11/12 obiettivi **fattibili**, ma 
 - Fase 1: dato un fabbisogno (es. "100 × T08-0100") il Production Plan esplode la BOM e calcola materiali e acquisti (con lead time e fornitore); il risultato si esporta in un **file** per SAP B1
 - Fase 2: se la fase 1 regge, interconnessione automatica via Service Layer
 
-**Decisione sulla strada:** **C1 — conto lavoro per fase nativo v16**. Prima un **pilota su una sola Job Card esterna** in mezzo al ciclo con fornitore A.M.C. CONTROL SRL, poi estensione alle 134 fasi via script. Script di lettura preparato: `pilota_1_lettura.py` (Job Card candidate, codice v16 delle funzioni di conto lavoro, pulsanti JS, campi Job Card) — **output in attesa**.
+**Decisione sulla strada:** **C1 — conto lavoro per fase nativo v16**. Prima un **pilota su una sola Job Card esterna** in mezzo al ciclo con fornitore A.M.C. CONTROL SRL, poi estensione alle 134 fasi via script. Script di lettura preparato: `pilota_1_lettura.py` (Job Card candidate, codice v16 delle funzioni di conto lavoro, pulsanti JS, campi Job Card) — **output in attesa**. ⚠️ *Superato in sessione 22: scelta B (Ordine conto lavoro + SAP), niente conto lavoro nativo.*
 
 ### 10. Documentazione e archivio
 - La struttura di progetto vive su SharePoint: sito StartIT → `Documenti condivisi/Clienti/Remazel/Progetti/Remazel-Combustion`. Verificata la presenza dei 13 documenti correnti e delle sottocartelle `Dati` ed `Email_Simone`: la copia locale originale può essere eliminata
@@ -728,8 +729,18 @@ A fine sessione 16 il documento B3 dichiarava 11/12 obiettivi **fattibili**, ma 
 - Con la chiave privata a `600 root`, `openssl rsa` richiede `sudo`
 - In SSH si usa l'hostname `combustionerp.remazel.com`; `cs-erp01` è il nome interno della macchina
 
----
+### 12. Decisioni di indirizzo (dalla sessione del 25/09, messe a verbale in sessione 20)
+- **Il sistema non è in produzione.** Un go-live vero è un rischio accettato: se qualcosa non torna, si corregge dopo. Non va trattato come "in produzione, non si tocca".
+- **Linea con Simone**: non si chiede altro, si scrive codice e si centrano gli obiettivi con quanto già disponibile.
+- **Divisione interno/esterno sullo stesso WO**: nativa in v16 (Create Job Card con quantità parziale), va solo documentata (v. punto 8).
+- **Direzione strategica sulla distinta base** (confermata da Gian, da implementare): ERPNext calcola i fabbisogni via Production Plan e alimenta SAP B1 (v. punto 9, fasi 1-2).
 
+### 13. Viste Gantt (attività 16-24/09, recuperate in sessione 20)
+- 3 viste **Gantt** dal Workspace `/app/produzione-remazel`: Work Order Gantt per progetto (`/app/work-order/view/gantt?project=PROJ-0001`), Task Gantt dettaglio (21 task, "Gantt Dettaglio"), Task Gantt macro-fasi (6 task padre: A1000, A2000, A3000, P4000, P5000, A0001, "Gantt Macro-fasi") per le riunioni con Simone
+- Fix CSS via Client Script **`Gantt_Fix_Remazel`** (bug Frappe v16: barre bianche su bianco), applicato a Work Order e Task
+- Restano da documentare nel dettaglio: le 25 dipendenze tra i 21 Task e il Server Script `JobCard_Avviso_Precedenze`
+
+---
 
 ## SESSIONE 19 — Standard documentale unico e passaggio a Claude Code locale (26-27/09/2026)
 
@@ -799,83 +810,828 @@ con il flussaggio dentro Qualità). Da confermare con Simone quale dei due vale.
 
 ---
 
-## 🖥️ FRONTE ERPNEXT — stato al 27/09/2026
+## SESSIONE 20 — Consolidamento memoria e preparazione riunione Romeo (29/09/2026)
 
-### Configurazione a regime
-- **58 Work Order** "In Process", **581 Job Card** (dato 01/09), 130 delle quali su Lavorazione Esterna
-- Ciclo **v6** caricato; capacity planning attivo (`disable_capacity_planning=0`)
-- 613 BOM Operation con descrizione parlante; Server Script `JobCard_Descrizione_Fase` e `JobCard_Documenti_Tecnici`
-- Backward scheduling dalla scadenza 18/12/2026; deadline interna PROJ-0001 al 13/12/2026 (buffer 5 gg)
-- **Capacità reparti reale**: Saldatura 7, Molatura 5, Montaggio 5, Controllo Qualità 3, Lavorazioni Meccaniche 1
-- **21 Employee + 21 User** operatori con ruolo `Operatore di Reparto` e User Permission per reparto
-- **HTTPS attivo** su `combustionerp.remazel.com` con certificato wildcard `*.remazel.com`
-- `allow_negative_stock = 1` per scelta: si lavora in negativo, nessun carico fittizio
-- Server Script API `Simula_Ritardo_JobCard` / `Applica_Ritardo_JobCard`
-- Infrastruttura documenti tecnici (2b) e matricole segnaposto + template saldature (2d) pronte
+Sessione di verifica incrociata su tutte le chat del progetto (ricerca e lettura mirata), per
+recuperare quanto la sessione 18 non aveva ancora scritto qui, in vista della riunione di
+martedì 29/09 ("Allineamento ERPNext", organizzata dal Responsabile Produzione).
 
-### Dati per il go-live (30/09/2026)
-| Dato | Stato |
-|---|---|
-| Codici articolo microfusi | ✅ chiuso per decisione: restano `F000` e i codici attuali |
-| Prezzi fornitore reali | ✅ chiuso per decisione: restano i fittizi (1000,00 sui 4 microfusi) |
-| Anagrafica dipendenti | ✅ caricata (21 persone) |
-| Postazioni e capacità reparti | ✅ applicate (dato Simone del 25/09) |
-| Numeri Job reali | ⏳ segnaposto `99-99999` su `po_no`, da sostituire |
-| Matricole reali | ⏳ segnaposto `PLACEHOLDER-T08-xxxx` |
-| Documenti tecnici (disegni, WPS, controlli) | ⏳ non forniti; infrastruttura pronta |
+### Esito della verifica
+- Confermata la coerenza di quanto riportato per la sessione 18
+- Recuperate le decisioni della sessione del 25/09 che non erano ancora scritte qui (sessione 18, punti 12-13)
+- **T09-0100 — chiarimento sui "codici duplicati"**: Gian ha indicato che i "codici fase duplicati"
+  segnalati come anomalia nel ciclo T09 (`Analisi_Ciclo_T090100_v1.xlsx`, sessione 16) **non sono
+  duplicati reali** — motivazione fornita e chiusa in sessione 21 (vedi sotto)
+- Confermato che il documento **`Analisi_Implicazioni_Integrazione_SAP_BU_Combustion_B1.docx`**
+  concordato il 25-27/09 **non risultava ancora prodotto** a questa data — superato: prodotto
+  come **B2** nella riunione del 29/09 (vedi sotto)
+- Segnalata la **discrepanza Job Card (581 vs 557)** come da verificare in console — **non
+  ancora risolta**
+
+### Materiale prodotto per la riunione del 29/09 ("Allineamento ERPNext")
+- `Analisi_Implicazioni_Integrazione_SAP_BU_Combustion_B2.docx` — decisioni strutturali per
+  l'eventuale integrazione SAP
+- `Stato_Avanzamento_Lavori_BU_Combustion_B3.docx` — stato dei 12 obiettivi di pianificazione produzione
+- `Guida_Riunione_Allineamento_ERPNext_B2.docx` — guida discorsiva per la riunione
+- `Distinta_Base_Ricostruita_T080100.xlsx` — 578 operazioni di produzione reali + foglio Delta
+  (cosa è cambiato dopo sessione 15)
+- Template SAP B1 DTW per import ordini d'acquisto
+
+### Sviluppo live in sessione (continuazione sessione 18, 29/09)
+- UI aggiunta ai Server Script `Simula_Ritardo_JobCard` / `Applica_Ritardo_JobCard` (creati in
+  sessione 18, privi di interfaccia): Client Script **`Job Card-Ritardo`** aggiunge i pulsanti
+  "Simula Ritardo" / "Applica Ritardo" sotto un menu "Pianificazione" su ogni form Job Card
+- **3 bug trovati e corretti**:
+  1. `ImportError: __import__ not found` — il sandbox RestrictedPython di Frappe blocca ogni
+     `import`: serve accesso per attributo (`frappe.utils.X`)
+  2. `SyntaxError` da triple-quote mal escapate aggiornando script via console — risolto generando
+     il blocco di update con `repr()` Python
+  3. Errore di formato data: `expected_end_date` (Datetime, con componente ora) passato diretto a
+     un campo dialog di tipo Date, causava popup sovrapposti — risolto troncando con `.split(' ')[0]`
+- Wording aggiornato: "la commessa" → "l'ordine" nei messaggi di alert
+- **Chiarimento comportamentale**: la cascata scatta solo col pulsante "Applica Ritardo", non con
+  la modifica manuale dei campi data; la cascata si ferma ai confini del Work Order (non si
+  propaga tra BOM con più Work Order)
+
+### Nota metodologica
+Verifica fatta per ricerca testuale sulle chat passate (nomi di script, codici obiettivo, nomi
+documento come query — funzionano meglio di ricerche generiche per argomento). Non sostituisce
+un controllo diretto sul sistema: per i dati che dipendono dallo stato live di ERPNext
+(conteggio Job Card, valore reale di `allow_negative_stock`, stato SMTP), la fonte affidabile
+resta la console via Claude Code o SSH diretto.
+
+✅ **Conflitto di memoria** con la versione aggiornata da Claude Code (sessione 19): risolto in sessione 22.
 
 ---
 
-## 🎯 TASK APERTI / PROSSIMA SESSIONE (aggiornato al 27/09/2026)
+## SESSIONE 21 — Chiusura codifica articoli condivisi T08/T09, riverifica anomalie import (01/10/2026)
 
-### Priorità 1 — Obiettivo 3: conto lavoro per fase (strada C1)
-- Eseguire `pilota_1_lettura.py` e analizzare come la v16 gestisce `is_subcontracted` sulla Job Card (articolo che esce, articolo servizio, magazzino fornitore, aggancio della fase successiva al rientro)
-- Prerequisiti del pilota: magazzino presso fornitore; normalizzare "A.M.C. CONTROL" su "A.M.C. CONTROL SRL"; verificare se "H.T. SRL" e "H.T.S. SRL" sono la stessa azienda; assegnare il fornitore alla fase che ne è priva
-- Pilota su una Job Card esterna in mezzo al ciclo (A.M.C. CONTROL SRL), flusso completo documentato passo per passo
-- Se regge: estensione alle 134 fasi via script, report dei rientri in ritardo
+### Contesto
+Riunione di martedì 29/09 (Simone, Sergey, Romeo): **decisione di procedere con il carico di
+T09-0100**. Restavano da chiarire alcuni punti prima di avviare l'import — affrontati in questa
+sessione.
 
-### Priorità 2 — SMTP Microsoft 365 (OAuth)
-Connected App + App registration Entra ID per `noreply@remazel.com` (dettagli in sessione 18, punto 5).
+### Codifica articoli condivisi T08/T09 — chiuso definitivamente
+Verificato lo scambio mail reale con Simone (thread **"Codici articolo condivisi tra T08 e
+T09 — conferma prima di importare"**, 25/09/2026, Cc: Lasorella, Picco, Mylnikov, Verzeroli):
 
-### Priorità 3 — T09-0100
-- Verificare se il ciclo rinviato il 22/09 risolve le anomalie note (residuo codici T08, duplicati, `*CONFERMARE GRUPPO*`)
-- Import con i componenti identici a T08 referenziati con il **codice T08** (regola di Simone)
-- Project dedicato all'Equipment T09-0100, Sales Order con `po_no = 99-99998`, Work Order propri anche per i componenti condivisi
-- Usare le 6 date di consegna per lo scheduling
-- Preparare la riunione di **martedì 29/09** con Simone e Sergey; analizzare prima `T09-0100 Ciclo e fasi_26-19008.xlsx` (allegato alla mail del 22/09)
-- Riconciliare con Simone le postazioni: mail 22/09 (Molatura 6, Qualità 2 + Flussaggio 1) vs chiarimento 25/09 applicato a sistema
+- **Confermato da Simone**: se un componente T09 è fisicamente identico a uno già in T08, il
+  codice resta quello di T08 — non si crea un secondo codice con prefisso T09.
+- **Precisazione di Simone non richiesta ma rilevante**: la relazione è univoca, non simmetrica.
+  Un componente T09 non potrà **mai** finire in una BOM T08, perché T09-0100 è stato creato
+  dopo T08-0100.
+- **Alias/Global Search per recuperare "il codice T09" nei documenti**: proposta valutata
+  (DocType custom "Alias Articolo per Commessa" + registrazione Global Search), poi **annullata
+  definitivamente** — Simone non ha capito a cosa servisse e ha chiarito che userà direttamente
+  i codici T08 anche nei documenti/picking list T09. Nessuno sviluppo necessario.
+- **Per le commesse future** (T10, T11...): segnalato a Simone (non ancora discusso nel merito)
+  che converrebbe un codice articolo neutro, senza riferimento all'Equipment nel nome, per i
+  **codici non ancora assegnati** — non tocca nulla di esistente.
 
-### Priorità 4 — Correzioni tecniche emerse in sessione 18
-- Server Script `Before Save` su Project per ricalcolare `custom_deadline_interna` quando cambia il buffer
-- Verificare che `po_no = 99-99999` sia stato davvero scritto su `SAL-ORD-2026-00001`
-- Pulsanti in interfaccia (Client Script su Job Card) per simulare e applicare il ritardo; provare la chiamata HTTP agli endpoint
-- Validare con Simone il template "Controllo Saldature per Matricola" e la regola "Quality Inspection per matricola"
-- Comunicare a Simone che anagrafica e postazioni sono a sistema
+### Anomalia "residuo codici fase T08" sotto articoli T09 — ridimensionata
+L'anomalia di sessione 16 (`Analisi_Ciclo_T090100_v1.xlsx`) segnalava 14 righe operazione sotto
+3 presunti articoli **nuovi** T09 (P6000: 9, P3101: 4, P2114: 1) con codice fase che porta ancora
+il prefisso `T08-0100`, catalogata come "residuo di copia-incolla da correggere".
 
-### Priorità 5 — Documentazione (ordine e naming definiti in sessione 19, punto 5)
-- **Prima di tutto**: materiale per la riunione del 29/09 (validazione ciclo T09-0100)
-- Tutti i documenti in grafica `docx-startit`, naming `{Tipo}_{Oggetto}_Remazel_B{N}`
-- **Guida Produzione → B4**: rimuovere i riferimenti a Mario Rossi / `HR-EMP-00001` e ai codici C0900/C0901; nuovo flusso operatore con login personale e filtro automatico per reparto; divisione di una fase tra interno ed esterno (più Job Card con quantità parziali); numeri aggiornati (58 WO, 581 Job Card)
-- **Guida Concettuale → B7**: aggiornare la tabella "azioni prima del go-live"; spiegare `production_capacity`, buffer e deadline interna
-- Documentare le nuove funzioni: simulazione/applicazione ritardo (1c), documenti tecnici (2b), matricole e controllo saldature (2d)
-- Punti di contenuto ancora aperti dalla sessione 17: titoli di sezione mancanti, voce d'indice spezzata, accenti mancanti, campi persi nelle tabelle info
-- Recuperare e registrare le attività 16-24/09 non documentate (Gantt, Task, precedenze)
+- **P6000 non è un articolo nuovo**: risulta già censito in T08-0100 (BOM Operation
+  `P6000-10SA`, saldatura in conto lavoro H.T. SRL, da sessione 15). I suoi codici fase con
+  prefisso T08 sono quindi **corretti**, non un refuso — sono semplicemente il ciclo
+  dell'articolo T08 riusato, coerente col principio confermato da Simone.
+- → **L'errore era nell'analisi di sessione 16** (classificazione "nuovo T09" sbagliata), non nel
+  file di Simone.
+- **P3101 e P2114**: non ancora verificati allo stesso modo. Script predisposto (da lanciare in
+  `bench --site site1.local console`):
+  ```python
+  for codice in ["P3101", "P2114", "P6000"]:
+      trovato = frappe.db.sql(
+          "SELECT name FROM `tabItem` WHERE name LIKE %s",
+          (f"T08-0100-{codice}%",), as_dict=True
+      )
+      print(codice, "->", trovato if trovato else "NON esiste in T08-0100")
+  ```
+  Se risultano anch'essi Item T08-0100 esistenti, l'intera anomalia si chiude come refuso
+  dell'analisi, non blocca l'import.
 
-### Priorità 6 — Integrazione SAP Business One
-- Fase 1: Production Plan di prova (es. 100 × T08-0100) per verificare l'esplosione dei fabbisogni; definire il formato del file da passare a SAP B1
-- Fase 2: integrazione via Service Layer (credenziali e utente tecnico da ottenere da chi amministra SAP B1)
+### Stato blocchi residui per import T09-0100 (aggiornato)
+| Punto | Stato |
+|---|---|
+| Principio codifica T08/T09 | ✅ chiuso (mail Simone 25/09) |
+| Alias/Global Search | ✅ chiuso — non serve, cancellato |
+| "Residuo codici T08" sotto P6000 | ✅ chiuso — non è un'anomalia, refuso dell'analisi |
+| "Residuo codici T08" sotto P3101/P2114 | ⏳ script pronto, **non ancora eseguito** |
+| `*CONFERMARE GRUPPO*` (3 marcature: A0001-40MT, A1000-10LA, A1000-10MT) | ⏳ da far dichiarare definitive da Simone, come già fatto per T08 |
+| 2 duplicazioni ereditate da T08 (A2000-20VT, P2201-10RX) | ⏳ da verificare se il file T09 è stato aggiornato dopo le correzioni T08 di sessione 15 |
+| 2 duplicazioni proprie di T09 (P1100-10QC, P3100-10ML) | ⏳ da verificare se intenzionali |
+| Fogli "Fasi critiche"/"Matricole" | ⏳ sembravano ancora riferiti a saldature T08, da riverificare sul file aggiornato del 22/09 |
+| Discrepanza conteggio Job Card (581 vs 557) | ⏳ ancora da verificare in console |
 
-### Priorità 7 — Dopo il go-live
-- Motore APS di terze parti per l'obiettivo 1e
-- Cascata ritardi tra Work Order padre/figlio (1c livello 2) e vista "coda per postazione"
-- Codifica articoli neutra per i nuovi codici, da concordare con Simone
+### Prossimo passo
+Eseguire lo script di verifica P3101/P2114, poi far chiudere a Simone le `*CONFERMARE GRUPPO*` e
+le duplicazioni residue. Solo a quel punto procedere con l'import vero in ERPNext (Item + BOM +
+BOM Operation per T09-0100).
+
+---
+
+## SESSIONE 22 — Riconciliazione memoria, carico e pianificazione T09, expediting (02-03/10/2026)
+
+### Riconciliazione delle due versioni della memoria
+Esistevano due versioni divergenti di questo file: quella del Project Cowork (fino alla sessione
+"20", 01/10, 61.785 byte) e quella aggiornata da Claude Code (fino alla sessione 19, 27/09,
+69.110 byte). Unite in questo file con questi criteri:
+- **Rinumerazione cronologica** (decisione di Gian): 18 = 25-27/09 · **19** = 26-27/09 Claude Code
+  (standard docx, Claude Code locale) · **20** = 29/09 Cowork (riunione Allineamento ERPNext,
+  UI ritardo) · **21** = 01/10 Cowork (codici T08/T09) · **22** = questa. Nelle chat Cowork
+  precedenti "sessione 19" e "sessione 20" corrispondono qui alla **20** e alla **21**
+- Sessione 18: tenuto il testo dettagliato di Claude Code + decisioni di indirizzo e viste Gantt
+  dalla versione Cowork (punti 12-13)
+- Formato documenti e regole operative: vale la versione Claude Code (`docx-startit`, niente `%cpaste`)
+- Postazioni: i numeri a sistema (7/5/5/3) sono quelli del **chiarimento del 25/09**, non della mail
+  del 22/09 (la versione Cowork li attribuiva per errore al 22/09)
+- Fronte ERPNext e task aperti riscritti da zero sulla base di entrambe le versioni
+
+### Go-live
+- Il go-live del **30/09/2026 è slittato**. Obiettivo: **partire oggi, 02/10/2026** — sessione
+  dedicata interamente a questo
+- ~~Perimetro: T08-0100 come primo Equipment in esercizio, T09-0100 non blocca~~ → **superato**
+- **Decisione di Gian in sessione**: prima del go-live si procede con il **carico di T09-0100**; poi
+  (02/10) **T08 parcheggiata** e focus sulla T09 (vedi "Tempi fasi esterne e buffer")
+
+### T09-0100 — verifica del file del 22/09 e codifica definitiva T08/T09
+File: `T09-0100 Ciclo e fasi_26-19008.xlsx` (2.013.881 byte, MD5 `2cc058e6589cf20beb2c6dfd72630b36`),
+fogli "Ciclo e fasi" (58 righe articolo, 556 operazioni, 35 righe materiale) e "Tabelle". **Non era
+presente in OneDrive**: da salvare a cura di Gian in `01_Documentazione/Dati/`. I fogli "Fasi
+critiche"/"Matricole" non esistono più → punto chiuso.
+
+Verifiche a sistema (console, sola lettura):
+- T09 a sistema: nessun Item, BOM o Project. T08: 61 Item, 61 BOM submitted/attive/default, 571 BOM
+  Operation sulle BOM default (non 613 come riportato in passato)
+- ⚠️ `SAL-ORD-2026-00001.po_no` è **vuoto**: il segnaposto `99-99999` non è mai stato scritto
+- Schema BOM Operation T08: `operation` = nome reparto (6 Operation in tutto, una per Workstation
+  Type); il codice fase sta in testa alla `description` (`T08-0100-P6000-10LT — Taglio + Calandratura
+  (SOMECAR SRL)`); fasi esterne su Workstation "Lavorazione Esterna"; `time_in_mins` = C/T × 60
+- Materiali del file: tutti i 14 codici `001-00xx-Cxxxx` esistono. Fornitori: tutti esistono tranne
+  `ARTIL` (= `A.R.T.I.L. SNC`)
+- Script di confronto `/home/frappe-user/confronto_t09_t08.py`: ogni articolo del file confrontato con
+  la controparte T08 su sequenza codici fase, materiale, componenti per unità (non confronta tempi,
+  descrizioni, fornitori)
+
+**Regola di codifica definitiva** (applicata dal basso verso l'alto):
+1. Articolo T09 fisicamente identico a un T08 (stesse fasi, stesso materiale, stessi componenti) →
+   **codice T08** e BOM T08 esistente, nessun import
+2. Diverso anche in un solo punto → `T09-0100-xxx`, con **tutte** le fasi a prefisso T09
+3. Un assieme con anche un solo componente T09 diventa T09
+4. Le differenze di sola numerazione dei codici fase (QC fuori sequenza o duplicati) non contano: in
+   ERPNext la numerazione è in sequenza dalla sessione 15
+
+**Esito**:
+| | Articoli | In ERPNext |
+|---|---|---|
+| **Nuovi `T09-0100-`** (10) | P2114 (nuovo), P3101, P3103, P3104 (materiale AISI 304L invece di Hastelloy-X), P2100 (contiene P2114 ×6), P3100 (contiene P3101/3103/3104), A1000 (ciclo diverso, senza P7000 ×3), A2000, A3000, A0001 (per cascata) | Item + BOM da creare |
+| **T09 nel file ma identici a T08** (11) | P1100, P1103, P1110, P1120, P1800, P2105, P2106, P2300, P2302, P3200, P6000 | codice `T08-0100-` |
+| **`T08-0200` nel file** (4) | P3300, P3203, P3301, P3302 — identici a `T08-0100-`: **refuso** | codice `T08-0100-` |
+| **Già T08 nel file** (32) | il resto | BOM T08 esistenti |
+
+Correzioni al file di Simone da applicare nelle BOM nuove: P2114 fase `T08-…-10LA` → `T09-0100-P2114-10LA`;
+P3101 fasi a prefisso T09; P3100 seconda `10ML` → `20ML`; A2000 seconda `20VT` → `30VT`.
+La conclusione della sessione 21 su P6000 (articolo T08 riusato) è **confermata**.
+
+**Buco nella BOM T08 trovato**: `T08-0100-P2301` non ha la fase **10VX** (Valutazione RX W30) dopo
+`10RX`; il gemello P2307 ce l'ha e il file di Simone la riporta. Correzione proposta: nuova
+`BOM-T08-0100-P2301-002` con 10VX (Controllo Qualità, 1 min), submit e default. I WO T08 già In Process
+restano sulla -001.
+
+**Mail a Simone preparata** (invio a cura di Gian) con 5 punti da confermare: codice e quantità del
+materiale AISI 304L (P3101/P3103 sp. 1,6 — P3104 sp. 3,18), quantità del materiale di P2114, aggiunta
+10VX su P2301, A1000 senza P7000, reparto per le 3 marcature `*CONFERMARE GRUPPO*` (stesso reparto
+di T08). Proposta di partire con codici provvisori (`PLACEHOLDER-304L-1.6`, `PLACEHOLDER-304L-3.18`)
+se i dati non arrivano. ⚠️ Nella bozza, al punto 3, "gemello P2301" va corretto in **P2307**.
+
+### Risposta di Simone (02/10, Cc Picco, Scaglia, Brunasso, Verzeroli, Lasorella) e import eseguito
+Risposte: **T08-0200 sono codici corretti**, non refusi (nel file hanno documentazione qualità
+propria `CQ-T08-0200-xxx`) → creati come Item propri; rinumerazione fasi ok; materiali senza codice
+= materiale del fornitore → codice fittizio come le fusioni (**F000** "Grezzo di fusione"); qty
+materiali sempre 1; **P2301 10VX va inserita** (nel suo Excel T08 c'è: persa nel nostro caricamento);
+**P7000 non esiste in T09**; marcature `*CONFERMARE GRUPPO*` nello stesso reparto di T08. Non ha
+commentato gli 11 articoli passati a codice T08 → accettati.
+
+**Import eseguito** (script `/home/frappe-user/import_t09_scrivi.py`, prova `import_t09.py`, backup
+prima della scrittura), 0 errori:
+- 14 Item + 14 BOM submitted/default: T09-0100-P2114, -P3101, -P3103, -P3104, T08-0200-P3203,
+  -P3301, -P3302, -P3300, T09-0100-P2100, -P3100, -A1000, -A2000, -A3000, -A0001
+- Item copiati dalla controparte T08 (P2114 da P2113), senza barcode; seriale attivo su A0001,
+  A1000, A2000, A3000 con serie `T09-0100-xxxx-.####`
+- BOM copiate dalla controparte T08 (qty BOM 1), componenti con codici finali, materiali qty 1,
+  fasi dal file del 22/09 (codice ricostruito sul codice articolo finale), reparto copiato dalla
+  fase T08 con lo stesso codice (3 fasi per regola), tempo = C/T × 60 (min 1)
+- `BOM-T08-0100-P2301-002` con 10VX in posizione 6 (Controllo Qualità, 1 min), default. I WO T08 in
+  corso restano sulla -001
+- Note: A0001-20QC "Data Book" 1560 min/pezzo e RX 1800 min/pezzo sono attività per lotto modellate
+  per pezzo, come già in T08 (RX 1620): da rivedere in blocco su T08+T09 se il carico CQ risulta
+  falsato. T08-0200-P3300-30SA "W??": numero saldatura mancante già nel file di Simone
+- Verifica fasi perse nel caricamento T08: coperti 49 articoli T08 su 61 (unica mancanza P2301);
+  i 12 articoli T08 non usati da T09 non sono stati verificati contro l'Excel T08 di Simone
+
+### Project e Sales Order T09-0100 creati
+Commessa **26-19008 = 100 liner**, ordine dell'**11/05/2026** (produzione già in corso: si subentra in
+corsa e si allinea l'avanzamento dopo). Consegne dalla mail di Simone del 22/09 "Informazioni
+mancati ERPNext": 10 liner 26/02/2027 · 20 30/04 · 20 30/06 · 20 31/08 · 20 29/10 · 10 30/11/2027.
+- **PROJ-0002** "T09-0100 ASSY LINER COMPLETE": 11/05/2026 → 30/11/2027, buffer 5, deadline interna
+  25/11/2027, cliente REMAZEL, External
+- **SAL-ORD-2026-00002**: 6 righe `T09-0100-A0001` (BOM-T09-0100-A0001-001), `po_no = 99-99998`,
+  prezzo segnaposto 100 come T08, submitted (To Deliver and Bill), collegato a PROJ-0002
+- `SAL-ORD-2026-00001.po_no = 99-99999` scritto
+- Script `/home/frappe-user/project_so_t09.py`
+- ⚠️ T08 è modellato su **1 pezzo** (SO qty 1, WO top qty 1, 58 WO): ogni riga SO genera un albero di
+  ~57 WO / ~550 Job Card indipendentemente dalla quantità
+- ⚠️ Trappola: `exec(open(...).read())` **non vede le variabili** impostate in console prima
+  (`globals().get(...)` restituisce il default). Passarle esplicitamente:
+  `exec(open(f).read(), {"frappe": frappe, "VAR": valore})`
+
+### Correzione modello tempi per lotto (prerequisito al Production Plan T09)
+Diagnosi: in BOM il tempo fase è **per pezzo** e il WO lo moltiplica per la qty. T08 (qty 1) non lo
+mostrava; con T09 (10-20 liner per set) le fasi esterne (tempi del file = **per lotto**, "LT per set
+di 10 liner") su Workstation "Lavorazione Esterna" a **capacità 1** davano ~210.000 min/pezzo in coda
+→ CapacityError certo già col 1° set. Manufacturing Settings: capacity planning attivo,
+`capacity_planning_for_days = 365`, no overtime, no festivi.
+Decisione: **nessuna Workstation per fornitore** (il fornitore sta in descrizione fase e, con C1,
+sul Purchase Order di conto lavoro). Eseguito:
+- **`fixed_time = 1`** su 214 BOM Operation delle 75 BOM default attive (T08+T09+T08-0200): 165
+  Lavorazione Esterna, 47 MX, 2 Data Book (T08-A0001-20QC 1080 min = 18 h come da Simone 01/09;
+  T09-A0001-20QC 1560 min = 26 h dal file). I WO T08 esistenti non cambiano (copia propria)
+- **Workstation "Lavorazione Esterna": `production_capacity` 1 → 50** (fornitori in parallelo)
+
+### Identificazione Job Card per set di consegna (opzione B: tutti e 6 i set)
+Decisione di Gian: pianificare **tutti e 6 i set** T09, **un Production Plan per set**
+(`combine_sub_items = 0` come T08). Per distinguere Job Card identiche di set diversi:
+- Server Script **`WorkOrder_Consegna_Set`** (DocType Event, Work Order, Before Insert): se manca,
+  `expected_delivery_date` = `delivery_date` della riga Sales Order del WO
+- Custom Field su Job Card: **`custom_consegna_set`** (Date, "Consegna set", fetch
+  `work_order.expected_delivery_date`, in list view + filtro) e **`custom_production_plan`** (Link,
+  fetch `work_order.production_plan`, filtro)
+- Riallineati T08: 57 WO semilavorati con consegna 18/12/2026; 557 Job Card con i due campi
+- ✅ **Discrepanza Job Card chiusa: a sistema sono 557** (581 era il conteggio del 01/09)
+- Impostazioni PP T08 da replicare (MFG-PP-2026-00001): get_items_from Sales Order, for_warehouse e
+  sub_assembly_warehouse `Sub-Assembly & Parts WH - Rema`, include_subcontracted_items 1,
+  include_non_stock_items 1, skip_available_sub_assembly_item 1, combine_items 0,
+  combine_sub_items 0, ignore_existing_ordered_qty 1, include_safety_stock 0
+
+### Correzioni da mail di Simone del 04/09 (non applicate all'import, recuperate)
+- Materia prima **AISI 304L → codice fittizio `I000`** (non F000): creato Item I000 "Grezzo INOX
+  AISI 304L (fittizio)" (copia di F000); sostituito in BOM-T09-0100-P3101/-P3103/-P3104-001;
+  esplosi ricalcolati a cascata (`update_exploded_items`) su P3100, A3000, A0001 → A0001: F000 9 +
+  I000 3
+- **Data Book T09 = stessi tempi di T08**: T09-0100-A0001-20QC 1560 → **1080 min**
+- Nella stessa mail Simone suggeriva di testare un **SO con più righe a date diverse** (fatto:
+  SAL-ORD-2026-00002)
+- **Scheduling all'indietro di T08**: fatto **una tantum da console il 06/09** (WO creati 01/09,
+  modificati in blocco 06/09 16:48), script non salvato. Va riscritto per T09
+
+### Production Plan T09 creati (uno per set)
+Script `/home/frappe-user/pp_t09.py` (impostazioni copiate da MFG-PP-2026-00001), tutti Submitted,
+57 sub-assembly ciascuno (livelli 0:5, 1:8, 2:24, 3:14, 4:4, 5:2):
+| Set | Consegna | Liner | PP |
+|---|---|---|---|
+| 1 | 26/02/2027 | 10 | MFG-PP-2026-00002 |
+| 2 | 30/04/2027 | 20 | MFG-PP-2026-00003 |
+| 3 | 30/06/2027 | 20 | MFG-PP-2026-00004 |
+| 4 | 31/08/2027 | 20 | MFG-PP-2026-00005 |
+| 5 | 29/10/2027 | 20 | MFG-PP-2026-00006 |
+| 6 | 30/11/2027 | 10 | MFG-PP-2026-00007 |
+
+✅ **348 Work Order T09 creati in bozza** (02/10, `make_work_order()` dai 6 PP, 58 per set): tutti su
+PROJ-0002, data consegna del set compilata anche sui sub-assembly (Server Script WorkOrder_Consegna_Set).
+WO P4000/P5000 (a scorta) creati ma da non sottomettere finché Simone non risponde.
+✅ **Scheduling eseguito** (`sessione_22/scheduling_wo_t09.py`, 348 planned_start_date scritte): indietro
+da consegna − buffer 5, poi avanti con regola 2A. Esito: **set 1 +35 gg** sulla consegna (17 WO andavano
+avviati prima di oggi, inizio necessario 25/08/2026), **set 2 +41 gg** (10 WO), set 3-6 in tempo.
+Ritardo set 1-2 solo indicativo: sono in produzione da maggio, Simone smarcherà l'avanzamento → poi
+rilanciare lo scheduling. Residuo 1-4 gg da arrotondamenti (fasi 24h vs giornata), entro il buffer.
+Calendari: interni 540 min/g 07-17 con Calendario Remazel; Lavorazione Esterna 24h.
+✅ **Set 1 sottomesso** (56 WO, P4000/P5000 in bozza): liner MFG-WO-2026-01210 pianificato da ERPNext
+10/03 → **26/03/2027** (+28 gg sulla consegna 26/02). Job Card esterne con fornitore e stato "Da inviare".
+- ⚠️ Fix: `custom_stato_cl` (Select) aveva "Da inviare" come prima opzione → ERPNext lo usava come default
+  anche sulle Job Card interne. Opzioni ora `\nDa inviare\nPresso fornitore\nRientrato`, interne ripulite.
+  **Lezione**: `frappe.new_doc` tiene in memoria il modello del documento nuovo **nel processo**; dopo aver
+  cambiato un campo, `clear_cache` non basta in console → **chiudere e riaprire la console**
+✅ **Tutti i 6 set T09 sottomessi** (02/10): **336 WO** submitted, 12 in bozza (P4000/P5000 × 6, a scorta),
+**3.306 Job Card** (768 esterne), 0 errori. Pianificazione ERPNext (capacity planning) dei liner:
+| Set | Liner | Consegna | Fine liner | Scarto |
+|---|---|---|---|---|
+| 1 | MFG-WO-2026-01210 | 26/02/2027 | 26/03/2027 | **+28 gg** |
+| 2 | MFG-WO-2026-01268 | 30/04/2027 | 08/06/2027 | **+39 gg** |
+| 3 | MFG-WO-2026-01326 | 30/06/2027 | 23/06/2027 | −7 gg |
+| 4 | MFG-WO-2026-01384 | 31/08/2027 | 24/08/2027 | −7 gg |
+| 5 | MFG-WO-2026-01442 | 29/10/2027 | 19/10/2027 | −10 gg |
+| 6 | MFG-WO-2026-01500 | 30/11/2027 | 19/11/2027 | −11 gg |
+Ritardo set 1-2 indicativo (in produzione da maggio, avanzamento da smarcare a cura di Simone).
+Nota: `custom_stato_cl` vuoto sulle interne vale `''` (non NULL): nei controlli usare `IFNULL(campo,'') <> ''`.
+Set 2-5 da 20 liner: lead time esterno ancora da confermare (mail a Simone, punto 1).
+
+Decisioni prese prima della creazione:
+1. Conto lavoro C1 (chat expediting): modifica le BOM Operation (`is_subcontracted`)? Va fatto prima
+   dei WO, che copiano le fasi alla creazione — ✅ chiuso: nessuna modifica (scelta B, tracciamento
+   senza conto lavoro nativo)
+2. ✅ **Deciso (2A)**: se l'inizio calcolato a ritroso cade nel passato, il WO parte dal primo giorno
+   utile e viene segnalato in ritardo rispetto alla consegna del set
+3. ✅ **Deciso (3B)**: fine produzione di ogni set = **consegna − buffer 5 gg** (deadline interna
+   per set), non la consegna esatta come T08
+   + ✅ stato reale dei set 1-2: **lo smarca Simone** stesso quando tutto sarà operativo (risposta 02/10)
+   + nuovo prerequisito (expediting fase 1): **fornitore strutturato sulle BOM Operation** prima del
+   submit dei WO T09, copiato sulla Job Card alla creazione
+4. ✅ Matricole: TBD da Simone → serie provvisoria; chiusure aziendali ricevute (da caricare nella
+   Holiday List); avanzamento set lo smarca Simone
+Sequenza poi: WO in bozza → scheduling all'indietro sui WO in bozza (script da riscrivere) → submit
+(Job Card pianificate con capacity planning) → Start All.
+Da fare dopo: Simula/Applica ritardo devono confrontare con la consegna del set
+(`custom_consegna_set`) e non con la deadline del Project; Gantt/Workspace per PROJ-0002; QI
+template su Item T09; domande del 07/09 (RX 10.800 min, P1600 due WO).
+
+### Manutenzione server cs-erp01 (02/10/2026, nessun utente collegato)
+- Verifica risorse prima: 2 vCPU, 3,8 GB RAM (1,9 disponibili), disco 27 GB al 53%, DB MariaDB
+  410 MB, 7 processi supervisor RUNNING. Uptime 118 giorni su kernel 6.8.0-124 (riavvio arretrato)
+- Backup prima dell'intervento: `/home/frappe-user/backup_sessione22/` (12:11 e 12:22, 3,3 MB cad.)
+- `apt upgrade`: 54 aggiornati + 26 nuovi, nessun pacchetto ERPNext (MariaDB/nginx/redis/python3
+  invariati); hypervisor **VMware** (open-vm-tools)
+- VM portata a **4 vCPU / 8 GB RAM**; riavvio → kernel **6.8.0-146**, servizi tutti RUNNING
+- Versioni: ERPNext 16.21.1, Frappe 16.18.3, HRMS 16.7.1. Aggiornamento ERPNext **rimandato** a
+  finestra dedicata (controllo "commit indietro" non affidabile: clone shallow, remoto `upstream`)
+- ⚠️ **Certificato HTTPS senza intermedio** (dalla sessione 18): il fullchain conteneva la root
+  DigiCert Global Root G2 al posto dell'intermedio **RapidSSL TLS RSA CA G1** → `curl` falliva
+  (verify 21); i browser lo mascheravano. Corretto: intermedio scaricato da
+  `https://cacerts.digicert.com/RapidSSLTLSRSACAG1.crt.pem`, fullchain = certificato + intermedio,
+  backup `combustionerp.remazel.com.crt.bak-20261002`, nginx ricaricato → **Verify return code 0**.
+  Certificato `*.remazel.com` valido fino al **15/02/2027**: aggiornare
+  `Procedura_Rinnovo_Certificato_SSL_Remazel_B2` (intermedio corretto + verifica con
+  `openssl s_client … | grep "Verify return code"`) → B3
+- **Taratura ERPNext sulle nuove risorse**:
+  - MariaDB `innodb_buffer_pool_size` 128 MB → **2 GB** (file `/etc/mysql/mariadb.conf.d/99-erpnext-remazel.cnf`)
+  - `gunicorn_workers` 5 → **9**, `background_workers` 1 → **2** (short e long), via
+    `bench set-config -g -p …` + `bench setup supervisor --yes` + `supervisorctl reread/update`.
+    Backup `config/supervisor.conf.bak-20261002`. Tutti RUNNING, ping 200
+  - ⚠️ Trappola: `bench set-config` senza `-p` salva i numeri come stringa → `bench setup
+    supervisor` va in TypeError
+  - Bench CLI 5.29.1 (disponibile 5.31.0): non aggiornato
+- **Aggiornamento ERPNext eseguito** (stesso giorno, con snapshot VMware `pre-update-erpnext-02102026`
+  + backup): **ERPNext 16.21.1 → 16.37.0, Frappe 16.18.3 → 16.36.1, HRMS 16.7.1 → 16.20.1**.
+  `bench update` in tmux, log `/home/frappe-user/script_progetto/bench_update_20261002.log`.
+  Migrate e build completati (assets 02/10 13:37); il riavvio finale di bench è fallito perché
+  `sudo supervisorctl` chiede la password → riavvio a mano `sudo supervisorctl restart all`, 9/9
+  RUNNING, ping 200. Verifica post: 10 Server Script attivi, 4 Client Script abilitati, 4 Custom
+  Field Job Card presenti; 1 Error Log alle 13:36 (`FORMULA_TRIGGER_CHARS`, codice misto durante
+  l'update), import OK dopo il riavvio, 0 errori dopo le 13:38
+  - ⚠️ Trappola: `bench update` termina con `CalledProcessError: sudo supervisorctl status` se sudo
+    richiede password — non è un fallimento dell'update, basta riavviare a mano
+  - Pulizia: `apps/frappe/completa_wo.py` (script di TEST di luglio che chiude tutti i WO T08 con
+    time log fittizi di HR-EMP-00001 — **NON rilanciare**) spostato in `/home/frappe-user/script_progetto/`
+  - ✅ Test funzionali nel browser confermati da Gian (scrivania, colonna Consegna set, Simula
+    Ritardo, Gantt WO, Workspace + report Carico Reparti). Da fare: eliminare lo snapshot VMware
+    dopo qualche giorno
+
+### Expediting — decisione di Gian sull'ordine al fornitore (02/10/2026)
+- **Oggi l'ordine al fornitore lo emette SAP B1.** ERPNext **traccia** uscita/rientro della fase
+  esterna e registra il riferimento all'ordine SAP
+- **In futuro**, quando il sistema sarà affidabile: ordine generato da ERPNext e inviato a SAP B1
+  tramite connettore (Service Layer, porta 50000)
+- Conseguenza: fase 1 dell'expediting **senza Purchase Order ERPNext**, tracciamento sulla Job Card;
+  il disegno deve permettere di passare in seguito al PO nativo ERPNext → SAP senza rifare i dati
+
+### Expediting fase 1 — passo 1: fornitore strutturato sulle fasi BOM ✅
+- Custom Field **`BOM Operation.custom_fornitore`** (Link Supplier, allow_on_submit, in list view)
+- Compilato da descrizione `(FORNITORE)` su **165/165 fasi esterne** delle 75 BOM default.
+  Correzioni: "A.M.C. CONTROL" → "A.M.C. CONTROL SRL" (BOM-T08-0100-P2301-002); aggiunto
+  A.M.C. CONTROL SRL su T08-0100-P2202-10RX (era senza fornitore, dato dal file Simone)
+- Distribuzione: A.M.C. CONTROL SRL 47, INOXEA 19, SOMECAR 16, BONADEI 16, MAC STAMP 12, SARZI 10,
+  EPIS 10, FLAME SPRAY 7, BODYCOTE 6, H.T.S. 5, A.R.T.I.L. 5, T.A.G. 4, ZARE 2, M.B.L. 2, ATS 2,
+  H.T. SRL 1, GIOTTO 1
+- ⚠️ Da chiedere a Simone (punto 4 della mail): H.T. SRL (solo P6000-10SA) vs H.T.S. SRL — stessa
+  azienda?
+- Prossimo: campi conto lavoro su Job Card (Fornitore, N° ordine SAP, Data uscita, Rientro
+  previsto, Rientro effettivo, Stato) + Server Script che copia il fornitore dalla BOM Operation
+  alla creazione della Job Card; riallineamento delle Job Card T08 esterne
+
+### Expediting fase 1 — passo 2: conto lavoro sulla Job Card ✅
+Script `00_Script_Progetto/sessione_22/jobcard_conto_lavoro.py` (eseguito):
+- Sezione **"Conto lavoro"** su Job Card (visibile solo se workstation/workstation_type =
+  Lavorazione Esterna): `custom_fornitore` (Link Supplier), `custom_ordine_sap` (Data),
+  `custom_stato_cl` (Select Da inviare / Presso fornitore / Rientrato, read only),
+  `custom_data_uscita`, `custom_rientro_previsto` (read only), `custom_rientro_effettivo` — tutti
+  allow_on_submit
+- Server Script **`JobCard_Fornitore`** (Before Insert): fornitore copiato dalla BOM Operation
+  (Job Card → operation_id → Work Order Operation idx → BOM Operation stesso bom_no + idx, stesso
+  percorso di JobCard_Documenti_Tecnici); stato iniziale Da inviare
+- Server Script **`JobCard_Conto_Lavoro`** (Before Save) e **`JobCard_Conto_Lavoro_Submitted`**
+  (Before Save Submitted Document): rientro previsto = data uscita + durata pianificata della Job
+  Card (giorni arrotondati per eccesso), altrimenti fine pianificata; stato automatico
+- Riallineate **130/130 Job Card esterne T08** (controllo codice fase JC = BOM: 0 anomalie):
+  fornitore, stato Da inviare, rientro previsto = fine pianificata
+- Correzione collegata: fornitore compilato anche sulle 3 fasi esterne della BOM non default
+  **BOM-T08-0100-P2301-001** (ancora usata dal WO T08 in corso)
+- Il ritardo ("In ritardo" = rientro previsto < oggi e non rientrato) lo calcolerà il cruscotto
+- Prossimo: cruscotto expediting (report), poi test reale su una Job Card con ordine SAP
+
+### Expediting — modello a EVENTI, non a date (decisione di Gian, 02/10/2026)
+Problema reale: oggi l'expediting è su Excel e non funziona; l'ordine SAP può precedere di **mesi**
+l'invio effettivo, quindi una data scritta all'ordine non è affidabile. Decisione:
+- **Inizia** sulla Job Card esterna = materiale partito verso il fornitore (chi spedisce, data
+  automatica); **Completa** = materiale rientrato (chi riceve, data automatica). Stessi pulsanti
+  nativi usati per le fasi interne
+- A mano solo, facoltativi: **N° ordine SAP** e **data promessa dal fornitore**
+- Calcolati: fornitore (BOM), data necessaria (piano), dove si trova il materiale, giorni fuori,
+  ritardo (oggi > promessa o > necessaria)
+- Da rimuovere/sostituire dalla sezione Conto lavoro: Data uscita e Rientro effettivo (→ eventi
+  Inizia/Completa); scartati: data richiesta, note sollecito, tabella lead time
+- Passaggio diretto fornitore→fornitore: nei cicli **non esistono due fasi esterne consecutive**
+  (verificato: 132 fasi esterne isolate, 0 catene). Caso microfuso da chiarire: ordine unico al
+  fornitore finale (= una fase) o due ordini (= due fasi consecutive, il Completa della prima avvia
+  la seconda, QC spostato dopo)
+
+### Expediting a eventi — implementato ✅ (02/10/2026, `sessione_22/expediting_eventi.py`)
+- Nuovo `custom_data_promessa` ("Data promessa fornitore", facoltativa, allow_on_submit)
+- `custom_data_uscita` → "Uscita (da Inizia)" e `custom_rientro_effettivo` → "Rientro (da Completa)",
+  **sola lettura**, calcolati dai Time Log (primo from_time / ultimo to_time a quantità completata o submit)
+- Rientro previsto = data promessa → uscita + durata pianificata → fine pianificata
+- Stato: Da inviare → Presso fornitore (Inizia) → Rientrato (Completa/submit)
+- Sezione chiusa con `custom_sb_fine_conto_lavoro`; 898 JC esterne riallineate ("Da inviare");
+  ripulita la prova su **PO-JOB05173** (non PO-JOB05464)
+- ✅ **Prova reale su PO-JOB05551** (Start Job → Presso fornitore, uscita 02/10, previsto 09/10;
+  data promessa 12/10 → previsto 12/10; Complete qty 10 → Rientrato). Poi Job Card, WO e operazione
+  riportati allo stato iniziale (Open / Not Started / Pending)
+- Valutazione di gestibilità (Gian dubbioso): modello dati corretto, volumi sostenibili (768 fasi
+  esterne T09 ≈ 2-3 eventi/giorno), ma **non usabile senza**: (1) cruscotto/lista expediting (da
+  spedire, presso fornitore, in ritardo, per fornitore); (2) "Invia al fornitore"/"Rientro" su più
+  Job Card insieme (una spedizione = più pezzi); (3) submit automatico al Complete delle esterne;
+  (4) Employee per magazzino/logistica (chi spedisce/riceve) — da chiedere a Simone
+
+### Expediting — integrazione SAP (decisione 03/10/2026)
+- **Scelta B**: il magazzino resta su SAP (in SAP esistono già i magazzini dei fornitori). ERPNext non
+  fa movimenti di stock per il conto lavoro: traccia con un **Ordine conto lavoro** (raggruppa le Job
+  Card esterne; n° ordine SAP, fornitore, data promessa, magazzino SAP fornitore; pulsanti
+  Spedito/Rientrato senza operatore; al Rientrato JC completate e sottomesse in automatico)
+- Start/Complete sulla singola Job Card **scartato** (Gian: per le esterne non c'è operatore)
+- Connettore: **lettura SAP → ERPNext** (trasferimenti verso/da magazzini fornitore = eventi
+  Spedito/Rientrato; giacenze presso fornitore) — una direzione, ripetibile, fallback manuale;
+  **scrittura** solo per gli ordini (futuro) via **Service Layer**, mai SQL diretto
+- Rete: cs-erp01 raggiunge **cs-sql03.remazel.local:1433 (10.101.1.100)** ✅ (03/10)
+- Da fare: utente SQL **sola lettura** sul DB della società SAP; ambiente Python separato `~/sap_conn`
+  (pymssql); credenziali in `~/.sap_ro.json` chmod 600; script `sessione_22/sap_lettura.py`
+  (magazzini per fornitore da OWTR/WTR1, codici articolo movimentati, UDF su OCRD, elenco OWHS)
+
+### Risposta di Simone del 02/10 (matricole, calendario, avanzamento)
+- **Matricole: TBD** → decisione di Gian: **matricola solo sul prodotto finito (A0001)**, assegnata
+  **solo alla chiusura del WO del liner**, numerazione **provvisoria** dalla serie
+  (`T08-0100-A0001-.####`, `T09-0100-A0001-.####`). Eseguito: **A1000/A2000/A3000 di T08 e T09
+  senza matricola** (nessun movimento di magazzino, modifica consentita); Custom Field
+  **`Serial No.custom_matricola_reale`** ("Matricola reale", in list view, filtro, indicizzato) per
+  la matricola definitiva senza rinominare il documento. Restano le 58 matricole segnaposto T08-A0001.
+  Nota: nessun Item ha `quality_inspection_template` collegato (template saldature per matricola
+  esistente ma non agganciato ad A0001 — da fare quando validato con Simone)
+- **Chiusure aziendali** (date approssimative): 24/12/2026–07/01/2027 · 09/08/2027–20/08/2027 ·
+  24/12/2027–07/01/2028 · 07/08/2028–18/08/2028 · 25/12/2028–07/01/2029 (nella mail scritto
+  "07/101/2029", refuso)
+- **Stato avanzamento set: lo smarcherà Simone** stesso quando tutto sarà operativo
+- ✅ **Holiday List "Calendario Remazel 2026-2029"** creata (01/01/2026–31/12/2029, 493 giorni):
+  405 sabati/domeniche, 44 festività nazionali (11/anno incl. Pasquetta e 15/8 = patrono Chiuduno),
+  44 giorni feriali di chiusura aziendale. Assegnata ai 5 reparti interni e come default azienda;
+  Lavorazione Esterna senza calendario (24h). La vecchia "Festivi Italia 2026-2027" resta (rollback).
+  Vale per le pianificazioni future (WO T09); Job Card T08 già pianificate invariate
+
+### Permessi e profilo "Responsabile Processo MES" (02/10/2026)
+- **Problema**: Simone non vedeva più le Job Card. Causa: su Job Card esistevano solo 2 Custom
+  DocPerm (Operatore di Reparto, Sola Lettura MES) → in Frappe i Custom DocPerm **sostituiscono**
+  quelli standard, quindi System Manager / Manufacturing Manager / Manufacturing User erano senza
+  accesso. **Corretto**: ricopiati in Custom DocPerm i permessi standard della Job Card (ora 5 ruoli)
+- Verifica su tutti i doctype con Custom DocPerm: solo Job Card aveva ruoli standard persi
+  rilevanti (scarti minori non toccati: Desk User su Currency/Role, Report Manager su Email Account,
+  Accounts Manager su Terms and Conditions)
+- ⚠️ Ruolo **"Sola Lettura MES"** presente su molti doctype ma non documentato in queste sessioni
+  (probabilmente periodo 16-24/09): non toccato
+- ⚠️ Trappola: aggiungere un Custom DocPerm a un doctype senza ricopiare gli standard toglie
+  l'accesso a tutti gli altri ruoli
+- **Role Profile "Responsabile Processo MES"** (decisione di Gian: chi governa il processo, non
+  super amministratori): Manufacturing Manager/User, Projects Manager/User, Item Manager, Quality
+  Manager, Stock User, Purchase User, Prepared Report User
+- Assegnato a **Simone Sacchi** (da 49 ruoli con System Manager a 9), **Sergey Mylnikov** e **Omar
+  Ferrari** (dal profilo "Manufacturing" a 3 ruoli, nessun ruolo perso). Tutti leggono/scrivono Job
+  Card. Amministrazione di sistema (script, permessi, utenti, aggiornamenti) solo a Gian
+- Da verificare con Simone: selezione del Dipendente nei time log Job Card senza ruoli HR (se serve,
+  sola lettura Employee)
+
+### Tempi fasi esterne e buffer (02/10/2026)
+- Nel ciclo di Simone: **Attività/set** = pezzi per un set da 10 liner, **C/T** = ore per pezzo,
+  **TT [H]** = Attività/set × C/T = tempo del lotto. Le note delle esterne dicono "LT per set di 10 liner"
+- ✅ **Durata fasi esterne = TT** (eseguito 02/10): 152 BOM Operation aggiornate su 75 BOM default
+  (11 già corrette, 165 fasi esterne totali). Ore esterne totali 2.759 h → **21.380 h**. Fonti: ciclo T09
+  del 22/09 (prevale) + ciclo T08 **v5** = allegato "T08-0100 Ciclo e fasi (5).xlsx" della mail di Simone
+  del 28/08 ("R: componenti con serial number disabilitato"), colonna "Tempo/set". RX 27 → 30 h;
+  `P1102-10TT` 100 h (T09) invece di 120 (v5); anomalie del file tenute come scritte (A1000-10LA 100 h,
+  P3200-10LA 250 h). **Esclusi** `P4000-10LA` e `P5000-10LA` (articoli a scorta, ordini 1000-1500 pz).
+  Backup valori: `/home/frappe-user/backup_sessione22/bom_operation_esterne_prima_tt.json`.
+  Script `sessione_22/tempi_esterne_tt.py`
+- Postazione Lavorazione Esterna: 24 h, capacità 50, **nessuna Holiday List** → ERPNext non applica
+  festività (workstation.py: controllo solo se la postazione ha una Holiday List propria) → il TT conta in
+  giorni di calendario 7/7. Non considera chiusure fornitori (agosto): eventuale "Calendario Fornitori" dopo
+- ⚠️ I 58 WO T08 e le 130 Job Card esterne esistenti **mantengono i tempi vecchi**: riallineamento da
+  decidere (ripianifica la T08 in corso). I WO T09 (da creare) prendono già i nuovi tempi
+- Buffer trasporto **0** di default (Simone: il TT comprende già la spedizione)
+- 🅿️ **Decisione di Gian (02/10)**: la **T08 è parcheggiata** (WO e Job Card esistenti non si
+  riallineano per ora); ci si concentra sulla **T09**. La **base resta la T08**: codici, BOM e fasi
+  T08 condivisi (aggiornati con il TT) sono la base dati comune
+- Da chiedere a Simone: il TT comprende spedizione andata/ritorno? Per i set T09 da **20 liner**
+  (consegne 2-5) il lead time resta uguale o raddoppia (anche fase per fase)? Provvisorio: TT invariato
+- **Terminologia**: non usare "commessa" (progetto "Da Commessa a Prodotto"); il documento è il
+  **Project** (PROJ-0001 = T08-0100, PROJ-0002 = T09-0100), la commessa è il Job
+- **Buffer Project**: resta **sul singolo Project** (scelta di Gian, per avere buffer diversi per
+  ordine), NON nella pagina impostazioni. Dove: Project → Details → sezione **Timeline** (chiusa) →
+  "Buffer Project (giorni)", default 5; accanto "Deadline Interna (con buffer)" e "Fine Produzione Stimata"
+- ✅ Server Script **`Project_Deadline_Interna`** (Before Save su Project): deadline interna =
+  Expected End Date − buffer. Etichetta rinominata da "Buffer Commessa" a "Buffer Project". Verifica:
+  PROJ-0001 13/12/2026, PROJ-0002 25/11/2027 (invariati). Script: `sessione_22/project_buffer_ricalcolo.py`
+- 🌐 **Lingua (decisione di Gian, 02/10)**: tutto è stato creato in italiano (etichette Custom Field,
+  Server/Client Script, Workspace, report, stati), ma la lingua finale del sistema è l'**inglese**.
+  Traduzione delle etichette italiano → inglese **solo alla fine**, in un unico passaggio; nel frattempo
+  si continua in italiano. Tenere traccia degli oggetti con etichette italiane da convertire
+- **Pagina unica "Impostazioni MES Remazel"** (da fare, va documentata nel manuale docx): buffer
+  trasporto (default 0), buffer trasporto per fornitore (opzionale), regola 2A, calendario chiusure,
+  capacità reparti
+
+### Riepilogo sessione 22 (02-03/10/2026)
+- Memoria riconciliata (Cowork + Claude Code), numerazione cronologica unica
+- T09-0100 caricata: 14 Item/BOM, PROJ-0002, SAL-ORD-2026-00002, 6 Production Plan, **348 WO (336
+  submitted, 12 bozza P4000/P5000), 3.306 Job Card**; scheduling 3B/2A; set 3-6 in tempo, set 1-2 in
+  ritardo indicativo (+28 / +39 gg)
+- Tempi fasi esterne = **TT** del ciclo (152 BOM Operation); Buffer Project con ricalcolo automatico
+- Server cs-erp01 aggiornato (4 vCPU/8 GB, Ubuntu + ERPNext 16.37), backup 02/10 18:35
+- Permessi "Responsabile Processo MES", calendario Remazel 2026-2029, matricole solo A0001 provvisorie
+- Expediting: fornitore da BOM, sezione Conto lavoro su Job Card; modello a eventi provato con
+  Start/Complete e poi **scartato** per le esterne (nessun operatore) → **scelta B**: Ordine conto
+  lavoro + magazzino su SAP + connettore in lettura (03/10)
+- Decisioni: T08 parcheggiata (base dati resta T08), niente "commessa" (Project), lingua finale
+  inglese alla fine, buffer sul singolo Project
+- Mail a Simone sui tempi esterni preparata (`sessione_22/Mail_Simone_Tempi_Esterni.md`): **invio non
+  confermato** in memoria
+- Expediting seguito **in questa stessa chat** (non in un'altra, come ipotizzato all'inizio)
+
+---
+
+## SESSIONE 23 — Riallineamento della memoria (05/10/2026)
+
+### Incongruenze rilevate e corrette
+- **Copie della memoria divergenti**: repo GitHub aggiornato al 03/10 (sessione 22 completa);
+  OneDrive `12_Memorie` fermo al **01/10** e Project Cowork fermo alla versione "_5" (entrambi senza
+  la sessione 22); copie vecchie in OneDrive `12_Memorie/Old` (`_01`, `_02`) e `Transfer` (`(1)`, `(2)`)
+- **Regola sulle copie contraddittoria**: `MEMORIA_SESSIONE_19.md` diceva "il repo non va più
+  aggiornato"; `CLAUDE.md` e la pratica dicono il contrario → regola unificata (vedi Regole operative,
+  Memoria) e nota di superamento in `MEMORIA_SESSIONE_19.md`
+- **Parti superate dentro questo file**, riscritte o barrate: go-live del 02/10 con la T08; expediting
+  "in un'altra chat"; conto lavoro "nativo v16 (strada C1)"; Fronte ERPNext limitato alla T08; task
+  "GO-LIVE OGGI", "Production Plan → WO da fare", "pilota_1_lettura.py", SAP via file DTW; riga
+  "Ultimo aggiornamento"
+- **Numerazione**: sessione 22 = 02-03/10 (stessa chat), sessione 23 = 05/10 (decisione di Gian)
+- Skill `erpnext-remazel`: la lista "Fix aperti pre go-live" è superata (da aggiornare, vedi task)
+
+### Azioni
+- Fronte ERPNext, Decisioni chiuse e Task aperti **riscritti da zero** al 05/10
+- Recuperati in **Appendice tecnica** i dettagli ancora validi di `Cowork_Progetto_T080100.md` e
+  `MEMORIA_SESSIONE_T08-0100.md` (25/08), da spostare in `12_Memorie/Old`
+- Verifica OneDrive: memoria principale aggiornata ✅; da eliminare `Old/CONTESTO_PROGRESSIVO_ERPNext125.md`
+  (copia della nuova) e i duplicati `Transfer/CONTESTO_PROGRESSIVO_ERPNext (1).md` e `(2).md`
+- ⚠️ Repo GitHub `AI-Project` risulta **pubblico**: contiene dati interni → da rendere privato (Gian)
+- File finale da copiare a cura di Gian in OneDrive `12_Memorie` (sostituisce quello del 01/10) e nel
+  Project Cowork (il connettore Microsoft 365 è in sola lettura); `Old` e `Transfer` da archiviare
+
+---
+
+## SESSIONE 24 — Site di staging per simulazione T08 (12/10/2026)
+
+### Idea e decisione
+- Gian propone di usare la **T08** come banco di prova: simulare che sia partita nel passato e
+  completata all'**80-90%**, per ottenere un report su **tempi ciclo e costi**
+- Si fa **solo su un site di staging**, non su `site1.local`: gli avanzamenti retrodatati sporcano
+  stock ledger, valutazioni e date reali. Non contraddice la decisione del 02/10 (T08 parcheggiata in
+  produzione): la T08 resta la base dati comune, qui è solo materiale di test
+- **Nessun clone del server**: secondo site sullo stesso bench di cs-erp01 (spazio e risorse non sono un
+  problema, confermato da Gian)
+
+### Staging
+- Nome site: **`stgcombustion.remazel.com`** (scelta di Gian); DB previsto `stg_combustion`
+- Procedura concordata (da `/home/frappe-user/frappe-bench`): backup `--with-files` di `site1.local` →
+  `new-site` → `restore` con file public/private → `migrate` → `disable-scheduler`
+- Verifica post-restore: **58 WO T08** e **557 Job Card**
+- Il restore porta utenti, password e Server Script di produzione; SMTP non è configurato, scheduler
+  spento comunque sullo staging
+- ⏳ **Passi non ancora eseguiti**: Gian li fa più tardi; l'esito della verifica va riportato in chat
+
+### Cosa il test dà e cosa no
+- **Dà**: report planned vs actual dei tempi ciclo per fase e reparto; verifica del flusso
+  Inizia/Completa sulle Job Card esterne e del cruscotto expediting con dati realistici; controllo del
+  cammino critico (~94% del ciclo è conto lavoro)
+- **Costi solo indicativi**: mancano prezzi fornitore reali, i microfusi sono su placeholder `F000`, il
+  prezzo del Sales Order è un segnaposto. Il costo delle fasi esterne è `hour_rate × ore` della
+  postazione "Lavorazione Esterna" (24 h/giorno, capacità 50): servono hour rate e prezzi di prova per
+  renderlo sensato
+- I 58 WO T08 hanno ancora i tempi **pre-TT** (non riallineati): rigenerarli prima, se si vuole
+  misurare con i tempi aggiornati
+- Simulazione: time log retrodatati sulle Job Card, `allow_negative_stock` (già attivo), scostamenti
+  realistici (±10-30% sui tempi interni, ritardi casuali sui rientri esterni). Valgono le trappole note
+  (`doc.save()` mai su record submitted, `create_job_card()` sovrascrive `planned_end_date`)
+
+### Punti aperti
+- **Esposizione web dello staging**: come è pubblicato `combustionerp.remazel.com` (nginx diretto o
+  reverse proxy/FortiGate) e se il bench è in `dns_multitenant` → DNS o file hosts + config nginx
+- **Script di simulazione**: file completo, solo staging, da scrivere dopo la verifica del restore
+- Aggiornamento memoria: scelto da Gian di farlo con **Claude Code** (qui si produce il file completo)
+
+---
+
+## 🖥️ FRONTE ERPNEXT — stato al 05/10/2026
+
+### Ambiente
+- **cs-erp01** (VMware, Ubuntu 24.04, 4 vCPU / 8 GB), ERPNext **16.37.0** / Frappe 16.36.1 / HRMS 16.20.1,
+  MariaDB buffer pool 2 GB, HTTPS con catena completa (wildcard `*.remazel.com` + RapidSSL)
+- Ultimo backup: **02/10/2026 18:35** (`site1.local`). Snapshot VMware del 02/10 da eliminare
+- Rete verso SAP: cs-erp01 → **cs-sql03.remazel.local:1433** (10.101.1.100) raggiungibile
+- **Staging** (12/10): `stgcombustion.remazel.com` sullo stesso bench, da creare con restore del backup di
+  produzione (vedi sessione 24). Per il restore serve un backup fresco: l'ultimo è quello del 02/10
+
+### T09-0100 — in esercizio (PROJ-0002)
+- SAL-ORD-2026-00002, 100 liner in 6 set; Production Plan MFG-PP-2026-00002…00007 (uno per set)
+- **348 WO**: 336 submitted, **12 in bozza** (P4000/P5000 × 6, articoli a scorta in attesa di Simone);
+  **3.306 Job Card**, di cui 768 esterne con fornitore e stato "Da inviare"
+- Fine liner pianificata da ERPNext: set 1 26/03/2027 (**+28 gg**), set 2 08/06/2027 (**+39 gg**),
+  set 3-6 in anticipo di 7-11 gg sulla consegna (tabella in sessione 22)
+- Fasi esterne = **TT** del ciclo (lotto da 10 liner), Lavorazione Esterna 24h senza calendario;
+  reparti interni 07-17 (540 min/g) con "Calendario Remazel 2026-2029"
+- Capacità reparti: Saldatura 7, Molatura 5, Montaggio 5, Controllo Qualità 3, Lavorazioni Meccaniche 1;
+  Lavorazione Esterna 50
+
+### T08-0100 — parcheggiata (PROJ-0001)
+- 58 WO "In Process" e Job Card con i **tempi esterni vecchi** (riallineamento al TT rinviato);
+  130 Job Card esterne con fornitore. Discrepanza 581 vs 557 Job Card mai verificata (non urgente)
+- Le BOM T08 sono aggiornate al TT e restano la base dati comune
+
+### Funzioni disponibili
+- Utenti: 21 Employee/User "Operatore di Reparto" con filtro per reparto; profilo **"Responsabile
+  Processo MES"** per Simone, Sergey, Omar (non System Manager)
+- **Buffer Project** sul singolo Project + Server Script `Project_Deadline_Interna`
+- Ritardo a cascata (`Simula/Applica_Ritardo_JobCard`, menu "Pianificazione"), solo dentro lo stesso WO;
+  confronta ancora con la deadline del Project (da portare sulla consegna del set)
+- Job Card: "Consegna set" e "Production Plan"; sezione **Conto lavoro** (fornitore da BOM, n° ordine
+  SAP, data promessa, uscita/rientro in sola lettura, rientro previsto, stato)
+- Matricole solo su A0001, assegnate a fine produzione, provvisorie; `Serial No.custom_matricola_reale`
+- Documenti tecnici su Job Card (2b), template saldature (2d, non agganciato), Workspace "Produzione
+  Remazel" con 3 viste Gantt (T08), report "Carico Reparti Settimanale"
+- `allow_negative_stock = 1`, **nessuna giacenza in ERPNext**: il magazzino è su SAP
+
+### Decisioni chiuse
+| Punto | Decisione |
+|---|---|
+| Perimetro | **T09 in esercizio**, T08 parcheggiata; la base dati resta la T08 |
+| Codifica T08/T09 | identico → codice T08; diverso → T09 con tutte le fasi T09; niente alias |
+| Tempi fasi esterne | **TT** del ciclo (lotto da 10 liner), ore di calendario; buffer trasporto 0 |
+| Scheduling | 3B: fine set = consegna − Buffer Project; 2A: inizio non prima di oggi |
+| Buffer | sul **singolo Project** (default 5), non nella pagina impostazioni |
+| Conto lavoro / expediting | **scelta B**: Ordine conto lavoro in ERPNext, magazzino e magazzini fornitore su **SAP**, connettore SAP → ERPNext in lettura; scrittura ordini (futuro) via Service Layer. **Niente** conto lavoro nativo v16, **niente** Start/Complete sulle Job Card esterne |
+| Ordini al fornitore | oggi li emette **SAP**; in futuro generati da ERPNext e inviati a SAP |
+| Matricole | solo prodotto finito A0001, a fine produzione, provvisorie |
+| Microfusi | codici `F000` e €1.000 provvisori |
+| `allow_negative_stock` | resta a 1 |
+| Terminologia | niente "commessa": **Project** (la commessa è il Job) |
+| Lingua | lavori in italiano, traduzione etichette in **inglese solo alla fine** |
+| Standard documentale | `docx-startit` (+ `docx-remazel`) |
+
+---
+
+## 🎯 TASK APERTI (aggiornato al 12/10/2026)
+
+### Priorità 1 — Expediting (in corso)
+1. **Ordine conto lavoro**: DocType con n° ordine SAP, fornitore, data promessa, magazzino SAP
+   fornitore, righe = Job Card esterne; pulsanti **Spedito / Rientrato** (anche parziale); al rientro
+   Job Card completate e sottomesse in automatico. Prima: verificare se ERPNext completa una Job Card
+   senza dipendente (altrimenti dipendente tecnico "Conto lavoro")
+2. **Cruscotto expediting**: da ordinare/spedire, presso fornitore, in ritardo, per fornitore
+3. **Lettura SAP**: login SQL **sola lettura** + nome DB della società (da chiedere all'amministratore
+   SAP); su cs-erp01 ambiente `~/sap_conn` (pymssql) e credenziali `~/.sap_ro.json` (chmod 600);
+   script `sessione_22/sap_lettura.py`. In alternativa, query dal client SAP (Gestione interrogazioni)
+4. Da chiarire con Remazel: documenti SAP usati per il conto lavoro; codici articolo con cui viaggia il
+   pezzo a metà ciclo; codici dei magazzini fornitore; accesso al Service Layer
+
+### Priorità 2 — Risposte di Simone
+- **Verificare se la mail sui tempi esterni è stata inviata** (`sessione_22/Mail_Simone_Tempi_Esterni.md`):
+  set da 20 liner (lead time uguale o doppio — può spostare i set 2-5), P4000/P5000 a scorta (12 WO in
+  bozza), TT di A1000-10LA e P3200-10LA, P1102-10TT, chiusure fornitori, microfuso (uno o due ordini)
+- H.T. SRL vs H.T.S. SRL; selezione Dipendente nei time log senza ruoli HR
+- Avanzamento reale set 1-2 (lo smarca Simone) → poi ripianificare (i WO sono submitted: si usano gli
+  strumenti di ritardo, non `scheduling_wo_t09.py` che lavora sui WO in bozza)
+
+### Priorità 3 — Pianificazione
+- Strumenti di ritardo: confronto con la **consegna del set** (`custom_consegna_set`), non con il Project
+- Pagina **"Impostazioni MES Remazel"** (buffer trasporto, buffer per fornitore, regola 2A, calendari,
+  capacità reparti) e sua documentazione nel manuale
+- Gantt / Workspace per PROJ-0002; eventuale "Calendario Fornitori" (chiusure di agosto)
+
+### Priorità 4 — Documentazione (grafica `docx-startit`, naming `{Tipo}_{Oggetto}_Remazel_B{N}`)
+- **Manuale**: pagina impostazioni, expediting (Ordine conto lavoro), uso operativo T09
+- **Guida Produzione → B4**, **Guida Concettuale → B7**, **Analisi Obiettivi → B4**, **Prerequisiti
+  Go-Live → B2**; guida alle funzioni 1c/2b/2d
+- I documenti del 29/09 prendono il naming standard alla versione successiva
+- Salvare `12_Memorie/SKILL_docx-remazel.md` nella skill `docx-remazel`
+
+### Priorità 5 — Manutenzione e memoria
+- **Copiare questa memoria** in OneDrive `12_Memorie` e nel Project Cowork; archiviare `Old` e `Transfer`
+- Aggiornare la skill `erpnext-remazel` (lista "Fix aperti pre go-live" superata)
+- Eliminare lo snapshot VMware del 02/10
+- QI template su A0001 quando validato; SMTP Microsoft 365; matricole e Job reali
+
+### Priorità 6 — Staging e simulazione T08 (sessione 24)
+1. Backup fresco di `site1.local`, creazione site `stgcombustion.remazel.com`, restore, `migrate`,
+   `disable-scheduler`; verifica 58 WO / 557 Job Card (a cura di Gian)
+2. Chiarire esposizione web dello staging (nginx / reverse proxy / `dns_multitenant`)
+3. Scrivere lo **script di simulazione** (file completo, solo staging): avanzamento T08 all'80-90% nel
+   passato, time log retrodatati, scostamenti realistici
+4. Report tempi ciclo planned vs actual e costi (indicativi: servono hour rate e prezzi di prova)
+
+### Priorità 7 — T08 (parcheggiata, alla ripresa)
+- Riallineare WO e Job Card T08 ai tempi TT (ripianifica la T08); verificare 581 vs 557 Job Card
+
+### Dopo
+- Traduzione finale in inglese delle etichette; connettore SAP in scrittura (ordini)
+- Motore APS; cascata ritardi tra WO padre/figlio; vista "coda per postazione"
+- Codifica articoli neutra per le commesse future; layout 22 postazioni (TO-BE del 9/09)
+
+---
+
+## 🔧 APPENDICE TECNICA — dettagli del 25/08/2026 ancora validi
+Recuperati in sessione 23 da `Cowork_Progetto_T080100.md` e `MEMORIA_SESSIONE_T08-0100.md` (OneDrive
+`12_Memorie`, poi spostati in `Old`). Il resto di quei file è superato (postazioni a capacità 1, BOM
+Operation vuote, 57 WO, modulo Subcontracting).
+
+### Correzione BOM T08 (25/08/2026)
+- In `BOM-T08-0100-P2105-001` (P2106, P2107) e `BOM-T08-0100-P2109-001` (P2110, P2111) le quantità
+  erano 6 anziché 1 → corrette a **qty = 1** via SQL su `tabBOM Item` (qty e stock_qty)
+- WO ricreati con la quantità corretta (36 → 6): `MFG-WO-2026-00492-1` (P2106), `00491-1` (P2107),
+  `00488-1` (P2110), `00489-1` (P2111)
+
+### Script sui Work Order
+- Server Script **`WO Default WIP Warehouse`** (DocType Event, Before Submit, Work Order) — imposta il WIP
+  anche sui WO T09:
+```python
+if not doc.wip_warehouse:
+    doc.wip_warehouse = "Goods In Transit - Rema"
+```
+- Server Script API **`submit_all_draft_wo`** + Client Script **"WO List Submit All Draft"** (lista Work Order,
+  pulsante "Submit All Draft" con conferma). ⚠️ Sottomette **tutti** i WO in bozza: oggi includerebbe i 12 WO
+  P4000/P5000 T09 tenuti in bozza apposta → non usarlo finché Simone non risponde
+```python
+wos = frappe.get_all("Work Order", filters={"status": "Draft"}, fields=["name"])
+count = 0
+errors = []
+for wo in wos:
+    try:
+        doc = frappe.get_doc("Work Order", wo.name)
+        doc.submit()
+        frappe.db.commit()
+        count += 1
+    except Exception as e:
+        errors.append({"wo": wo.name, "error": str(e)})
+frappe.response["message"] = {"submitted": count, "errors": errors}
+```
+- Abilitazione Server Script: `bench set-config -g server_script_enabled true && bench restart`
+
+### Magazzini ERPNext
+| Magazzino | Uso |
+|---|---|
+| Raw Materials WH - Rema | materie prime |
+| Sub-Assembly & Parts WH - Rema | sotto-assiemi (anche `sub_assembly_warehouse` dei Production Plan) |
+| Finished Products WH - Rema | prodotti finiti |
+| Goods In Transit - Rema | WIP dei Work Order |
+
+### Query SQL di servizio (MariaDB)
+```sql
+-- bom_no vuoti su componenti non materia prima
+SELECT bi.name, bi.item_code, bi.bom_no, bi.parent
+FROM `tabBOM Item` bi JOIN `tabBOM` b ON b.name = bi.parent
+WHERE b.is_active = 1 AND bi.item_code NOT LIKE '001-%%' AND (bi.bom_no IS NULL OR bi.bom_no = '');
+
+-- correzione bom_no (dopo un reimport)
+UPDATE `tabBOM Item` bi
+JOIN `tabBOM` b ON b.name = bi.parent
+JOIN `tabBOM` bsub ON bsub.item = bi.item_code AND bsub.is_active = 1 AND bsub.is_default = 1
+SET bi.bom_no = bsub.name
+WHERE b.is_active = 1 AND bi.item_code NOT LIKE '001-%%' AND (bi.bom_no IS NULL OR bi.bom_no = '');
+```
+(in `frappe.db.sql` il `%` va raddoppiato come sopra; in un client SQL usare `'001-%'`)
+
+### Production Plan in v16
+"Include Exploded Items" non esiste più. Procedura da interfaccia: Production Plan dalla Sales Order →
+tab **Sub Assembly Items** → **Get Sub Assembly Items** → **Make Work Orders**. Da script (usato per la T09):
+`pp.get_sub_assembly_items()` prima del submit, poi `pp.make_work_order()` (crea WO in bozza).
 
 ---
 
 ## 📌 REGOLE OPERATIVE CONSOLIDATE
 
 **Documenti**
-- Si lavora **solo** in `01_Documentazione`, che contiene una sola versione per famiglia (ora su SharePoint: `Clienti/Remazel/Progetti/Remazel-Combustion`)
+- Si lavora **solo** in `01_Documentazione`, che contiene una sola versione per famiglia (su SharePoint: `Clienti/Remazel/Progetti/Remazel-Combustion`)
 - Prima di consegnare: `censimento_remazel.py` dice se qualcosa è fuori standard
 - Ogni variante deve avere l'identificativo di versione nel nome: mai sovrascrivere senza incrementare
 - Il campo `Documento` della tabella info deve coincidere col nome file reale
@@ -892,13 +1648,24 @@ Connected App + App registration Entra ID per `noreply@remazel.com` (dettagli in
 - `bench` si lancia da `/home/frappe-user/frappe-bench`; in SSH l'host è `combustionerp.remazel.com`
 - Script lunghi: file compresso gzip+base64 → `wc -l` → `exec(open(...).read())` in console; niente `%cpaste` / `--`
 - Negli script niente lambda né comprehension: solo cicli espliciti
+- Server Script (sandbox RestrictedPython): niente `import`, accesso per attributo (`frappe.utils.X`)
+- Aggiornando script via console, generare il codice con `repr()` per evitare errori di escaping
 - `frappe.db.set_value(..., update_modified=False)` sui documenti submitted; mai `doc.save()`
 - Dopo DELETE/UPDATE in console: `frappe.db.commit()` prima di rileggere, altrimenti lo snapshot MariaDB non vede i dati creati dal web server
 - Prima di scrivere su un doctype, verificare tipo e nome reale dei campi (`frappe.get_meta`), non dedurli
 - Dati inventati o provvisori sempre etichettati in modo inequivocabile (`PLACEHOLDER-`, `99-9999x`, "SEGNAPOSTO")
 - `allow_negative_stock` resta a 1: non riportarlo a 0 senza conferma esplicita di Gian
 
+**Memoria**
+- Copia principale: `12_Memorie/CONTESTO_PROGRESSIVO_ERPNext.md` in **OneDrive**. A fine sessione la
+  stessa versione va in **tutte e tre** le posizioni: OneDrive, Project Cowork e repo GitHub `AI-Project`
+  (il repo si aggiorna anche durante la sessione). Prima di iniziare, verificare quale copia è la più
+  recente (data e dimensione) e partire da quella
+- Le versioni superate vanno in `12_Memorie/Old`, non in altre cartelle
+- Una sola sequenza di sessioni, in ordine cronologico, qualunque sia lo strumento (Cowork, Claude
+  Code locale o cloud): prima di aggiungere una sessione, verificare l'ultimo numero usato
+
 ---
 
-*Ultimo aggiornamento: **Sessione 19** — 27 settembre 2026 (standard documentale unico docx-startit, docx-remazel derivata, passaggio a Claude Code locale)*
-*⚠️ A fine ogni sessione: aggiornare questo file in `12_Memorie` (copia principale in OneDrive) aggiungendo la sezione della sessione.*
+*Ultimo aggiornamento: **Sessione 23** — 5 ottobre 2026 (riallineamento della memoria: copie divergenti, parti superate rimosse, Fronte ERPNext / Decisioni / Task riscritti. Sessione 22 del 02-03/10: carico e pianificazione T09, tempi esterni TT, expediting e scelta B con SAP)*
+*⚠️ A fine ogni sessione: aggiornare questo file in OneDrive `12_Memorie`, nel Project Cowork e nel repo, aggiungendo la sezione della sessione.*
