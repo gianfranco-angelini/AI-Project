@@ -799,64 +799,172 @@ con il flussaggio dentro Qualità). Da confermare con Simone quale dei due vale.
 
 ---
 
-## 🖥️ FRONTE ERPNEXT — stato al 27/09/2026
+## SESSIONE 20 — Verifica T09 a sistema e pulizia di WO e Job Card del T08 (20/10/2026)
+
+Sessione in Claude Code **cloud** (branch `claude/awesome-planck-8vao9v`). Comandi eseguiti da Gian
+in SSH su `cs-erp01`, come `frappe-user`, dalla console di bench. Backup del sito fatto prima di
+ogni eliminazione.
+
+⚠️ **Lacuna di registrazione 28/09 – 19/10**: in questo periodo, in altre chat, sono stati creati
+Project, Sales Order, Work Order e Job Card del T09 (02/10) e sono state completate in blocco 50 Job
+Card T09 (09/10). Qui manca anche l'esito della riunione del 29/09. Da recuperare e registrare.
+
+### 1. Stato T09-0100 verificato a sistema
+| Oggetto | Valore |
+|---|---|
+| Project | **PROJ-0002** "T09-0100 ASSY LINER COMPLETE", Open, buffer 5 gg, fine 30/11/2027, deadline interna 25/11/2027 |
+| Sales Order | **SAL-ORD-2026-00002**, submitted, `po_no = 99-99998` (segnaposto) |
+| Righe SO | 6 righe `T09-0100-A0001`: 10 il 26/02, 20 il 30/04, 20 il 30/06, 20 il 31/08, 20 il 29/10, 10 il 30/11/2027 → **100 pezzi** |
+| Work Order | **348**, tutti submitted: 31 In Process, 317 Not Started. 58 WO per consegna, come la struttura T08 |
+| Job Card | **3.330**: 3.280 Open, 50 Completed |
+| Codici T08 riusati | 43 codici `T08-0100-Pxxxx` con **WO propri su PROJ-0002** (7 WO a codice, 14 per P1600): regola di tracciabilità rispettata |
+| Controlli | 0 WO senza project o Sales Order, 0 WO in Draft |
+| Task | 42 su PROJ-0002 |
+
+Gli articoli sul Sales Order sono `T08-0100-A0001` e `T09-0100-A0001`, non `T08-0100` / `T09-0100`.
+
+### 2. Anomalie T09 emerse (da decidere)
+**a) Job reali non scritti**: `po_no` è ancora `99-99999` (SO-00001) e `99-99998` (SO-00002).
+Proposta in attesa di conferma: **24-19006** sul T08, **26-19008** sul T09. Il campo è modificabile
+anche a documento submitted.
+
+**b) Prime due consegne in ritardo** (WO top-level `T09-0100-A0001`, confronto tra
+`planned_end_date` e `expected_delivery_date`):
+
+| WO | Qtà | Consegna | Fine pianificata | Scarto |
+|---|---|---|---|---|
+| MFG-WO-2026-01210 | 10 | 26/02/2027 | 26/03/2027 | **+28 gg** |
+| MFG-WO-2026-01268 | 20 | 30/04/2027 | 08/06/2027 | **+39 gg** |
+| MFG-WO-2026-01326 | 20 | 30/06/2027 | 23/06/2027 | −7 gg |
+| MFG-WO-2026-01384 | 20 | 31/08/2027 | 24/08/2027 | −7 gg |
+| MFG-WO-2026-01442 | 20 | 29/10/2027 | 19/10/2027 | −10 gg |
+| MFG-WO-2026-01500 | 10 | 30/11/2027 | 19/11/2027 | −11 gg |
+
+La deadline interna del Project guarda solo l'ultima consegna, quindi i due ritardi non emergono:
+con più consegne il buffer va gestito per riga di Sales Order (o per WO top-level), non per Project.
+
+**c) 50 Job Card T09 Completed**, non da lavoro reale:
+- create il 02/10 da `Administrator` insieme ai WO, chiuse il **09/10 tra le 18:48:00 e le
+  18:48:04**, sempre da `Administrator`: operazione massiva
+- sono sempre le fasi 1 e 2 del ciclo (**Lavorazione Esterna**, poi **Controllo Qualità**) su
+  25 WO di tutte e 6 le consegne; 2 time log ciascuna, 100 in totale
+- `is_subcontracted = 0`: non è il pilota del conto lavoro C1
+- tempi apparentemente ricavati dai pianificati (es. 9.007 min per 10 pezzi esterni)
+- probabile origine dei 31 WO "In Process"
+
+Da chiarire chi le ha chiuse e se vanno tenute o annullate. Query di verifica sulle Stock Entry
+preparata, non ancora eseguita.
+
+### 3. Pulizia T08-0100: eliminati WO, Job Card, Production Plan e Material Request
+**Richiesta di Gian**: togliere WO e Job Card del T08 lasciando intatto il T09, valutando prima cosa
+è condiviso.
+
+**Inventario a sola lettura** (`inventario_t08.py`): scansione di tutti i campi Link verso Work
+Order, Job Card, Project, Sales Order e Production Plan. Il T08 risultava **completamente isolato**:
+- 58 WO (In Process, submitted, **0 Stock Entry**), 557 Job Card (Open, **docstatus 0**, 0 time log)
+- Production Plan `MFG-PP-2026-00001`, submitted, con soli WO PROJ-0001 e solo SO-00001
+- Material Request `MAT-MR-2026-00002` (Material Transfer) e `00003` (Purchase), entrambe Draft,
+  senza PO né Stock Entry a valle
+- Nessun incrocio con il T09: 0 WO T09 dallo stesso PP, 0 JC T09 su WO T08, 0 dipendenze Task tra
+  project diversi
+
+**Decisioni**:
+- Eliminati: Job Card, Material Request, Work Order, Production Plan del T08
+- **Tenuti**: BOM T08 (il T09 usa i codici T08), articoli, Workstation, script, **21 Task di PROJ-0001**,
+  **SAL-ORD-2026-00001**, **PROJ-0001**. Decisione su Task, SO e Project rimandata
+- Filtro sempre per `project = 'PROJ-0001'`, mai per codice articolo: i 43 codici T08 hanno WO anche
+  su PROJ-0002
+
+**Esecuzione** (`elimina_t08.py`, prima a secco con `DRY_RUN = True`, poi reale):
+1. `bench --site site1.local backup --with-files` ✅
+2. 557 Job Card eliminate
+3. 2 Material Request eliminate
+4. 58 WO: cancel e poi delete
+5. Production Plan `MFG-PP-2026-00001`: cancel e poi delete
+
+**Verifica finale**: WO T08 0, JC T08 0, PP e MR non più presenti, Task T08 21, SO-00001 e PROJ-0001
+presenti. **T09 invariato**: 348 WO, 3.330 JC, 42 Task. **0 errori**.
+I documenti eliminati sono recuperabili da **Deleted Document**, oltre che dal backup.
+
+### 4. Lezioni operative
+- La console di bench lavora in `frappe-bench/sites`: nei `exec(open(...))` usare il **percorso
+  assoluto** dello script
+- Se le funzioni dello script si richiamano tra loro: `exec(open(...).read(), globals())`, altrimenti
+  `NameError` (le funzioni finiscono in uno spazio di nomi locale)
+- I blocchi heredoc `cat > file <<'EOF'` vanno incollati nella **shell**, non nella console Python.
+  L'eco confuso del terminale dopo l'incolla è normale: fanno fede `wc -l` e `py_compile`
+- Gli script che eliminano partono sempre con `DRY_RUN = True` e controlli che fermano tutto se i
+  numeri non corrispondono all'inventario o se ci sono legami con altri project
+
+---
+
+## 🖥️ FRONTE ERPNEXT — stato al 20/10/2026
 
 ### Configurazione a regime
-- **58 Work Order** "In Process", **581 Job Card** (dato 01/09), 130 delle quali su Lavorazione Esterna
-- Ciclo **v6** caricato; capacity planning attivo (`disable_capacity_planning=0`)
+- **T08-0100 (PROJ-0001)**: WO, Job Card, Production Plan e Material Request **eliminati** il 20/10.
+  Restano BOM (ciclo v6), SAL-ORD-2026-00001, PROJ-0001 e i 21 Task
+- **T09-0100 (PROJ-0002)**: **348 Work Order** (31 In Process, 317 Not Started), **3.330 Job Card**
+  (50 Completed in blocco il 09/10, da chiarire), 42 Task, 6 consegne da 26/02 a 30/11/2027
+- Capacity planning attivo (`disable_capacity_planning=0`)
 - 613 BOM Operation con descrizione parlante; Server Script `JobCard_Descrizione_Fase` e `JobCard_Documenti_Tecnici`
-- Backward scheduling dalla scadenza 18/12/2026; deadline interna PROJ-0001 al 13/12/2026 (buffer 5 gg)
+- Deadline interna PROJ-0002 al 25/11/2027 (buffer 5 gg); prime due consegne T09 pianificate in ritardo
 - **Capacità reparti reale**: Saldatura 7, Molatura 5, Montaggio 5, Controllo Qualità 3, Lavorazioni Meccaniche 1
 - **21 Employee + 21 User** operatori con ruolo `Operatore di Reparto` e User Permission per reparto
 - **HTTPS attivo** su `combustionerp.remazel.com` con certificato wildcard `*.remazel.com`
 - `allow_negative_stock = 1` per scelta: si lavora in negativo, nessun carico fittizio
 - Server Script API `Simula_Ritardo_JobCard` / `Applica_Ritardo_JobCard`
 - Infrastruttura documenti tecnici (2b) e matricole segnaposto + template saldature (2d) pronte
+- Script sul server in `/home/frappe-user/frappe-bench`: `verifica_t08_t09.py`, `inventario_t08.py`,
+  `elimina_t08.py` (da lasciare con `DRY_RUN = True`)
 
-### Dati per il go-live (30/09/2026)
+### Dati per il go-live
 | Dato | Stato |
 |---|---|
 | Codici articolo microfusi | ✅ chiuso per decisione: restano `F000` e i codici attuali |
 | Prezzi fornitore reali | ✅ chiuso per decisione: restano i fittizi (1000,00 sui 4 microfusi) |
 | Anagrafica dipendenti | ✅ caricata (21 persone) |
 | Postazioni e capacità reparti | ✅ applicate (dato Simone del 25/09) |
-| Numeri Job reali | ⏳ segnaposto `99-99999` su `po_no`, da sostituire |
+| Numeri Job reali | ⏳ ancora `99-99999` (SO-00001) e `99-99998` (SO-00002): proposti 24-19006 / 26-19008 |
 | Matricole reali | ⏳ segnaposto `PLACEHOLDER-T08-xxxx` |
 | Documenti tecnici (disegni, WPS, controlli) | ⏳ non forniti; infrastruttura pronta |
 
 ---
 
-## 🎯 TASK APERTI / PROSSIMA SESSIONE (aggiornato al 27/09/2026)
+## 🎯 TASK APERTI / PROSSIMA SESSIONE (aggiornato al 20/10/2026)
+
+### Priorità 0 — Decisioni aperte dalla sessione 20
+- `po_no`: confermare **24-19006** su SAL-ORD-2026-00001 e **26-19008** su SAL-ORD-2026-00002, poi scriverli con `frappe.db.set_value(..., update_modified=False)`
+- **50 Job Card T09 Completed** del 09/10: capire chi le ha chiuse; eseguire la query sulle Stock Entry di PROJ-0002; decidere se tenerle o annullarle (riapertura JC e WO a "Not Started")
+- **Consegne 1 e 2 T09** in ritardo di +28 e +39 gg: segnalarle a Simone; valutare il buffer per riga di Sales Order invece che per Project
+- **Task PROJ-0001, SAL-ORD-2026-00001, PROJ-0001**: tenere o eliminare
+- Recuperare e registrare le attività 28/09-19/10 (riunione del 29/09, creazione T09 del 02/10, completamento JC del 09/10)
 
 ### Priorità 1 — Obiettivo 3: conto lavoro per fase (strada C1)
 - Eseguire `pilota_1_lettura.py` e analizzare come la v16 gestisce `is_subcontracted` sulla Job Card (articolo che esce, articolo servizio, magazzino fornitore, aggancio della fase successiva al rientro)
 - Prerequisiti del pilota: magazzino presso fornitore; normalizzare "A.M.C. CONTROL" su "A.M.C. CONTROL SRL"; verificare se "H.T. SRL" e "H.T.S. SRL" sono la stessa azienda; assegnare il fornitore alla fase che ne è priva
-- Pilota su una Job Card esterna in mezzo al ciclo (A.M.C. CONTROL SRL), flusso completo documentato passo per passo
-- Se regge: estensione alle 134 fasi via script, report dei rientri in ritardo
+- Pilota su una Job Card esterna in mezzo al ciclo (A.M.C. CONTROL SRL), ora **su T09** (il T08 non ha più WO), flusso completo documentato passo per passo
+- Se regge: estensione alle fasi esterne via script, report dei rientri in ritardo
 
 ### Priorità 2 — SMTP Microsoft 365 (OAuth)
 Connected App + App registration Entra ID per `noreply@remazel.com` (dettagli in sessione 18, punto 5).
 
 ### Priorità 3 — T09-0100
-- Verificare se il ciclo rinviato il 22/09 risolve le anomalie note (residuo codici T08, duplicati, `*CONFERMARE GRUPPO*`)
-- Import con i componenti identici a T08 referenziati con il **codice T08** (regola di Simone)
-- Project dedicato all'Equipment T09-0100, Sales Order con `po_no = 99-99998`, Work Order propri anche per i componenti condivisi
-- Usare le 6 date di consegna per lo scheduling
-- Preparare la riunione di **martedì 29/09** con Simone e Sergey; analizzare prima `T09-0100 Ciclo e fasi_26-19008.xlsx` (allegato alla mail del 22/09)
+- ✅ Project dedicato (PROJ-0002), Sales Order con `po_no = 99-99998`, 6 consegne, WO propri anche per i componenti condivisi (verificato in sessione 20)
+- Verificare con Simone che l'import abbia risolto le anomalie note del ciclo (residuo codici T08, duplicati, `*CONFERMARE GRUPPO*`)
 - Riconciliare con Simone le postazioni: mail 22/09 (Molatura 6, Qualità 2 + Flussaggio 1) vs chiarimento 25/09 applicato a sistema
+- Rendicontazione dei tempi su una parte del processo T09 (richiesta di Romeo per la riunione del 29/09)
 
 ### Priorità 4 — Correzioni tecniche emerse in sessione 18
 - Server Script `Before Save` su Project per ricalcolare `custom_deadline_interna` quando cambia il buffer
-- Verificare che `po_no = 99-99999` sia stato davvero scritto su `SAL-ORD-2026-00001`
+- ✅ `po_no = 99-99999` su `SAL-ORD-2026-00001` verificato in sessione 20
 - Pulsanti in interfaccia (Client Script su Job Card) per simulare e applicare il ritardo; provare la chiamata HTTP agli endpoint
 - Validare con Simone il template "Controllo Saldature per Matricola" e la regola "Quality Inspection per matricola"
 - Comunicare a Simone che anagrafica e postazioni sono a sistema
 
 ### Priorità 5 — Documentazione (ordine e naming definiti in sessione 19, punto 5)
-- **Prima di tutto**: materiale per la riunione del 29/09 (validazione ciclo T09-0100)
 - Tutti i documenti in grafica `docx-startit`, naming `{Tipo}_{Oggetto}_Remazel_B{N}`
-- **Guida Produzione → B4**: rimuovere i riferimenti a Mario Rossi / `HR-EMP-00001` e ai codici C0900/C0901; nuovo flusso operatore con login personale e filtro automatico per reparto; divisione di una fase tra interno ed esterno (più Job Card con quantità parziali); numeri aggiornati (58 WO, 581 Job Card)
-- **Guida Concettuale → B7**: aggiornare la tabella "azioni prima del go-live"; spiegare `production_capacity`, buffer e deadline interna
+- **Guida Produzione → B4**: rimuovere i riferimenti a Mario Rossi / `HR-EMP-00001` e ai codici C0900/C0901; nuovo flusso operatore con login personale e filtro automatico per reparto; divisione di una fase tra interno ed esterno (più Job Card con quantità parziali); numeri aggiornati (**T09: 348 WO, 3.330 Job Card**; T08 senza WO dal 20/10)
+- **Guida Concettuale → B7**: aggiornare la tabella "azioni prima del go-live"; spiegare `production_capacity`, buffer e deadline interna (anche il limite con più consegne)
 - Documentare le nuove funzioni: simulazione/applicazione ritardo (1c), documenti tecnici (2b), matricole e controllo saldature (2d)
 - Punti di contenuto ancora aperti dalla sessione 17: titoli di sezione mancanti, voce d'indice spezzata, accenti mancanti, campi persi nelle tabelle info
 - Recuperare e registrare le attività 16-24/09 non documentate (Gantt, Task, precedenze)
@@ -897,8 +1005,11 @@ Connected App + App registration Entra ID per `noreply@remazel.com` (dettagli in
 - Prima di scrivere su un doctype, verificare tipo e nome reale dei campi (`frappe.get_meta`), non dedurli
 - Dati inventati o provvisori sempre etichettati in modo inequivocabile (`PLACEHOLDER-`, `99-9999x`, "SEGNAPOSTO")
 - `allow_negative_stock` resta a 1: non riportarlo a 0 senza conferma esplicita di Gian
+- Eliminazioni sempre filtrate per `project`, mai per prefisso del codice articolo (i codici T08 sono usati anche dal T09)
+- Prima di eliminare: inventario a sola lettura dei Link, backup `bench --site site1.local backup --with-files`, script con `DRY_RUN = True`
+- In console: percorso assoluto negli `exec(open(...))` e `exec(..., globals())` se le funzioni si richiamano tra loro
 
 ---
 
-*Ultimo aggiornamento: **Sessione 19** — 27 settembre 2026 (standard documentale unico docx-startit, docx-remazel derivata, passaggio a Claude Code locale)*
+*Ultimo aggiornamento: **Sessione 20** — 20 ottobre 2026 (verifica T09 a sistema, eliminazione di WO, Job Card, Production Plan e Material Request del T08)*
 *⚠️ A fine ogni sessione: aggiornare questo file in `12_Memorie` (copia principale in OneDrive) aggiungendo la sezione della sessione.*
