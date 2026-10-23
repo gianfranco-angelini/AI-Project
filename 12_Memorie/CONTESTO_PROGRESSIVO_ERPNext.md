@@ -799,6 +799,80 @@ con il flussaggio dentro Qualità). Da confermare con Simone quale dei due vale.
 
 ---
 
+## SESSIONE 20 — Registro punti di sviluppo di Simone e carico Job Card esterne (23/10/2026)
+
+Sessione in Claude Code **cloud** (repo `gianfranco-angelini/AI-Project`, branch
+`claude/quirky-ramanujan-e6ruai`). Script in `Remazel-Combustion/script/`. Comandi eseguiti da Gian
+in `bench --site site1.local console`, output verificato a ogni passo.
+
+⚠️ Tra il 27/09 e il 23/10 sono state fatte attività **non registrate** in questo file. Trovate a
+sistema: sezione **Conto lavoro** sulla Job Card (`custom_fornitore` Link, `custom_ordine_sap`,
+`custom_data_promessa`, `custom_stato_cl` Select "Da inviare / Presso fornitore / Rientrato",
+`custom_data_uscita` "Uscita (da Inizia)", `custom_rientro_previsto`, `custom_rientro_effettivo`
+"Rientro (da Completa)"), `custom_consegna_set`, `custom_production_plan`; Server Script
+`JobCard_Conto_Lavoro` (Before Save) e `JobCard_Conto_Lavoro_Submitted`, `JobCard_Fornitore` (Before
+Insert), `Task_Progress_JobCard_Submit`, API `Task_Progress_API`; Client Script `Gantt_Remazel_Job_Card`
+(List) e `Job Card-Ritardo` (Form); Workstation **Lavorazioni Meccaniche** (capacità 1); PROJ-0002.
+Job Card aperte al 23/10: CQ 1751, Lavorazione Esterna 749, Saldatura 270, Molatura 258,
+Lavorazioni Meccaniche 144, Montaggio 108. Da ricostruire con Gian.
+
+### 1. Registro punti di sviluppo software (Excel di Simone, 3 righe aperte)
+| ID | Richiesta | Esito |
+|---|---|---|
+| 1 | Spostare una lavorazione interna come esterna, anche all'ultimo minuto (Alta) | **Nativo**: `workstation` modificabile sulla Job Card in bozza; la sezione Conto lavoro si attiva con Workstation = Lavorazione Esterna. Vincolo trovato: fasi non iniziali bloccate dalla sequenza (punto 4) |
+| 2 | Utente a nome di Simone a cui assegnare le attività esterne (Media; testo troncato) | Employee **HR-EMP-00023** collegato a `simone.sacchi@remazel.com` con `frappe.db.set_value` (il `save()` fallisce: `gender` e `date_of_birth` obbligatori vuoti). Nessuna User Permission creata |
+| 3 | Descrizione fase come prima colonna della lista Job Card; codice ricercabile (Alta) | Property Setter `title_field = custom_descrizione_fase`, `search_fields = production_item,item_name,work_order,custom_descrizione_fase`, `production_item.in_standard_filter = 1`; `custom_descrizione_fase.in_list_view = 0` (è già la colonna titolo) |
+
+Script: `registro_sviluppo_1_lettura.py`, `registro_sviluppo_2_modifica.py` (con istruzioni di ripristino in testa).
+
+### 2. Mail di Simone del 23/10 (cc Fabio Picco)
+- "Job cards da caricare": allegato `Job Card da caricare_23102026.xlsx` (120 Job Card in 20 gruppi
+  codice RZL / quantità / data uscita / data ingresso) e richiesta urgente di poter passare una Job
+  Card da interna a esterna: **per saturazione delle risorse interne si manda fuori molto lavoro**
+- "R: Job cards da caricare": PO-JOB08618 e PO-JOB05835 avviate da lui la mattina, da correggere con le
+  durate del file
+- Nel file alcuni codici non coincidono col sistema (P3200 è T08-0100, P3203 è T08-0200, P2106 è
+  T08-0100): fa fede il numero di Job Card
+
+### 3. Carico Job Card esterne — eseguito
+- **Capacità Workstation "Lavorazione Esterna": 50 → 999** (decisione Gian). Con 50 il controllo di
+  sovrapposizione di ERPNext bloccava il carico (fino a 69 Job Card esterne contemporanee a settembre)
+  e ogni salvataggio successivo di queste Job Card
+- Metodo: time log unico per Job Card, uscita 08:00 → rientro 17:00, `completed_qty = for_quantity`,
+  **senza employee**; `save()` in bozza, nessun submit (decisione Gian). I Server Script ricalcolano
+  Uscita, Rientro effettivo e Stato CL = **Rientrato**
+- **77 Job Card caricate**: 71 di fase iniziale (`jc_esterne_2_carica.py`) + 6 di
+  T08-0100-P6000-10SA (`jc_esterne_3_sequenza.py`). Comprese PO-JOB08618 e PO-JOB05835 (01/09 → 17/09;
+  rimossi i log di pochi secondi e la riga vuota)
+- Eccedenze non caricate (quantità file > fabbisogno): P1102 104/100, P2113 624/600, P3200 105/100,
+  P3301 105/100, P2114 624/600
+- **6 gruppi parziali NON caricati, in attesa di Simone**: P1300-10LT 67/100, P1600-10LT 100/700,
+  P1600-10SA 108/700 (saldatura interna diventata esterna, fornitore non indicato),
+  T08-0200-P3203-10RX 3/10, T08-0200-P3203-10SA 87/100 (fornitore non indicato), P2106-10LT 300/600
+- Dati del file convertiti in `jc_esterne_23102026_dati.py` (date dal seriale Excel)
+
+### 4. Vincolo di sequenza delle fasi (OperationSequenceError)
+- ERPNext (`validate_sequence_id`, in validate) rifiuta quantità completate su una Job Card se le fasi
+  con `sequence_id` minore dello stesso Work Order non risultano completate. Una fase risulta completata
+  **solo con il submit** della sua Job Card: le Job Card in bozza "Rientrato" non contano
+- Caso reale: P6000-10SA (seq 3) bloccata da seq 1 (taglio, caricato ma in bozza) e seq 2 (QC
+  dimensionale, mai registrato). I cicli hanno molte fasi QC intermedie: **lo stesso blocco colpirà il
+  reparto** su ogni fase registrata fuori ordine
+- Soluzione adottata (opzione B, mirata): `sequence_id = 0` **sulla sola Job Card** (la colonna è
+  NOT NULL: `None` dà IntegrityError; con 0 il controllo non si applica). Work Order Operation e BOM
+  invariati. Verificato che `JobCard_Avviso_Precedenze` (precedenze di distinta, non di fase) e il
+  Gantt non usano `sequence_id`. Applicata alle 6 Job Card P6000-10SA (seq originale 3)
+- WO di riferimento `MFG-WO-2026-01214`: `transfer_material_against = Work Order`, stato Not Started
+
+### Trappole tecniche (sessione 20)
+- `Employee.save()` fallisce su anagrafiche importate senza `gender`/`date_of_birth`: usare `frappe.db.set_value`
+- Collegando un Employee a un User, `create_user_permission=1` creerebbe una User Permission che limita la visibilità
+- `sequence_id` su Job Card è NOT NULL: azzerare con 0, non con None
+- Con `GRUPPI` in file separato: lanciare **prima** il file dati, poi lo script
+- Se `echo | base64 -d | gunzip` non viene rieseguito, in console gira la versione vecchia: verificare sempre con `wc -l` o `!grep` (in IPython il prefisso `!` esegue comandi di shell)
+
+---
+
 ## 🖥️ FRONTE ERPNEXT — stato al 27/09/2026
 
 ### Configurazione a regime
@@ -806,7 +880,7 @@ con il flussaggio dentro Qualità). Da confermare con Simone quale dei due vale.
 - Ciclo **v6** caricato; capacity planning attivo (`disable_capacity_planning=0`)
 - 613 BOM Operation con descrizione parlante; Server Script `JobCard_Descrizione_Fase` e `JobCard_Documenti_Tecnici`
 - Backward scheduling dalla scadenza 18/12/2026; deadline interna PROJ-0001 al 13/12/2026 (buffer 5 gg)
-- **Capacità reparti reale**: Saldatura 7, Molatura 5, Montaggio 5, Controllo Qualità 3, Lavorazioni Meccaniche 1
+- **Capacità reparti reale**: Saldatura 7, Molatura 5, Montaggio 5, Controllo Qualità 3, Lavorazioni Meccaniche 1; **Lavorazione Esterna 999** (dal 23/10, prima 50)
 - **21 Employee + 21 User** operatori con ruolo `Operatore di Reparto` e User Permission per reparto
 - **HTTPS attivo** su `combustionerp.remazel.com` con certificato wildcard `*.remazel.com`
 - `allow_negative_stock = 1` per scelta: si lavora in negativo, nessun carico fittizio
@@ -826,7 +900,15 @@ con il flussaggio dentro Qualità). Da confermare con Simone quale dei due vale.
 
 ---
 
-## 🎯 TASK APERTI / PROSSIMA SESSIONE (aggiornato al 27/09/2026)
+## 🎯 TASK APERTI / PROSSIMA SESSIONE (aggiornato al 27/09/2026; integrazione sessione 20 del 23/10/2026)
+
+### Priorità 0 — Da sessione 20 (Simone, urgente)
+- Inviare a Simone l'esito del carico e le domande sui **6 gruppi parziali** (su quali Job Card registrare la quantità; fornitore delle due saldature esterne); poi caricarli con `jc_esterne_2_carica.py` / `jc_esterne_3_sequenza.py` adattati
+- **Decidere con Simone la regola sulla sequenza**: azzerare `sequence_id` su tutte le Job Card aperte (fasi registrabili fuori ordine) oppure flusso con submit in ordine di fase. Senza decisione il reparto si blocca alla prima fase non iniziale
+- Simone che usa il proprio Employee su più Job Card esterne contemporanee rischia l'errore di sovrapposizione: indicargli di registrare le esterne senza dipendente (o rivedere il controllo)
+- Completare `gender` e `date_of_birth` sugli Employee importati (almeno HR-EMP-00023), altrimenti non si salvano da interfaccia
+- Registro sviluppo: compilare "Note interne IT" e stato SVILUPPATO per i punti 1-3; completare il testo troncato del punto 2
+- Ricostruire e registrare le attività 27/09-23/10 non documentate (conto lavoro su Job Card, Gantt, PROJ-0002, Lavorazioni Meccaniche)
 
 ### Priorità 1 — Obiettivo 3: conto lavoro per fase (strada C1)
 - Eseguire `pilota_1_lettura.py` e analizzare come la v16 gestisce `is_subcontracted` sulla Job Card (articolo che esce, articolo servizio, magazzino fornitore, aggancio della fase successiva al rientro)
@@ -900,5 +982,5 @@ Connected App + App registration Entra ID per `noreply@remazel.com` (dettagli in
 
 ---
 
-*Ultimo aggiornamento: **Sessione 19** — 27 settembre 2026 (standard documentale unico docx-startit, docx-remazel derivata, passaggio a Claude Code locale)*
+*Ultimo aggiornamento: **Sessione 20** — 23 ottobre 2026 (registro sviluppo di Simone punti 1-3, carico 77 Job Card esterne, capacità Lavorazione Esterna 999, vincolo sequenza fasi)*
 *⚠️ A fine ogni sessione: aggiornare questo file in `12_Memorie` (copia principale in OneDrive) aggiungendo la sezione della sessione.*
