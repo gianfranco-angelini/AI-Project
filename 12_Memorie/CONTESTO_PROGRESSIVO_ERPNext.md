@@ -1813,7 +1813,136 @@ Destinatario per funzione: **Pianificazione di produzione** (nessun nome). Organ
 
 ---
 
-## 🖥️ FRONTE ERPNEXT — stato al 16/10/2026
+## SESSIONE 27 — Verifica T09 a sistema e pulizia di WO e Job Card del T08 (20/10/2026)
+
+> **Nota di riallineamento (sessione 28, 23/10)**: sessione svolta sul branch `claude/awesome-planck-8vao9v` partendo
+> dalla memoria ferma alla sessione 19 (27/09), quindi registrata lì come "Sessione 20" e senza conoscere le
+> sessioni 20-26. Rinumerata **27**. Correzioni al testo che segue:
+> - la "lacuna 28/09-19/10" non esiste: è documentata nelle sessioni 20-26
+> - le **50 Job Card Completed del 09/10** sono l'**allineamento** dal file di Simone `26-19008_EG.xlsx` (sessione 24,
+>   `allineamento_fasi.py`, date e tempi STIMATI con nota in `remarks`), confermato da Gian il 16/10: **si tengono**
+> - i ritardi +28/+39 gg sono quelli **prima** dell'allineamento; dopo: set 1 **+33**, set 2 **+44** gg
+> - la consegna di ogni set ha già la propria scadenza interna (`custom_consegna_set` − buffer, usata da Simula/Applica
+>   Ritardo dal 05/10): il limite della deadline del Project riguarda solo il campo del Project
+> - il "pilota conto lavoro C1" e `pilota_1_lettura.py` sono superati dalla scelta B (03/10) e dalla modalità
+>   transitoria A (16/10)
+> - `po_no = 99-99999/99-99998` è un segnaposto voluto (sessione 22): da sostituire con i Job reali, proposta corretta
+
+Sessione in Claude Code **cloud** (branch `claude/awesome-planck-8vao9v`). Comandi eseguiti da Gian
+in SSH su `cs-erp01`, come `frappe-user`, dalla console di bench. Backup del sito fatto prima di
+ogni eliminazione.
+
+⚠️ **Lacuna di registrazione 28/09 – 19/10**: in questo periodo, in altre chat, sono stati creati
+Project, Sales Order, Work Order e Job Card del T09 (02/10) e sono state completate in blocco 50 Job
+Card T09 (09/10). Qui manca anche l'esito della riunione del 29/09. Da recuperare e registrare.
+
+### 1. Stato T09-0100 verificato a sistema
+| Oggetto | Valore |
+|---|---|
+| Project | **PROJ-0002** "T09-0100 ASSY LINER COMPLETE", Open, buffer 5 gg, fine 30/11/2027, deadline interna 25/11/2027 |
+| Sales Order | **SAL-ORD-2026-00002**, submitted, `po_no = 99-99998` (segnaposto) |
+| Righe SO | 6 righe `T09-0100-A0001`: 10 il 26/02, 20 il 30/04, 20 il 30/06, 20 il 31/08, 20 il 29/10, 10 il 30/11/2027 → **100 pezzi** |
+| Work Order | **348**, tutti submitted: 31 In Process, 317 Not Started. 58 WO per consegna, come la struttura T08 |
+| Job Card | **3.330**: 3.280 Open, 50 Completed |
+| Codici T08 riusati | 43 codici `T08-0100-Pxxxx` con **WO propri su PROJ-0002** (7 WO a codice, 14 per P1600): regola di tracciabilità rispettata |
+| Controlli | 0 WO senza project o Sales Order, 0 WO in Draft |
+| Task | 42 su PROJ-0002 |
+
+Gli articoli sul Sales Order sono `T08-0100-A0001` e `T09-0100-A0001`, non `T08-0100` / `T09-0100`.
+
+### 2. Anomalie T09 emerse (da decidere)
+**a) Job reali non scritti**: `po_no` è ancora `99-99999` (SO-00001) e `99-99998` (SO-00002).
+Proposta in attesa di conferma: **24-19006** sul T08, **26-19008** sul T09. Il campo è modificabile
+anche a documento submitted.
+
+**b) Prime due consegne in ritardo** (WO top-level `T09-0100-A0001`, confronto tra
+`planned_end_date` e `expected_delivery_date`):
+
+| WO | Qtà | Consegna | Fine pianificata | Scarto |
+|---|---|---|---|---|
+| MFG-WO-2026-01210 | 10 | 26/02/2027 | 26/03/2027 | **+28 gg** |
+| MFG-WO-2026-01268 | 20 | 30/04/2027 | 08/06/2027 | **+39 gg** |
+| MFG-WO-2026-01326 | 20 | 30/06/2027 | 23/06/2027 | −7 gg |
+| MFG-WO-2026-01384 | 20 | 31/08/2027 | 24/08/2027 | −7 gg |
+| MFG-WO-2026-01442 | 20 | 29/10/2027 | 19/10/2027 | −10 gg |
+| MFG-WO-2026-01500 | 10 | 30/11/2027 | 19/11/2027 | −11 gg |
+
+La deadline interna del Project guarda solo l'ultima consegna, quindi i due ritardi non emergono:
+con più consegne il buffer va gestito per riga di Sales Order (o per WO top-level), non per Project.
+
+**c) 50 Job Card T09 Completed**, non da lavoro reale:
+- create il 02/10 da `Administrator` insieme ai WO, chiuse il **09/10 tra le 18:48:00 e le
+  18:48:04**, sempre da `Administrator`: operazione massiva
+- sono sempre le fasi 1 e 2 del ciclo (**Lavorazione Esterna**, poi **Controllo Qualità**) su
+  25 WO di tutte e 6 le consegne; 2 time log ciascuna, 100 in totale
+- `is_subcontracted = 0`: non è il pilota del conto lavoro C1
+- tempi apparentemente ricavati dai pianificati (es. 9.007 min per 10 pezzi esterni)
+- probabile origine dei 31 WO "In Process"
+
+Da chiarire chi le ha chiuse e se vanno tenute o annullate. Query di verifica sulle Stock Entry
+preparata, non ancora eseguita.
+
+### 3. Pulizia T08-0100: eliminati WO, Job Card, Production Plan e Material Request
+**Richiesta di Gian**: togliere WO e Job Card del T08 lasciando intatto il T09, valutando prima cosa
+è condiviso.
+
+**Inventario a sola lettura** (`inventario_t08.py`): scansione di tutti i campi Link verso Work
+Order, Job Card, Project, Sales Order e Production Plan. Il T08 risultava **completamente isolato**:
+- 58 WO (In Process, submitted, **0 Stock Entry**), 557 Job Card (Open, **docstatus 0**, 0 time log)
+- Production Plan `MFG-PP-2026-00001`, submitted, con soli WO PROJ-0001 e solo SO-00001
+- Material Request `MAT-MR-2026-00002` (Material Transfer) e `00003` (Purchase), entrambe Draft,
+  senza PO né Stock Entry a valle
+- Nessun incrocio con il T09: 0 WO T09 dallo stesso PP, 0 JC T09 su WO T08, 0 dipendenze Task tra
+  project diversi
+
+**Decisioni**:
+- Eliminati: Job Card, Material Request, Work Order, Production Plan del T08
+- **Tenuti**: BOM T08 (il T09 usa i codici T08), articoli, Workstation, script, **21 Task di PROJ-0001**,
+  **SAL-ORD-2026-00001**, **PROJ-0001**. Decisione su Task, SO e Project rimandata
+- Filtro sempre per `project = 'PROJ-0001'`, mai per codice articolo: i 43 codici T08 hanno WO anche
+  su PROJ-0002
+
+**Esecuzione** (`elimina_t08.py`, prima a secco con `DRY_RUN = True`, poi reale):
+1. `bench --site site1.local backup --with-files` ✅
+2. 557 Job Card eliminate
+3. 2 Material Request eliminate
+4. 58 WO: cancel e poi delete
+5. Production Plan `MFG-PP-2026-00001`: cancel e poi delete
+
+**Verifica finale**: WO T08 0, JC T08 0, PP e MR non più presenti, Task T08 21, SO-00001 e PROJ-0001
+presenti. **T09 invariato**: 348 WO, 3.330 JC, 42 Task. **0 errori**.
+I documenti eliminati sono recuperabili da **Deleted Document**, oltre che dal backup.
+
+### 4. Lezioni operative
+- La console di bench lavora in `frappe-bench/sites`: nei `exec(open(...))` usare il **percorso
+  assoluto** dello script
+- Se le funzioni dello script si richiamano tra loro: `exec(open(...).read(), globals())`, altrimenti
+  `NameError` (le funzioni finiscono in uno spazio di nomi locale)
+- I blocchi heredoc `cat > file <<'EOF'` vanno incollati nella **shell**, non nella console Python.
+  L'eco confuso del terminale dopo l'incolla è normale: fanno fede `wc -l` e `py_compile`
+- Gli script che eliminano partono sempre con `DRY_RUN = True` e controlli che fermano tutto se i
+  numeri non corrispondono all'inventario o se ci sono legami con altri project
+
+---
+
+---
+
+## SESSIONE 28 — Riallineamento memoria dopo la sessione del 20/10 (23/10/2026)
+
+Claude Code cloud, branch `claude/clever-davinci-odhm0s`. Nessun intervento su ERPNext.
+- Trovati due branch nuovi del 20/10: `claude/exciting-davinci-8zug10` (memoria = copia OneDrive del 12/10, nessun
+  contenuto nuovo) e `claude/awesome-planck-8vao9v` (lavoro su ERPNext registrato come "Sessione 20", partito dalla
+  memoria del 27/09) → integrato qui come **Sessione 27** con nota di correzione; `MEMORIA_SESSIONE_20.md` di quel
+  branch salvata come `12_Memorie/MEMORIA_SESSIONE_27.md`
+- OneDrive `12_Memorie` ancora al **12/10** (sessione 26 e successive non copiate); Guida B2 e modulo esterne non
+  risultano in OneDrive
+- **Causa ricorrente**: le sessioni cloud nuove partono dal branch di default del repo, fermo alla sessione 19, e non
+  dal branch con la memoria aggiornata. Rimedio: unire il branch della memoria nel branch di default (o copiare
+  sempre la memoria aggiornata in OneDrive e farla leggere a inizio sessione)
+
+---
+
+## 🖥️ FRONTE ERPNEXT — stato al 23/10/2026
 
 ### Ambiente
 - **cs-erp01** (VMware, Ubuntu 24.04, 4 vCPU / 8 GB), ERPNext **16.37.0** / Frappe 16.36.1 / HRMS 16.20.1,
@@ -1826,7 +1955,7 @@ Destinatario per funzione: **Pianificazione di produzione** (nessun nome). Organ
 
 ### T09-0100 — in esercizio (PROJ-0002)
 - SAL-ORD-2026-00002, 100 liner in 6 set; Production Plan MFG-PP-2026-00002…00007 (uno per set)
-- **348 WO tutti submitted**; **3.330 Job Card** (3.306 al 05/10, differenza da spiegare), ~770 esterne
+- **348 WO tutti submitted** (al 20/10: 31 In Process, 317 Not Started); **3.330 Job Card** (3.306 al 05/10, differenza da spiegare), ~770 esterne
 - **Avanzamento allineato il 09/10** dal file di Simone `26-19008_EG.xlsx` (06/10): **50 Job Card completate** su tutti i
   set (prime fasi di taglio/calandratura + QC; esterne → "Rientrato") con **date e tempi STIMATI** (nota in
   `remarks`, da escludere dal consuntivo ore); **2 parziali** set 5 T08-0200-P3302 (PO-JOB07996 10LT, PO-JOB07997 10QC)
@@ -1840,11 +1969,12 @@ Destinatario per funzione: **Pianificazione di produzione** (nessun nome). Organ
 - Capacità reparti: Saldatura 7, Molatura 5, Montaggio 5, Controllo Qualità 3, Lavorazioni Meccaniche 1;
   Lavorazione Esterna 50
 
-### T08-0100 — parcheggiata (PROJ-0001)
-- 58 WO "In Process" e Job Card con i **tempi esterni vecchi** (riallineamento al TT rinviato);
-  130 Job Card esterne con fornitore; 21 Task, **0 WO T08 collegati a Task**. Discrepanza 581 vs 557 Job Card mai
-  verificata (non urgente)
-- Le BOM T08 sono aggiornate al TT e restano la base dati comune
+### T08-0100 — WO eliminati il 20/10 (PROJ-0001)
+- **Eliminati** (sessione 27, backup `--with-files` prima, 0 errori): 58 WO, 557 Job Card, Production Plan
+  MFG-PP-2026-00001, Material Request MAT-MR-2026-00002/00003. Recuperabili da Deleted Document o dal backup del 20/10
+- **Restano**: BOM T08 (base dati comune, aggiornate al TT), articoli, PROJ-0001, SAL-ORD-2026-00001, 21 Task
+- Script sul server in `/home/frappe-user/frappe-bench`: `verifica_t08_t09.py`, `inventario_t08.py`, `elimina_t08.py`
+  (da lasciare con `DRY_RUN = True`)
 
 ### Funzioni disponibili
 - Utenti: 21 Employee/User "Operatore di Reparto" con filtro per reparto; profilo **"Responsabile
@@ -1874,7 +2004,8 @@ Destinatario per funzione: **Pianificazione di produzione** (nessun nome). Organ
 | Buffer | sul **singolo Project** (default 5), non nella pagina impostazioni |
 | Conto lavoro / expediting (finale) | **scelta B**: Ordine conto lavoro in ERPNext, magazzino e magazzini fornitore su **SAP**, connettore SAP → ERPNext in lettura; scrittura ordini (futuro) via Service Layer. Niente conto lavoro nativo v16 |
 | Esterne nel transitorio | **modalità A** sulla Job Card: Start = spedizione, Complete = rientro, n° ordine SAP e data promessa — 16/10 |
-| Allineamento set | eseguito il 09/10 (50 JC, date stimate), confermato il 16/10 |
+| Allineamento set | eseguito il 09/10 (50 JC, date stimate), confermato il 16/10; le 50 JC si tengono |
+| T08 in produzione | WO, Job Card, PP e MR eliminati il 20/10; restano BOM, PROJ-0001, SO-00001, Task |
 | Ordini al fornitore | oggi li emette **SAP**; in futuro generati da ERPNext e inviati a SAP |
 | Matricole | solo prodotto finito A0001, a fine produzione, provvisorie |
 | Microfusi | codici `F000` e €1.000 provvisori |
@@ -1888,9 +2019,16 @@ Destinatario per funzione: **Pianificazione di produzione** (nessun nome). Organ
 
 ---
 
-## 🎯 TASK APERTI (aggiornato al 16/10/2026)
+## 🎯 TASK APERTI (aggiornato al 23/10/2026)
 
 ### Priorità 0 — Avvio dell'uso quotidiano
+- **Decisioni dalla sessione 27**: `po_no` reali **24-19006** (SAL-ORD-2026-00001) e **26-19008** (SAL-ORD-2026-00002),
+  da confermare e scrivere; tenere o eliminare PROJ-0001, SAL-ORD-2026-00001 e i 21 Task T08; confermare
+  `elimina_t08.py` a `DRY_RUN = True`. Le 50 Job Card del 09/10 **si tengono** (allineamento)
+- **Memoria**: copiare in OneDrive `12_Memorie` questa versione (sostituisce quella del 12/10, che va in `Old`) e
+  `MEMORIA_SESSIONE_27.md`; evitare nuove sessioni partite dal branch di default (vedi sessione 28)
+- **Modulo per gli Acquisti** `Verifica_Esterne_Avvio_T09.xlsx`: esito dello script non comunicato; poi compilazione e
+  script di caricamento
 - **Guida operativa**: Gian decide destinatari e invio di `Guida_Operativa_Pianificazione_Remazel_B1.docx`; copiarla in
   OneDrive `01_Documentazione` (con `Analisi_Confronto_Fasi_Monitor_Remazel_B1.docx`, ancora solo nel repo)
 - Verificare che chi registra le spedizioni (Simone/Sergey/Omar o logistica) abbia un **Employee** per Start Job
@@ -1944,15 +2082,17 @@ Destinatario per funzione: **Pianificazione di produzione** (nessun nome). Organ
 - QI template su A0001 quando validato; SMTP Microsoft 365
 
 ### Priorità 5 — Staging e simulazione T08 (sessione 25)
-1. Backup fresco di `site1.local`, creazione site `stgcombustion.remazel.com`, restore, `migrate`,
-   `disable-scheduler`; verifica 58 WO / 557 Job Card (a cura di Gian)
+1. ⚠️ Dal 20/10 i WO T08 non esistono più in produzione: per lo staging usare il **backup del 20/10 fatto prima
+   dell'eliminazione** (o ricreare i WO T08 sullo staging). Poi creazione site `stgcombustion.remazel.com`, restore,
+   `migrate`, `disable-scheduler`; verifica 58 WO / 557 Job Card (a cura di Gian)
 2. Chiarire esposizione web dello staging (nginx / reverse proxy / `dns_multitenant`)
 3. Scrivere lo **script di simulazione** (file completo, solo staging): avanzamento T08 all'80-90% nel
    passato, time log retrodatati, scostamenti realistici
 4. Report tempi ciclo planned vs actual e costi (indicativi: servono hour rate e prezzi di prova)
 
-### Priorità 6 — T08 (parcheggiata, alla ripresa)
-- Riallineare WO e Job Card T08 ai tempi TT; verificare 581 vs 557 Job Card; decidere se mantenere o annullare i WO aperti
+### Priorità 6 — T08
+- WO e Job Card eliminati il 20/10: alla ripresa si ripianifica da zero (Production Plan dal SAL-ORD-2026-00001) con i
+  tempi TT già nelle BOM
 
 ### Dopo
 - Traduzione finale in inglese delle etichette; connettore SAP in scrittura (ordini via Service Layer)
@@ -2076,5 +2216,5 @@ tab **Sub Assembly Items** → **Get Sub Assembly Items** → **Make Work Orders
 
 ---
 
-*Ultimo aggiornamento: **Sessione 26** — 16 ottobre 2026 (riallineamento delle tre copie della memoria: sessioni 23-24 dal repo, staging come sessione 25; allineamento set confermato; esterne in modalità transitoria A; Guida_Operativa_Pianificazione_Remazel_B1)*
+*Ultimo aggiornamento: **Sessione 28** — 23 ottobre 2026 (integrata la sessione del 20/10 come Sessione 27: verifica T09 ed eliminazione WO/Job Card T08; correzioni sulle 50 Job Card dell'allineamento e sui ritardi)*
 *⚠️ A fine ogni sessione: aggiornare questo file in OneDrive `12_Memorie`, nel Project Cowork e nel repo, aggiungendo la sezione della sessione.*
