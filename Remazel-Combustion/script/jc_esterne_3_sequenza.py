@@ -1,5 +1,5 @@
 # Job Card esterne (mail Simone 23/10/2026) - fasi NON iniziali bloccate da OperationSequenceError
-# Opzione B: svuota sequence_id SOLO sulle Job Card indicate, poi carica il time log come jc_esterne_2_carica.py
+# Opzione B: azzera sequence_id (0) SOLO sulle Job Card indicate, poi carica il time log come jc_esterne_2_carica.py
 # Prerequisito: /home/frappe-user/jc_esterne_23102026_dati.py (lista GRUPPI)
 #
 # Esecuzione in console:
@@ -11,7 +11,7 @@
 #
 # Motivo: ERPNext (validate_sequence_id) blocca quantita' completate su una Job Card se le fasi precedenti
 # del Work Order non risultano completate (= Job Card inviate). Il controllo legge il sequence_id della
-# Job Card stessa: se vuoto, il controllo non si applica. Work Order Operation e BOM restano invariati.
+# Job Card stessa: se 0 il controllo non si applica (la colonna e' NOT NULL, None da IntegrityError). Work Order Operation e BOM restano invariati.
 # Verificato: JobCard_Avviso_Precedenze e Gantt_Remazel_Job_Card non usano sequence_id.
 #
 # Ripristino sequence_id (se serve): il valore originale e' stampato a video per ogni Job Card;
@@ -42,7 +42,7 @@ for g in GRUPPI:
     for n in g["jc"]:
         try:
             seq = frappe.db.get_value("Job Card", n, "sequence_id")
-            frappe.db.set_value("Job Card", n, "sequence_id", None, update_modified=False)
+            frappe.db.set_value("Job Card", n, "sequence_id", 0, update_modified=False)
             jc = frappe.get_doc("Job Card", n)
             if jc.docstatus != 0:
                 print("   ", n, "SALTATA: docstatus", jc.docstatus)
